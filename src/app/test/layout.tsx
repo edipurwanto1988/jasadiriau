@@ -2,9 +2,9 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
-import theme from "../theme";
+import theme from "../../theme";
 import { AppBar, Toolbar } from "@mui/material";
-import './globals.css'
+import Header from "@/components/base/headers/header";
 
 const figtree = Roboto({
   subsets: ["latin"],
@@ -26,7 +26,14 @@ export default function RootLayout({
     <html lang="en" className={figtree.variable}>
       <body>
         <AppRouterCacheProvider options={{ key: "css", enableCssLayer: true }}>
-          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+          <ThemeProvider theme={theme}>
+            <header>
+              <Header />
+            </header>
+            {children}
+
+            <footer></footer>
+          </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>

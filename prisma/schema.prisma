@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar
+  email     String    @unique
+  password  String?   @db.VarChar(255)
+  isActive  Boolean?  @default(false) @map("is_active")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Service {
+  id            Int      @id @default(autoincrement()) @map("id")
+  name          String   @map("name")
+  slug          String   @unique @map("slug")
+  description   String?  @map("description")
+  providerName  String   @map("provider_name")
+  contactNumber String?  @map("contact_number")
+  price         Decimal? @default(0) @db.Decimal(15, 2)
+  logoUrl       String?  @map("logo_url")
+  profileImage  String?  @map("profile_image")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  categoryId    Int      @map("category_id")
+  seoConfigId   Int?     @map("seo_config_id")
+
+  category Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  seo      SeoConfigs? @relation(fields: [seoConfigId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  tags   ServiceTags[]
+  images ServiceImages[]
+
+  @@map("services")
+}
+
+model Category {
+  id          Int    @id @default(autoincrement()) @map("id")
+  name        String @map("name")
+  slug        String @unique @map("slug")
+  seoConfigId Int?   @map("seo_config_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  parentId Int?        @map("parent_id")
+  parent   Category?   @relation("CategoryToParent", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  children Category[]  @relation("CategoryToParent")
+  seo      SeoConfigs? @relation(fields: [seoConfigId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  services Service[]
+
+  @@map("categories")
+}
+
+model Tags {
+  id        Int      @id @default(autoincrement()) @map("id")
+  name      String   @map("name")
+  slug      String   @unique @map("slug")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  serviceTags ServiceTags[]
+
+  @@map("tags")
+}
+
+model ServiceTags {
+  serviceId Int @map("service_id")
+  tagId     Int @map("tag_id")
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tag     Tags    @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([serviceId, tagId])
+  @@map("service_tags")
+}
+
+model ServiceImages {
+  id        Int      @id @default(autoincrement()) @map("id")
+  url       String   @map("url")
+  alt       String?  @map("alt")
+  order     Int      @default(0) @map("order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  serviceId Int     @map("service_id")
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("service_images")
+}
+
+model SeoConfigs {
+  id            Int      @id @default(autoincrement()) @map("id")
+  title         String   @map("title")
+  description   String?  @map("description")
+  keywords      String?  @map("keywords")
+  ogTitle       String?  @map("og_title")
+  ogDescription String?  @map("og_description")
+  ogImage       String?  @map("og_image")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  Service  Service[]
+  Category Category[]
+
+  @@map("seo_configs")
+}
