@@ -14,6 +14,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum StatusType {
+  active
+  inactive
+}
+
+enum Position {
+  header
+  footer
+  sidebar
+}
+
 model User {
   id        Int       @id @default(autoincrement())
   name      String    @db.VarChar
@@ -27,19 +38,19 @@ model User {
 }
 
 model Service {
-  id            Int      @id @default(autoincrement()) @map("id")
-  name          String   @map("name")
-  slug          String   @unique @map("slug")
-  description   String?  @map("description")
-  providerName  String   @map("provider_name")
-  contactNumber String?  @map("contact_number")
-  price         Decimal? @default(0) @db.Decimal(15, 2)
-  logoUrl       String?  @map("logo_url")
-  profileImage  String?  @map("profile_image")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
-  categoryId    Int      @map("category_id")
-  seoConfigId   Int?     @map("seo_config_id")
+  id            Int       @id @default(autoincrement()) @map("id")
+  name          String    @map("name")
+  slug          String?   @unique @map("slug")
+  description   String?   @map("description")
+  providerName  String    @map("provider_name")
+  contactNumber String?   @map("contact_number")
+  price         Decimal?  @default(0) @db.Decimal(15, 2)
+  logoUrl       String?   @map("logo_url")
+  profileImage  String?   @map("profile_image")
+  createdAt     DateTime? @default(now()) @map("created_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
+  categoryId    Int       @map("category_id")
+  seoConfigId   Int?      @map("seo_config_id")
 
   category Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   seo      SeoConfigs? @relation(fields: [seoConfigId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -50,31 +61,42 @@ model Service {
   @@map("services")
 }
 
+model Advantages {
+  id          Int        @id @default(autoincrement()) @map("id")
+  title       String     @map("title")
+  description String     @map("description")
+  icon        String?    @map("icon")
+  sortOrder   Int?       @map("sort_order")
+  status      StatusType @default(inactive) @map("status")
+  updatedAt   DateTime?  @updatedAt @map("updated_at")
+  createdAt   DateTime?  @default(now()) @map("created_at")
+
+  @@map("advantages")
+}
+
 model Category {
-  id          Int    @id @default(autoincrement()) @map("id")
-  name        String @map("name")
-  slug        String @unique @map("slug")
-  seoConfigId Int?   @map("seo_config_id")
+  id          Int       @id @default(autoincrement()) @map("id")
+  name        String    @map("name")
+  slug        String    @unique @map("slug")
+  seoConfigId Int?      @map("seo_config_id")
+  parentId    Int?      @map("parent_id")
+  createdAt   DateTime? @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  parentId Int?        @map("parent_id")
   parent   Category?   @relation("CategoryToParent", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   children Category[]  @relation("CategoryToParent")
   seo      SeoConfigs? @relation(fields: [seoConfigId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
   services Service[]
 
   @@map("categories")
 }
 
 model Tags {
-  id        Int      @id @default(autoincrement()) @map("id")
-  name      String   @map("name")
-  slug      String   @unique @map("slug")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id        Int       @id @default(autoincrement()) @map("id")
+  name      String    @map("name")
+  slug      String    @unique @map("slug")
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   serviceTags ServiceTags[]
 
@@ -93,12 +115,12 @@ model ServiceTags {
 }
 
 model ServiceImages {
-  id        Int      @id @default(autoincrement()) @map("id")
-  url       String   @map("url")
-  alt       String?  @map("alt")
-  order     Int      @default(0) @map("order")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id        Int       @id @default(autoincrement()) @map("id")
+  url       String    @map("url")
+  alt       String?   @map("alt")
+  order     Int       @default(0) @map("order")
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   serviceId Int     @map("service_id")
   service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -107,18 +129,75 @@ model ServiceImages {
 }
 
 model SeoConfigs {
-  id            Int      @id @default(autoincrement()) @map("id")
-  title         String   @map("title")
-  description   String?  @map("description")
-  keywords      String?  @map("keywords")
-  ogTitle       String?  @map("og_title")
-  ogDescription String?  @map("og_description")
-  ogImage       String?  @map("og_image")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  id            Int       @id @default(autoincrement()) @map("id")
+  title         String    @map("title")
+  description   String?   @map("description")
+  keywords      String?   @map("keywords")
+  ogTitle       String?   @map("og_title")
+  ogDescription String?   @map("og_description")
+  ogImage       String?   @map("og_image")
+  createdAt     DateTime? @default(now()) @map("created_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
 
   Service  Service[]
   Category Category[]
 
   @@map("seo_configs")
+}
+
+model Menu {
+  id        Int        @id @default(autoincrement())
+  name      String
+  url       String     @map("url")
+  icon      String?    @db.VarChar()
+  position  Position   @default(header) @map("position")
+  sortOrder Int?       @default(0) @map("sort_order") @db.SmallInt()
+  status    StatusType @default(inactive) @map("status")
+  parentId  Int?       @map("parent_id")
+  createdAt DateTime?  @default(now()) @map("created_at")
+  updatedAt DateTime?  @updatedAt @map("updated_at")
+
+  parent   Menu?  @relation("MenuToSub", fields: [parentId], references: [id])
+  children Menu[] @relation("MenuToSub")
+
+  @@map("menus")
+}
+
+model Slider {
+  id        Int        @id @default(autoincrement())
+  title     String     @map("title")
+  caption   String?    @map("caption")
+  imageUrl  String     @map("image_url")
+  link      String?    @map("link")
+  sortOrder Int?       @map("sort_order")
+  status    StatusType @default(inactive) @map("status")
+  createdAt DateTime?  @default(now()) @map("created_at")
+  updatedAt DateTime?  @updatedAt @map("updated_at")
+
+  @@map("sliders")
+}
+
+model Setting {
+  siteName               String    @unique() @map("site_name")
+  logo                   String?   @map("logo")
+  description            String?   @map("description")
+  metaKeywords           String?   @map("meta_keywords")
+  metaTitle              String    @map("meta_title")
+  metaDescription        String    @map("meta_description")
+  ogTitle                String?   @map("og_title")
+  ogDescription          String?   @map("og_description")
+  googleSiteVerification String?   @map("google_site_verification")
+  contactEmail           String?   @map("contact_email")
+  contactPhone           String?   @map("contact_phone")
+  address                String?   @map("address")
+  facebookUrl            String?   @map("facebook_url")
+  instagramUrl           String?   @map("instagram_url")
+  twitterUrl             String?   @map("twitter_url")
+  linkedinUrl            String?   @map("linkedin_url")
+  youtubeUrl             String?   @map("youtube_url")
+  whatsappUrl            String?   @map("whatsapp_url")
+  createdAt              DateTime? @default(now()) @map("created_at")
+  updatedAt              DateTime? @updatedAt @map("updated_at")
+
+  @@map("settings")
 }

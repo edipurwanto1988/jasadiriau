@@ -4,7 +4,7 @@ import { Roboto } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../theme";
 import { AppBar, Toolbar } from "@mui/material";
-import Header from "@/components/base/headers/header";
+import Header from "@/views/components/base/headers/header";
 
 const figtree = Roboto({
   subsets: ["latin"],

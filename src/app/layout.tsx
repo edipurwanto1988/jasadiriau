@@ -2,8 +2,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
-import theme from "../theme";
-import { AppBar, Toolbar } from "@mui/material";
+import theme from "@/views/theme";
 import './globals.css'
 
 const figtree = Roboto({

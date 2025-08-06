@@ -1,4 +1,4 @@
-import Header from "@/components/base/headers/header";
+import Header from "@/views/components/base/headers/header";
 import {
   Box,
   Button,

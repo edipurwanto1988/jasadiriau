@@ -10,8 +10,6 @@ export const ucwords = (text: string) => {
   });
 };
 
-
-
 export const convertPath = (path: string) => {
   if (!path) return "";
   return path.replace(/\.?(\d+)/g, "[$1]");
@@ -47,9 +45,12 @@ export const formatCountdown = (seconds: number): string => {
   return `${m}:${s}`;
 };
 
-export const sendType = (value: boolean) => {
-  if (value) {
-    return "Antar ke Alamat";
-  }
-  return "Ambil Diloket";
+export const statusActiveLabel = (value: string) => {
+  return value === "inactive" ? "Tidak Aktif" : "Aktif";
+};
+
+export const uniqueImage = (ext = "") => {
+  return (
+    Date.now() + "" + Math.round(Math.random() * 1e9) + (ext ? "." + ext : "")
+  );
 };
