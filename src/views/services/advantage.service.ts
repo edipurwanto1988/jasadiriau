@@ -32,6 +32,10 @@ export const postAdvantage = async (event?: EventSend) => {
     body: JSON.stringify({ ...event!.data!() }),
   });
 
+   if (!res.ok) {
+    throw res;
+  }
+
   return res.json();
 };
 

@@ -30,19 +30,6 @@ export const postSlider = async (event?: EventSend) => {
   return res.json();
 };
 
-export const putSlider = async (event?: EventSend) => {
-  const res = await fetch(url.slider, {
-    method: "put",
-    signal: event?.ctr?.signal,
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({ ...event!.data!() }),
-  });
-
-  return res.json();
-};
-
 export const deleteSlider = (event?: EventSend) => {
   return fetch(`${url.slider}/${event?.params?.id}`, {
     method: "delete",

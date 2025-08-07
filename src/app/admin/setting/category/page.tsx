@@ -1,10 +1,13 @@
 "use client";
 import React from "react";
-import PageTemplate from "@/views/components/templates/PageTemplate";
 import DataTablePage from "@/views/components/base/DataTable/DataTablePage";
 import Form from "./_partial/Form";
 import Dropdown from "@/views/components/base/Dropdown/Dropdown";
-import { CreateCategorySchema } from "@/schema/category.schema";
+import {
+  CreateCategorySchema,
+  createCatgorySchema,
+  updateCategorySchema,
+} from "@/schema/category.schema";
 import {
   deleteCategory,
   getCategory,
@@ -18,6 +21,9 @@ import useTable from "ezhooks/lib/useTable";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { useAlert } from "@/views/contexts/AlertContext";
 import SettingTemplate from "@/views/components/templates/SettingTemplate";
+import useZod from "@/views/hooks/useZod";
+import { parseResponseError } from "@/utils/format";
+import SnacbarLoading from "@/views/components/base/Skeleton/SnacbarLoading";
 
 export default function Page() {
   const openSnackbar = useSnackbar();
@@ -35,6 +41,11 @@ export default function Page() {
     },
   });
 
+  const validation = useZod({
+    data: mutation.data(),
+    schema: createCatgorySchema,
+  });
+
   const table = useTable({
     service: getCategory,
     selector: (resp) => resp.data,
@@ -46,14 +57,30 @@ export default function Page() {
   });
 
   const onSubmit = () => {
-    mutation.send({
-      service: postCategory,
-      onSuccess: () => {
-        table.reload();
-        mutation.reset();
-        openSnackbar("Kategori baru berhasil ditambahkan.");
-      },
+    const isNewRecord = !mutation.has("id");
+    const validated = validation.validated({
+      schema: !isNewRecord ? updateCategorySchema : undefined,
     });
+
+    if (validated) {
+      mutation.send({
+        service: postCategory,
+        onSuccess: () => {
+          table.reload();
+          mutation.reset();
+          openSnackbar(
+            isNewRecord
+              ? "Kategori baru berhasil ditambahkan."
+              : "Kategori berhasil diperbaharui"
+          );
+        },
+        onError: (e) => {
+          parseResponseError(e, (msg) => {
+            openSnackbar(msg, { severity: "error" });
+          });
+        },
+      });
+    }
   };
 
   const onClickDelete = React.useCallback(
@@ -150,11 +177,13 @@ export default function Page() {
       />
 
       <Form
-        isPending={isPending}
         dialog={dialog.getDialog("form")}
         mutation={mutation}
+        validation={validation}
         onSubmit={onSubmit}
       />
+
+      <SnacbarLoading loading={mutation.loading} pending={isPending} />
     </SettingTemplate>
   );
 }

@@ -12,7 +12,7 @@ export const ccFormat = (value: any, defaultValue = "") => {
   var v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
   var matches = v.match(/\d{4,16}/g);
   var match = (matches && matches[0]) || "";
-  var parts:any[] = [];
+  var parts: any[] = [];
 
   for (let i = 0, len = match.length; i < len; i += 4) {
     parts.push(match.substring(i, i + 4));
@@ -79,4 +79,18 @@ export const dateFormat = (
 
 export const parseZodError = (err: ZodError) => {
   return err.issues.map((val, i) => ({ [val.path.at(0) ?? i]: val.message }));
+};
+
+export const parseResponseError = async (
+  error: any,
+  message?: (msg: string) => void
+) => {
+  if (error instanceof Response) {
+    const resp = await error.json();
+    if (error.status === 422) {
+    }
+    if (message) {
+      message(resp.message);
+    }
+  }
 };

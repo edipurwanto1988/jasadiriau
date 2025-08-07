@@ -54,3 +54,7 @@ export const uniqueImage = (ext = "") => {
     Date.now() + "" + Math.round(Math.random() * 1e9) + (ext ? "." + ext : "")
   );
 };
+
+export const textLoading = (loading?: boolean, pending?: boolean) => {
+  return loading ? "Mengambil data..." : pending ? "Memuat data..." : "";
+};

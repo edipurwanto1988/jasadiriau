@@ -3,7 +3,6 @@ import { UseDialog } from "@/views/hooks/useDialog";
 import { CreateAdvantageSchema } from "@/schema/advantage.schema";
 import { UseMutation } from "ezhooks/lib/useMutation";
 import { UseZod } from "@/views/hooks/useZod";
-import Fade from "@mui/material/Fade";
 import InputSelect from "@/views/components/base/Input/InputSelect";
 import InputField from "@/views/components/base/Input/InputField";
 import React from "react";
@@ -13,11 +12,10 @@ type Props = {
   dialog: UseDialog;
   mutation: UseMutation<CreateAdvantageSchema>;
   validation: UseZod<CreateAdvantageSchema>;
-  isPending?: boolean;
   onSubmit: () => void;
 };
 
-const Form = ({ dialog, mutation, validation, isPending, onSubmit }: Props) => {
+const Form = ({ dialog, mutation, validation, onSubmit }: Props) => {
   const { setData, value } = mutation;
   return (
     <Dialog
@@ -42,18 +40,6 @@ const Form = ({ dialog, mutation, validation, isPending, onSubmit }: Props) => {
         },
       }}
     >
-      <Fade in={mutation.loading || isPending} unmountOnExit>
-        <div>
-          <em>
-            {mutation.loading
-              ? "Mengambil data..."
-              : isPending
-              ? "Memuat Data"
-              : ""}
-          </em>
-        </div>
-      </Fade>
-
       <InputField
         label="Judul"
         placeholder="Masukkan judul"
@@ -106,9 +92,11 @@ const Form = ({ dialog, mutation, validation, isPending, onSubmit }: Props) => {
 export default React.memo(
   Form,
   (prev, next) =>
-    prev.isPending === next.isPending &&
+    prev.dialog.open === next.dialog.open &&
     prev.mutation.loading === next.mutation.loading &&
     prev.mutation.processing === next.mutation.processing &&
     isEqual(prev.mutation.data(), next.mutation.data()) &&
-    isEqual(prev.dialog, next.dialog)
+    isEqual(prev.validation.message(), next.validation.message()) &&
+    prev.validation.error() &&
+    next.validation.error()
 );

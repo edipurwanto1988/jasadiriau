@@ -19,6 +19,8 @@ import {
 } from "@/views/services/slider.service";
 import { statusActiveLabel } from "@/utils/string";
 import Avatar from "@mui/material/Avatar";
+import { imgUrl } from "@/lib/dummy";
+import SnacbarLoading from "@/views/components/base/Skeleton/SnacbarLoading";
 
 export default function Page() {
   const openSnackbar = useSnackbar();
@@ -126,7 +128,6 @@ export default function Page() {
     [table.data]
   );
 
-  console.log(validation.message());
   return (
     <SettingTemplate
       title="Slider"
@@ -148,7 +149,11 @@ export default function Page() {
           {
             label: "Gambar",
             value: (value) => (
-              <Avatar alt={value.title} src={value.imageUrl} variant="square" />
+              <Avatar
+                alt={value.title}
+                src={value.imageUrl || imgUrl}
+                variant="square"
+              />
             ),
             head: { align: "center", padding: "checkbox" },
             align: "center",
@@ -183,12 +188,13 @@ export default function Page() {
       />
 
       <Form
-        isPending={isPending}
         dialog={dialog}
         mutation={mutation}
         validation={validation}
         onSubmit={onSubmit}
       />
+
+      <SnacbarLoading loading={mutation.loading} pending={isPending} />
     </SettingTemplate>
   );
 }

@@ -18,6 +18,8 @@ import Collapse from "@mui/material/Collapse";
 import { useApp } from "@/views/contexts/AppContext";
 import Loading from "@/views/components/base/Skeleton/Spinner";
 import { styled } from "@mui/material/styles";
+import { useRouter } from "next/navigation";
+import TooltipSidebarMenu from "../Tooltip/TooltipSidebarMenu";
 
 export type SiderBarMenu = Array<{
   path?: string;
@@ -89,26 +91,9 @@ const ListItemButton = styled(MUIListItemButton)(({}) => ({
 
 const menu: SiderBarMenu = [
   { path: "/", key: "dashboard", name: "Dashboard", icon: DashboardIcon },
+
   {
-    path: "order",
-    key: "order",
-    name: "Pemesanan",
-    icon: AddShoppingCartOutlinedIcon,
-  },
-  {
-    path: "package",
-    key: "package",
-    name: "Paket",
-    icon: LocalShippingOutlinedIcon,
-  },
-  {
-    path: "trip",
-    key: "trip",
-    name: "Perjalanan",
-    icon: MapOutlinedIcon,
-  },
-  {
-    path: "setting",
+    path: "/admin/setting",
     key: "setting",
     name: "Setting",
     icon: SettingsOutlinedIcon,
@@ -123,7 +108,7 @@ const SidebarMenu = (props: any) => {
     addKey,
     clearKey,
   } = useApp();
-
+  const router = useRouter();
   const { window } = props;
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -150,8 +135,7 @@ const SidebarMenu = (props: any) => {
           alignItems: "center",
           justifyContent: "space-between",
           px: [1],
-          borderBottom: 1,
-          borderColor: "divider",
+
           height: {
             xs: 48,
           },
@@ -181,56 +165,8 @@ const SidebarMenu = (props: any) => {
 
       <div>
         <List component={"div"} sx={{ px: 1 }}>
-          {menu.map((val, i) => (
-            <Tooltip
-              disableHoverListener={open}
-              key={`${val.key}-${i}`}
-              title={val.name}
-              arrow
-              placement="right"
-            >
-              <div>
-                <ListItemButton
-                  // sx={{ height: "36px" }}
-                  selected={paths.includes(val.path || val.key)}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (val.path) {
-                      clearKey();
-                    } else {
-                      addKey(val.key);
-                      if (!open) {
-                        onClickOpen();
-                      }
-                    }
-                  }}
-                >
-                  {val.icon ? (
-                    <ListItemIcon sx={{ minWidth: "36px" }}>
-                      <React.Suspense fallback={<Loading />}>
-                        <SvgIcon
-                          id={`icon-${val.key}`}
-                          fontSize={open ? "small" : "medium"}
-                          component={val.icon}
-                          sx={{
-                            // color: "white",
-                            ...(!open
-                              ? {
-                                  transform: "scale(1)",
-                                  transition: "all .5s",
-                                }
-                              : {
-                                  transform: "unset",
-                                  transition: "all .5s",
-                                }),
-                          }}
-                        />
-                      </React.Suspense>
-                    </ListItemIcon>
-                  ) : null}
-                </ListItemButton>
-              </div>
-            </Tooltip>
+          {menu.map(({key,...val}, i) => (
+            <TooltipSidebarMenu key={key} {...val} />
           ))}
         </List>
       </div>

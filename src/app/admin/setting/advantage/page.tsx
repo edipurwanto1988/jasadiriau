@@ -19,6 +19,7 @@ import {
   postAdvantage,
 } from "@/views/services/advantage.service";
 import { statusActiveLabel } from "@/utils/string";
+import SnacbarLoading from "@/views/components/base/Skeleton/SnacbarLoading";
 
 export default function Page() {
   const openSnackbar = useSnackbar();
@@ -60,7 +61,7 @@ export default function Page() {
     const validated = validation.validated();
     if (validated) {
       mutation.send({
-        service:  postAdvantage ,
+        service: postAdvantage,
         onSuccess: () => {
           table.reload();
           mutation.reset();
@@ -174,12 +175,13 @@ export default function Page() {
       />
 
       <Form
-        isPending={isPending}
         dialog={dialog}
         mutation={mutation}
         validation={validation}
         onSubmit={onSubmit}
       />
+
+      <SnacbarLoading loading={mutation.loading} pending={isPending} />
     </SettingTemplate>
   );
 }

@@ -3,7 +3,6 @@ import { UseDialog } from "@/views/hooks/useDialog";
 import { CreateSliderSchema } from "@/schema/slider.schema";
 import { UseMutation } from "ezhooks/lib/useMutation";
 import { UseZod } from "@/views/hooks/useZod";
-import Fade from "@mui/material/Fade";
 import InputSelect from "@/views/components/base/Input/InputSelect";
 import InputField from "@/views/components/base/Input/InputField";
 import React from "react";
@@ -19,11 +18,10 @@ type Props = {
   dialog: UseDialog;
   mutation: UseMutation<CreateSliderSchema>;
   validation: UseZod<CreateSliderSchema>;
-  isPending?: boolean;
   onSubmit: () => void;
 };
 
-const Form = ({ dialog, mutation, validation, isPending, onSubmit }: Props) => {
+const Form = ({ dialog, mutation, validation, onSubmit }: Props) => {
   const { setData, value } = mutation;
   const setImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) {
@@ -63,17 +61,6 @@ const Form = ({ dialog, mutation, validation, isPending, onSubmit }: Props) => {
         },
       }}
     >
-      <Fade in={mutation.loading || isPending} unmountOnExit>
-        <div>
-          <em>
-            {mutation.loading
-              ? "Mengambil data..."
-              : isPending
-              ? "Memuat Data"
-              : ""}
-          </em>
-        </div>
-      </Fade>
 
       <InputField
         label="Judul"
@@ -181,7 +168,6 @@ export default React.memo(
   Form,
   (prev, next) =>
     prev.dialog.open === next.dialog.open &&
-    prev.isPending === next.isPending &&
     prev.mutation.loading === next.mutation.loading &&
     prev.mutation.processing === next.mutation.processing &&
     isEqual(prev.mutation.data(), next.mutation.data()) &&

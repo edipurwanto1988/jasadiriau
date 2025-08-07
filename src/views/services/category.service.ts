@@ -22,14 +22,19 @@ export const getCategory = async (
 };
 
 export const postCategory = async (event?: EventSend) => {
+  const isNewRecord = !(event?.data && event.data().id);
   const res = await fetch(url.category, {
-    method: "post",
+    method: isNewRecord ? "post" : "put",
     signal: event?.ctr?.signal,
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify({ ...event!.data!() }),
+    body: JSON.stringify(event!.data!()),
   });
+
+  if (!res.ok) {
+    throw res;
+  }
 
   return res.json();
 };

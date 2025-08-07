@@ -23,6 +23,26 @@ const ArrowBackOutlinedIcon = LoadComponent(
   () => import("@mui/icons-material/ArrowBackOutlined")
 );
 
+const SettingsOutlinedIcon = LoadComponent(
+  () => import("@mui/icons-material/SettingsOutlined")
+);
+
+const FeaturedPlayListOutlinedIcon = LoadComponent(
+  () => import("@mui/icons-material/FeaturedPlayListOutlined")
+);
+
+const CategoryOutlinedIcon = LoadComponent(
+  () => import("@mui/icons-material/CategoryOutlined")
+);
+
+const CollectionsOutlinedIcon = LoadComponent(
+  () => import("@mui/icons-material/CollectionsOutlined")
+);
+
+const MenuOutlinedIcon = LoadComponent(
+  () => import("@mui/icons-material/MenuOutlined")
+);
+
 const SettingTemplate = (props: Props) => {
   const app = useApp();
   const pathname = usePathname();
@@ -32,16 +52,34 @@ const SettingTemplate = (props: Props) => {
     <LinkTab
       tab={[
         {
+          label: "Umum",
+          value: "/admin/setting",
+          icon: <SettingsOutlinedIcon />,
+          iconPosition: "start",
+        },
+        {
           label: "Advantage",
           value: "/admin/setting/advantage",
+          icon: <FeaturedPlayListOutlinedIcon />,
+          iconPosition: "start",
         },
         {
           label: "Kategori",
           value: "/admin/setting/category",
+          icon: <CategoryOutlinedIcon />,
+          iconPosition: "start",
         },
         {
           label: "Slider",
           value: "/admin/setting/slider",
+          icon: <CollectionsOutlinedIcon />,
+          iconPosition: "start",
+        },
+        {
+          label: "Menu",
+          value: "/admin/setting/menu",
+          icon: <MenuOutlinedIcon />,
+          iconPosition: "start",
         },
       ]}
       value={pathname}
@@ -148,7 +186,7 @@ const SettingTemplate = (props: Props) => {
                 variant="text"
                 onClick={props.onCreate}
               >
-                Add New
+                Tambah Baru
               </ButtonWithIcon>
             ) : null}
 
@@ -159,7 +197,7 @@ const SettingTemplate = (props: Props) => {
                 variant="text"
                 onClick={props.onUpdate}
               >
-                Edit Data
+                Ubah Data
               </ButtonWithIcon>
             ) : null}
 
@@ -170,7 +208,7 @@ const SettingTemplate = (props: Props) => {
                 variant="text"
                 onClick={props.onDelete}
               >
-                Delete Data
+                Hapus Data
               </ButtonWithIcon>
             ) : null}
 
@@ -181,7 +219,7 @@ const SettingTemplate = (props: Props) => {
                 variant="text"
                 onClick={props.onReload}
               >
-                Reload
+                Segarkan
               </ButtonWithIcon>
             ) : null}
           </div>

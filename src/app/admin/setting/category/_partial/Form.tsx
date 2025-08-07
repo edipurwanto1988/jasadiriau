@@ -3,19 +3,20 @@ import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
 import { UseDialog } from "@/views/hooks/useDialog";
 import { CreateCategorySchema } from "@/schema/category.schema";
 import { UseMutation } from "ezhooks/lib/useMutation";
-import Fade from "@mui/material/Fade";
-import Stack from "@mui/material/Stack";
+import React from "react";
+import { isEqual } from "lodash";
+import { UseZod } from "@/views/hooks/useZod";
 
 const TextField = LoadComponent(() => import("@mui/material/TextField"));
 
 type Props = {
   dialog: UseDialog;
   mutation: UseMutation<CreateCategorySchema>;
-  isPending?: boolean;
+  validation: UseZod<CreateCategorySchema>;
   onSubmit: () => void;
 };
 
-const Form = ({ dialog, mutation, isPending, onSubmit }: Props) => {
+const Form = ({ dialog, mutation, validation, onSubmit }: Props) => {
   const { setData, value } = mutation;
   return (
     <Dialog
@@ -26,7 +27,11 @@ const Form = ({ dialog, mutation, isPending, onSubmit }: Props) => {
       fullWidth
       actionButton={[
         { text: "Batal", onClick: dialog.closeDialog },
-        { text: "Tambah Kategori", variant: "text", onClick: onSubmit },
+        {
+          text: mutation.has("id") ? "Simpan Kategori" : "Tambah Kategori",
+          variant: "text",
+          onClick: onSubmit,
+        },
       ]}
       ContentProps={{
         sx: {
@@ -36,11 +41,6 @@ const Form = ({ dialog, mutation, isPending, onSubmit }: Props) => {
         },
       }}
     >
-      <Fade in={mutation.loading || isPending} unmountOnExit>
-        <div>
-          <em>{mutation.loading ? "Mengambil data...": isPending ? "Memuat Data" : ""}</em>
-        </div>
-      </Fade>
 
       <TextField
         label="Kategori"
@@ -49,6 +49,8 @@ const Form = ({ dialog, mutation, isPending, onSubmit }: Props) => {
         required
         value={value("name", "")}
         onChange={(e) => setData({ name: e.target.value })}
+        error={validation.error("name")}
+        helperText={validation.message("name")}
       />
 
       <TextField
@@ -57,10 +59,22 @@ const Form = ({ dialog, mutation, isPending, onSubmit }: Props) => {
         fullWidth
         required
         value={value("slug", "")}
-        onChange={(e) => setData({ slug: e.target.value })}
+        onChange={(e) => setData({ slug: e.target.value.replaceAll(" ", "-") })}
+        error={validation.error("slug")}
+        helperText={validation.message("slug")}
       />
     </Dialog>
   );
 };
 
-export default Form;
+export default React.memo(
+  Form,
+  (prev, next) =>
+    prev.dialog.open === next.dialog.open &&
+    prev.mutation.loading === next.mutation.loading &&
+    prev.mutation.processing === next.mutation.processing &&
+    isEqual(prev.mutation.data(), next.mutation.data()) &&
+    isEqual(prev.validation.message(), next.validation.message()) &&
+    prev.validation.error() &&
+    next.validation.error()
+);

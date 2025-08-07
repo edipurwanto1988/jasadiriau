@@ -1,13 +1,10 @@
 "use client";
 import React from "react";
-import Typography from "@mui/material/Typography";
 import { default as MuiLink } from "@mui/material/Link";
 import {
-  BreadcrumbsProps,
   default as MUIBreadcrumbs,
 } from "@mui/material/Breadcrumbs";
 import { snackCaseToWord } from "@/utils/string";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Box from "@mui/material/Box";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,13 +15,15 @@ const Breadcrumbs = () => {
     const paths = links.split("/");
     let url = "";
 
-    const temp = paths.map((v) => {
-      return (
-        <MuiLink component={Link} href={url} fontSize={"small"}>
-          {snackCaseToWord(v)}
-        </MuiLink>
-      );
-    });
+    const temp = paths
+      .filter((v) => !!v)
+      .map((v) => {
+        return (
+          <MuiLink component={Link} href={url} fontSize={"small"}>
+            {snackCaseToWord(v)}
+          </MuiLink>
+        );
+      });
 
     return temp;
   };

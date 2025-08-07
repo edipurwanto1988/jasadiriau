@@ -1,15 +1,9 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "@/views/theme";
 import './globals.css'
-
-const figtree = Roboto({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-figtree",
-});
+import { Inter } from "@/lib/admin.font";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={figtree.variable}>
+    <html lang="en" className={Inter.variable}>
       <body>
         <AppRouterCacheProvider options={{ key: "css", enableCssLayer: true }}>
           <ThemeProvider theme={theme}>{children}</ThemeProvider>

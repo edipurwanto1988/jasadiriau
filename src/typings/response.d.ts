@@ -29,3 +29,24 @@ type Slider = {
   sortOrder?: number;
   status: "inactive" | "active";
 };
+
+type Setting = {
+  siteName: string;
+  logo?: string;
+  description?: string;
+  metaKeywords?: string;
+  metaTitle: string;
+  metaDescription: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  googleSiteVerification?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  address?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
+  twitterUrl?: string;
+  linkedinUrl?: string;
+  youtubeUrl?: string;
+  whatsappUrl?: string;
+};

@@ -5,7 +5,7 @@ import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 let theme = createTheme({
   cssVariables: true,
   typography: {
-    fontFamily: "var(--font-figtree)",
+    fontFamily: "var(--font-inter)",
   },
   components: {
     MuiButton: {
