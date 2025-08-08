@@ -118,52 +118,24 @@ model Menu {
 }
 
 model Service {
-  id            Int       @id @default(autoincrement()) @map("id")
-  name          String    @map("name")
-  slug          String?   @unique @map("slug")
-  description   String?   @map("description")
-  providerName  String    @map("provider_name")
-  contactNumber String?   @map("contact_number")
-  price         Decimal?  @default(0) @db.Decimal(15, 2)
-  logoUrl       String?   @map("logo_url")
-  profileImage  String?   @map("profile_image")
-  createdAt     DateTime? @default(now()) @map("created_at")
-  updatedAt     DateTime? @updatedAt @map("updated_at")
-  categoryId    Int       @map("category_id")
-  seoConfigId   Int?      @map("seo_config_id")
+  id          Int        @id @default(autoincrement()) @map("id")
+  name        String     @map("name")
+  slug        String?    @unique @map("slug")
+  description String?    @map("description")
+  price       Decimal?   @default(0) @db.Decimal(15, 2)
+  status      StatusType @default(pending) @map("status")
+  terms       String?    @map("terms") @db.Text()
+  createdAt   DateTime?  @default(now()) @map("created_at")
+  updatedAt   DateTime?  @updatedAt @map("updated_at")
+  categoryId  Int        @map("category_id")
+  profileId   Int        @map("profile_id")
+  seoConfigId Int?       @map("seo_config_id")
 
-  category Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  seo      SeoConfigs? @relation(fields: [seoConfigId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  tags   ServiceTags[]
-  images ServiceImages[]
+  category        Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  seo             SeoConfigs?     @relation(fields: [seoConfigId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  businessProfile BusinessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   @@map("services")
-}
-
-model ServiceTags {
-  serviceId Int @map("service_id")
-  tagId     Int @map("tag_id")
-
-  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  tag     Tags    @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  @@id([serviceId, tagId])
-  @@map("service_tags")
-}
-
-model ServiceImages {
-  id        Int       @id @default(autoincrement()) @map("id")
-  url       String    @map("url")
-  alt       String?   @map("alt")
-  order     Int       @default(0) @map("order")
-  createdAt DateTime? @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-
-  serviceId Int     @map("service_id")
-  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  @@map("service_images")
 }
 
 model SeoConfigs {
@@ -235,6 +207,7 @@ model BusinessProfile {
   User            User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
   BusinessSocial  BusinessSocial[]
   BusinessContact BusinessContact[]
+  Service         Service[]
 
   @@map("business_profiles")
 }
@@ -244,7 +217,7 @@ model BusinessSocial {
   profileId Int       @map("profile_id")
   name      String?
   platform  Platform  @default(other) @map("platform")
-  url       String?    @map("url")
+  url       String?   @map("url")
   createdAt DateTime? @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
@@ -263,18 +236,6 @@ model BusinessContact {
   businessProfile BusinessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   @@map("business_contacts")
-}
-
-model Tags {
-  id        Int       @id @default(autoincrement()) @map("id")
-  name      String    @map("name")
-  slug      String    @unique @map("slug")
-  createdAt DateTime? @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-
-  serviceTags ServiceTags[]
-
-  @@map("tags")
 }
 
 model Validation {
