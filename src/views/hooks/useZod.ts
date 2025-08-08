@@ -11,7 +11,11 @@ export type UseZod<T = any> = {
   clear: () => void;
   error: (key?: {} | keyof T) => boolean;
   message: (key?: {} | keyof T) => any;
-  validated: <T>(option?: { schema?: z.ZodObject; data?: T }) => boolean;
+  validated: <T>(option?: {
+    schema?: z.ZodObject;
+    data?: T;
+    cb?: (value: T) => void;
+  }) => boolean;
   validateAt: <T>(
     key: string,
     opt?: {
@@ -47,7 +51,11 @@ const reducer = (state, action) => {
 const useZod = <T = any>(props: UseZodProps<T>): UseZod<T> => {
   const [errors, dispatch] = React.useReducer(reducer, {});
 
-  const validated = <T>(opt?: { data?: T; schema?: z.ZodObject }) => {
+  const validated = <T>(opt?: {
+    data?: T;
+    schema?: z.ZodObject;
+    cb?: (value: T) => void;
+  }) => {
     let op = {
       schema: opt?.schema ?? props.schema,
       data: opt?.data ?? props.data,
@@ -61,8 +69,13 @@ const useZod = <T = any>(props: UseZodProps<T>): UseZod<T> => {
           result.error.issues.map((v) => [v.path.join("."), v.message])
         ),
       });
+      return false;
     }
-    return result.success;
+
+    if (opt?.cb) {
+      opt.cb(result.data as T);
+    }
+    return true;
   };
 
   const validateAt = <T>(

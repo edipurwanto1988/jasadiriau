@@ -1,6 +1,6 @@
 import Resource from "frexp/lib/Resource";
 
-export class CategoryResource extends Resource {
+export default class CategoryResource extends Resource {
   toArray() {
     return {
       id: +this.id,

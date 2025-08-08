@@ -41,6 +41,10 @@ const DashboardIcon = React.lazy(() => import("@mui/icons-material/Dashboard"));
 
 const ExpandMore = React.lazy(() => import("@mui/icons-material/ExpandMore"));
 
+const AddBusinessOutlinedIcon = React.lazy(
+  () => import("@mui/icons-material/AddBusinessOutlined")
+);
+
 const SettingsOutlinedIcon = React.lazy(
   () => import("@mui/icons-material/SettingsOutlined")
 );
@@ -90,8 +94,13 @@ const ListItemButton = styled(MUIListItemButton)(({}) => ({
 }));
 
 const menu: SiderBarMenu = [
-  { path: "/", key: "dashboard", name: "Dashboard", icon: DashboardIcon },
-
+  { path: "/admin", key: "dashboard", name: "Dashboard", icon: DashboardIcon },
+  {
+    path: "/admin/business-profile",
+    key: "business-profile",
+    name: "Profil Bisnis",
+    icon: AddBusinessOutlinedIcon,
+  },
   {
     path: "/admin/setting",
     key: "setting",
@@ -165,7 +174,7 @@ const SidebarMenu = (props: any) => {
 
       <div>
         <List component={"div"} sx={{ px: 1 }}>
-          {menu.map(({key,...val}, i) => (
+          {menu.map(({ key, ...val }, i) => (
             <TooltipSidebarMenu key={key} {...val} />
           ))}
         </List>

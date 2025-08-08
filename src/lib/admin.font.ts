@@ -274,6 +274,5 @@ export const Inter = localFont({
     },
   ],
   variable: "--font-inter",
-  preload: true,
   display: "swap",
 });

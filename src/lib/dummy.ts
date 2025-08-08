@@ -1,6 +1,7 @@
+import { CreateBusinessProfileSchema } from "@/schema/business-profile.schema";
 import { InputSettingSchema } from "@/schema/setting.schema";
 
-export const imgUrl = '/images/placeholder.webp';
+export const imgUrl = "/images/placeholder.webp";
 
 export const settingFormGroups = [
   {
@@ -142,3 +143,25 @@ export const dummySetting: InputSettingSchema = {
   youtubeUrl: null,
   whatsappUrl: null,
 };
+
+export const dummyBusinessProfile: CreateBusinessProfileSchema = {
+  businessName: "",
+  status: "",
+  businessSocial: [],
+  businessContact: [],
+  user: {
+    name: "",
+    email: "",
+    isActive: null,
+    role: null
+  }
+};
+
+export const dummySocials = [
+  "facebook",
+  "instagram",
+  "tiktok",
+  "linkedin",
+  "youtube",
+  "twitter",
+];

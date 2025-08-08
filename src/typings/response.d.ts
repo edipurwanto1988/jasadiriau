@@ -17,7 +17,7 @@ type Advantage = {
   description: string;
   icon?: string;
   sortOrder?: number;
-  status: "inactive" | "active";
+  status: "active" | "inactive" | "pending";
 };
 
 type Slider = {
@@ -27,7 +27,7 @@ type Slider = {
   imageUrl: string;
   link?: string;
   sortOrder?: number;
-  status: "inactive" | "active";
+  status: "active" | "inactive" | "pending";
 };
 
 type Setting = {
@@ -49,4 +49,50 @@ type Setting = {
   linkedinUrl?: string;
   youtubeUrl?: string;
   whatsappUrl?: string;
+};
+
+type BusinessContact = {
+  id: number;
+  profileId: number;
+  whatsappNumber: string;
+  createdAt?: string; // ISO format
+  updatedAt?: string;
+  businessProfile?: BusinessProfile;
+};
+
+type BusinessSocial = {
+  id: number;
+  profileId: number;
+  name?: string | null;
+  platform:
+    | "facebook"
+    | "instagram"
+    | "tiktok"
+    | "whatsapp"
+    | "linkedin"
+    | "youtube"
+    | "twitter"
+    | "other";
+  url: string;
+  businessProfile?: BusinessProfile;
+};
+
+type BusinessProfile = {
+  id: number;
+  userId?: number;
+  businessName: string;
+  description?: string;
+  address?: string;
+  websiteUrl?: string;
+  status: StatusType;
+  user?: User;
+  BusinessSocial?: BusinessSocial[];
+  BusinessContact?: BusinessContact[];
+};
+
+type User = {
+  id: number;
+  name: number;
+  email: string;
+  phoneNumber?: string;
 };

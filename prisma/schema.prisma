@@ -17,6 +17,7 @@ datasource db {
 enum StatusType {
   active
   inactive
+  pending
 }
 
 enum Position {
@@ -25,40 +26,47 @@ enum Position {
   sidebar
 }
 
-model User {
-  id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar
-  email     String    @unique
-  password  String?   @db.VarChar(255)
-  isActive  Boolean?  @default(false) @map("is_active")
-  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt DateTime? @updatedAt @map("updated_at")
-
-  @@map("users")
+enum Platform {
+  facebook
+  instagram
+  twitter
+  linkedin
+  youtube
+  tiktok
+  whatsapp
+  other
 }
 
-model Service {
-  id            Int       @id @default(autoincrement()) @map("id")
-  name          String    @map("name")
-  slug          String?   @unique @map("slug")
-  description   String?   @map("description")
-  providerName  String    @map("provider_name")
-  contactNumber String?   @map("contact_number")
-  price         Decimal?  @default(0) @db.Decimal(15, 2)
-  logoUrl       String?   @map("logo_url")
-  profileImage  String?   @map("profile_image")
-  createdAt     DateTime? @default(now()) @map("created_at")
-  updatedAt     DateTime? @updatedAt @map("updated_at")
-  categoryId    Int       @map("category_id")
-  seoConfigId   Int?      @map("seo_config_id")
+enum Role {
+  user
+  operator
+  admin
+}
 
-  category Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  seo      SeoConfigs? @relation(fields: [seoConfigId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+enum TargetType {
+  profile
+  service
+  article
+}
 
-  tags   ServiceTags[]
-  images ServiceImages[]
+enum Action {
+  approved
+  rejected
+}
 
-  @@map("services")
+model User {
+  id              Int               @id @default(autoincrement())
+  name            String            @db.VarChar
+  email           String            @unique
+  password        String?           @db.VarChar(255)
+  role            Role?             @default(user) @map("role")
+  isActive        Boolean?          @default(false) @map("is_active")
+  createdAt       DateTime?         @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime?         @updatedAt @map("updated_at")
+  BusinessProfile BusinessProfile[]
+  Validation      Validation[]
+
+  @@map("users")
 }
 
 model Advantages {
@@ -91,16 +99,46 @@ model Category {
   @@map("categories")
 }
 
-model Tags {
-  id        Int       @id @default(autoincrement()) @map("id")
-  name      String    @map("name")
-  slug      String    @unique @map("slug")
-  createdAt DateTime? @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+model Menu {
+  id        Int        @id @default(autoincrement())
+  name      String
+  url       String     @map("url")
+  icon      String?    @db.VarChar()
+  position  Position   @default(header) @map("position")
+  sortOrder Int?       @default(0) @map("sort_order") @db.SmallInt()
+  status    StatusType @default(inactive) @map("status")
+  parentId  Int?       @map("parent_id")
+  createdAt DateTime?  @default(now()) @map("created_at")
+  updatedAt DateTime?  @updatedAt @map("updated_at")
 
-  serviceTags ServiceTags[]
+  parent   Menu?  @relation("MenuToSub", fields: [parentId], references: [id])
+  children Menu[] @relation("MenuToSub")
 
-  @@map("tags")
+  @@map("menus")
+}
+
+model Service {
+  id            Int       @id @default(autoincrement()) @map("id")
+  name          String    @map("name")
+  slug          String?   @unique @map("slug")
+  description   String?   @map("description")
+  providerName  String    @map("provider_name")
+  contactNumber String?   @map("contact_number")
+  price         Decimal?  @default(0) @db.Decimal(15, 2)
+  logoUrl       String?   @map("logo_url")
+  profileImage  String?   @map("profile_image")
+  createdAt     DateTime? @default(now()) @map("created_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
+  categoryId    Int       @map("category_id")
+  seoConfigId   Int?      @map("seo_config_id")
+
+  category Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  seo      SeoConfigs? @relation(fields: [seoConfigId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  tags   ServiceTags[]
+  images ServiceImages[]
+
+  @@map("services")
 }
 
 model ServiceTags {
@@ -145,24 +183,6 @@ model SeoConfigs {
   @@map("seo_configs")
 }
 
-model Menu {
-  id        Int        @id @default(autoincrement())
-  name      String
-  url       String     @map("url")
-  icon      String?    @db.VarChar()
-  position  Position   @default(header) @map("position")
-  sortOrder Int?       @default(0) @map("sort_order") @db.SmallInt()
-  status    StatusType @default(inactive) @map("status")
-  parentId  Int?       @map("parent_id")
-  createdAt DateTime?  @default(now()) @map("created_at")
-  updatedAt DateTime?  @updatedAt @map("updated_at")
-
-  parent   Menu?  @relation("MenuToSub", fields: [parentId], references: [id])
-  children Menu[] @relation("MenuToSub")
-
-  @@map("menus")
-}
-
 model Slider {
   id        Int        @id @default(autoincrement())
   title     String     @map("title")
@@ -200,4 +220,75 @@ model Setting {
   updatedAt              DateTime? @updatedAt @map("updated_at")
 
   @@map("settings")
+}
+
+model BusinessProfile {
+  id              Int               @id @default(autoincrement())
+  userId          Int?              @map("user_id") @db.Integer()
+  businessName    String            @map("business_name")
+  description     String?           @map("description")
+  address         String?           @map("address")
+  websiteUrl      String?           @map("website_url")
+  status          StatusType        @default(inactive) @map("status")
+  createdAt       DateTime?         @default(now()) @map("created_at")
+  updatedAt       DateTime?         @updatedAt @map("updated_at")
+  User            User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  BusinessSocial  BusinessSocial[]
+  BusinessContact BusinessContact[]
+
+  @@map("business_profiles")
+}
+
+model BusinessSocial {
+  id        Int       @id @default(autoincrement())
+  profileId Int       @map("profile_id")
+  name      String?
+  platform  Platform  @default(other) @map("platform")
+  url       String?    @map("url")
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  businessProfile BusinessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("business_socials")
+}
+
+model BusinessContact {
+  id             Int       @id @default(autoincrement())
+  profileId      Int       @map("profile_id")
+  whatsappNumber String    @map("whatsapp_number")
+  createdAt      DateTime? @default(now()) @map("created_at")
+  updatedAt      DateTime? @updatedAt @map("updated_at")
+
+  businessProfile BusinessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("business_contacts")
+}
+
+model Tags {
+  id        Int       @id @default(autoincrement()) @map("id")
+  name      String    @map("name")
+  slug      String    @unique @map("slug")
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  serviceTags ServiceTags[]
+
+  @@map("tags")
+}
+
+model Validation {
+  id           Int        @id @default(autoincrement())
+  operatorId   Int?       @map("operator_id")
+  operatorName String?    @map("operator_name")
+  targetType   TargetType @map("target_type")
+  targetId     Int        @map("target_id")
+  action       Action     @map("action")
+  note         String?    @map("note") @db.Text()
+  validatedAt  DateTime   @map("validated_at") @db.Timestamptz()
+  createdAt    DateTime?  @default(now()) @map("created_at")
+  updatedAt    DateTime?  @updatedAt @map("updated_at")
+  operator     User?      @relation(fields: [operatorId], references: [id], onDelete: SetNull)
+
+  @@map("validations")
 }

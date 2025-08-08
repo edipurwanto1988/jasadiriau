@@ -46,7 +46,11 @@ export const formatCountdown = (seconds: number): string => {
 };
 
 export const statusActiveLabel = (value: string) => {
-  return value === "inactive" ? "Tidak Aktif" : "Aktif";
+  return value === "inactive"
+    ? "Tidak Aktif"
+    : value === "active"
+    ? "Aktif"
+    : "Menunggu";
 };
 
 export const uniqueImage = (ext = "") => {

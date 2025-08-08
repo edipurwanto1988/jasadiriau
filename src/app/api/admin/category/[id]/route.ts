@@ -1,5 +1,5 @@
 import api from "@/utils/api";
-import { CategoryResource } from "@/http/resources/category.resource";
+import CategoryResource from "@/http/resources/category.resource";
 import {
   categoryDetail,
   deleteCategory,

@@ -45,7 +45,7 @@ const PageTemplate = (props: Props) => {
         }}
       >
         {props.onBack ? (
-          <IconButton size="small">
+          <IconButton size="small" onClick={props.onBack}>
             <ArrowBackOutlinedIcon fontSize="inherit" />
           </IconButton>
         ) : null}
@@ -67,7 +67,7 @@ const PageTemplate = (props: Props) => {
               variant="text"
               onClick={props.onCreate}
             >
-              Add New
+              Tambah Baru
             </ButtonWithIcon>
           ) : null}
 
@@ -78,7 +78,7 @@ const PageTemplate = (props: Props) => {
               variant="text"
               onClick={props.onUpdate}
             >
-              Edit Data
+              Ubah Data
             </ButtonWithIcon>
           ) : null}
 
@@ -89,7 +89,7 @@ const PageTemplate = (props: Props) => {
               variant="text"
               onClick={props.onDelete}
             >
-              Delete Data
+              Hapus Data
             </ButtonWithIcon>
           ) : null}
 
@@ -100,7 +100,7 @@ const PageTemplate = (props: Props) => {
               variant="text"
               onClick={props.onReload}
             >
-              Reload
+              Segarkan
             </ButtonWithIcon>
           ) : null}
         </div>

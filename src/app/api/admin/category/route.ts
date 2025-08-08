@@ -3,7 +3,7 @@ import {
   createCatgorySchema,
   updateCategorySchema,
 } from "@/schema/category.schema";
-import { CategoryResource } from "@/http/resources/category.resource";
+import CategoryResource from "@/http/resources/category.resource";
 import {
   categoryPaginate,
   createCategory,

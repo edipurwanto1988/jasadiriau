@@ -94,3 +94,45 @@ export const parseResponseError = async (
     }
   }
 };
+
+export const parseFormData = (formData: FormData) => {
+  const result: any = {};
+
+  for (const [key, value] of formData.entries()) {
+    const path = key.match(/[^[\]]+/g) || [];
+    let current = result;
+
+    path.forEach((part, idx) => {
+      const isLast = idx === path.length - 1;
+      const next = path[idx + 1];
+      const isArrayIndex = /^\d+$/.test(next || "");
+
+      if (isLast) {
+        if (Array.isArray(current)) {
+          current[+part] = value;
+        } else {
+          current[part] = value;
+        }
+      } else {
+        if (!current[part]) {
+          current[part] = isArrayIndex ? [] : {};
+        }
+        current = current[part];
+      }
+    });
+  }
+
+  return result;
+};
+
+export const paginate = (search: URLSearchParams) => {
+  if (search.has("page") && search.has("perPage")) {
+    const skip = String(
+      +(search.get("page") ?? 0) * +(search.get("perPage") ?? 10)
+    );
+    const take = search.get("perPage") ?? 10;
+    return { skip, take };
+  }
+
+  return { skip: 0, take: 10 };
+};

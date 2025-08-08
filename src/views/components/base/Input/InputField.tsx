@@ -5,11 +5,12 @@ import { TextFieldProps } from "@mui/material";
 const TextField = LoadComponent(() => import("@mui/material/TextField"));
 
 const InputField = React.memo(
-  ({ value, onChange, ...props }: TextFieldProps) => {
-    return <TextField {...props} value={value} onChange={onChange} />;
+  ({ ...props }: TextFieldProps) => {
+    return <TextField {...props} />;
   },
   (prev, next) =>
     prev.value === next.value &&
+    prev.defaultValue === next.defaultValue &&
     prev.error === next.error &&
     prev.helperText === next.helperText
 );
