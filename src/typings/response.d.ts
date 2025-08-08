@@ -86,8 +86,8 @@ type BusinessProfile = {
   websiteUrl?: string;
   status: StatusType;
   user?: User;
-  BusinessSocial?: BusinessSocial[];
-  BusinessContact?: BusinessContact[];
+  businessSocial?: BusinessSocial[];
+  businessContact?: BusinessContact[];
 };
 
 type User = {

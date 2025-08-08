@@ -6,7 +6,7 @@ import { parseZodError } from "./format";
 
 type HandlerFn = (
   req: NextRequest,
-  ctx: { params?: any }
+  ctx: { params?: Promise<any> }
 ) => Promise<NextResponse>;
 
 const api =
