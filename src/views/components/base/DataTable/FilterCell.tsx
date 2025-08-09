@@ -11,7 +11,7 @@ const Search = React.lazy(() => import("@mui/icons-material/Search"));
 export type FilterCellProps = {
   type: "text" | "date" | "select" | "datetime-local";
   value: any;
-  items?: InputSelectItem[];
+  items: InputSelectItem[];
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   options?: TextFieldProps;
   filterOptions?: TextFieldProps;

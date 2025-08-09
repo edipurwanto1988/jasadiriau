@@ -1,6 +1,5 @@
 import React from "react";
-import { useApp } from "@contexts/AppContext";
-import { useAuth } from "@contexts/AuthContext";
+import { useApp } from "@/views/contexts/AppContext";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -92,7 +91,7 @@ const GuestHeader = () => {
           </React.Suspense>
         </IconButton>
 
-        <Typography >{import.meta.env.VITE_APP_NAME}</Typography>
+        <Typography >{""}</Typography>
 
         <Box
           sx={{

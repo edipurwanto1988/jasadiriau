@@ -2,26 +2,23 @@ import React from "react";
 
 const AuthContext = React.createContext({
   isLogin: false,
-  user: undefined as Me | undefined,
+  user: undefined as any | undefined,
   setLogin(_: boolean) {},
-  setUser(_: Me) {},
-  updateAgent(_: any) {},
+  setUser(_: any) {},
   setToken(_: string) {},
-  getToken: (): string => "",
+  getToken: () => {},
   clear() {},
 });
-export function HydrateFallback() {
-  return <span />;
-}
+
 const AuthProvider = (props) => {
   const [isLogin, _setLogin] = React.useState(false);
-  const [_user, _setUser] = React.useState<Me | undefined>(undefined);
+  const [_user, _setUser] = React.useState<any | undefined>(undefined);
 
   const setLogin = (val: boolean) => {
     _setLogin(val);
   };
 
-  const setUser = (val: Me) => {
+  const setUser = (val: any) => {
     _setUser(val);
   };
 
@@ -33,10 +30,6 @@ const AuthProvider = (props) => {
 
   const getToken = () => {
     return localStorage.getItem("token");
-  };
-
-  const updateAgent = (value: any) => {
-    _setUser((p) => ({ ...p, agent: value }));
   };
 
   const clear = () => {
@@ -54,7 +47,6 @@ const AuthProvider = (props) => {
         user,
         setLogin,
         setUser,
-        updateAgent,
         setToken,
         getToken,
         clear,

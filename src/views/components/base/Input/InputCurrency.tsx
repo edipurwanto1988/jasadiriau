@@ -23,6 +23,8 @@ const InputCurrency = ({
   const formatValue = (val: string): string => {
     if (val === "" || val === null || val === undefined) return "";
 
+    if (!prefix) return val;
+
     // Remove prefix for formatting
     let rawValue = val.startsWith(prefix) ? val.substring(prefix.length) : val;
 
@@ -37,7 +39,7 @@ const InputCurrency = ({
     const absValue = isNegative ? numericValue.substring(1) : numericValue;
 
     // Split into integer and decimal parts
-    let [integer, decimal] = absValue.split(decimalSeparator);
+    let [integer, decimal] = absValue.split(decimalSeparator || ",");
 
     // Add thousand separators to the integer part
     integer = integer.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator ?? "");
@@ -62,8 +64,10 @@ const InputCurrency = ({
         {...props}
         value={formatValue(String(props.value))}
         onChange={(e) => {
-          e.target.value = e.target.value.replace(/[^0-9]/g, "");
-          props.onChange(e);
+          if (props.onChange) {
+            e.target.value = e.target.value.replace(/[^0-9]/g, "");
+            props.onChange(e);
+          }
         }}
       />
     </Suspense>

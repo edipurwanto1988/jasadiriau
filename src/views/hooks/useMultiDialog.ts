@@ -6,13 +6,6 @@ type Props<K extends readonly string[]> = {
   onClose?: Partial<Record<K[number], () => void>>;
 };
 
-
-// export type UseMultiDialog = {
-//   open: Record<string, boolean>;
-//   openDialog: (key: string) => () => void;
-//   closeDialog: (key: string) => () => void;
-// };
-
 const useMultiDialog = <K extends readonly string[]>(props: Props<K>) => {
   const [open, _setDialog] = React.useState<Record<K[number], boolean>>(
     Object.fromEntries(props.keys.map((v) => [v, false])) as Record<K[number], boolean>

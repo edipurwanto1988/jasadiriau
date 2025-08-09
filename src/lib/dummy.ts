@@ -153,8 +153,9 @@ export const dummyBusinessProfile: CreateBusinessProfileSchema = {
     name: "",
     email: "",
     isActive: null,
-    role: null
-  }
+    role: null,
+  },
+  address: "",
 };
 
 export const dummySocials = [
