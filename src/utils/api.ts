@@ -4,13 +4,13 @@ import { Prisma } from "@/generated/prisma";
 import { ZodError } from "zod";
 import { parseZodError } from "./format";
 
-type HandlerFn = (
+type HandlerFn<T> = (
   req: NextRequest,
-  ctx: { params?: Promise<any> }
+  ctx: { params: Promise<T> }
 ) => Promise<NextResponse>;
 
 const api =
-  (fn: HandlerFn): HandlerFn =>
+  <T>(fn: HandlerFn<T>): HandlerFn<T> =>
   async (req, ctx) => {
     try {
       return await fn(req, ctx);
