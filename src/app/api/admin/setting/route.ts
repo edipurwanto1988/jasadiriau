@@ -4,7 +4,7 @@ import SettingResource from "@/http/resources/setting.resource";
 import { createSettings, getSettingsID } from "@/http/services/setting.service";
 import { NextResponse } from "next/server";
 
-export const GET = api(async (req) => {
+export const GET = api(async (_) => {
   const result = await getSettingsID();
   return NextResponse.json(new SettingResource(result, true));
 });
