@@ -7,6 +7,13 @@ import {
   updateSlider,
 } from "@/http/services/slider.service";
 import { NextResponse } from "next/server";
+import path from "path";
+import fs from "fs";
+import { uniqueImage } from "@/utils/format";
+import omit from "lodash/omit";
+
+const uploadDir = path.join(process.cwd(), "public", "images");
+fs.mkdirSync(uploadDir, { recursive: true });
 
 export const GET = api(async (req) => {
   const result = await sliderAll();
@@ -18,7 +25,18 @@ export const POST = api(async (req) => {
   const validated = await createSliderSchema.parseAsync(
     Object.fromEntries(payload.entries())
   );
-  const result = await createSlider(validated);
+
+  const blob = payload.get("file") as Blob;
+  const ext = blob.type.split("/")[1] || "bin";
+  const fileName = `${uniqueImage(ext)}`;
+  const arrayBuffer = await blob.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+
+  const url = `/images/${fileName}`;
+
+  const result = await createSlider({ ...omit(validated, ["file"]), url });
+  fs.writeFileSync(path.join(uploadDir, fileName), buffer);
+
   return NextResponse.json(new SliderResource(result, true));
 });
 

@@ -24,15 +24,14 @@ export const getSliderID = async (id: number) => {
 };
 
 export const createSlider = async ({
-  file,
+  url,
   ...payload
-}: CreateSliderSchema) => {
+}: Omit<CreateSliderSchema, "file"> & { url: string }) => {
   const sliders = await prisma.slider.findMany({ select: { sortOrder: true } });
   payload.sortOrder = fillNextNumber(
     sliders.filter((f) => f.sortOrder !== null).map((v) => v.sortOrder!)
   );
 
-  const url = `/images/${file?.name}`;
   const created = await prisma.slider.create({
     data: {
       ...payload,
@@ -41,11 +40,6 @@ export const createSlider = async ({
       link: url,
     },
   });
-
-  fs.writeFileSync(
-    path.join(uploadDir, file.name),
-    Buffer.from(await file.arrayBuffer())
-  );
 
   return created;
 };

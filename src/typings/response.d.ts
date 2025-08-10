@@ -96,3 +96,16 @@ type User = {
   email: string;
   phoneNumber?: string;
 };
+
+type Service = {
+  id?: number;
+  name: string;
+  slug?: string;
+  description?: string;
+  price?: number;
+  status: "active" | "inactive" | "pending";
+  terms?: string;
+  categoryId: number;
+  profileId?: number;
+  category?: Category;
+};

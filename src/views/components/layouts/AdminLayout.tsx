@@ -1,6 +1,6 @@
 import React from "react";
 import Toolbar from "@mui/material/Toolbar";
-import Header from "@/views/components/base/Header/MainHeader";
+import Header from "@/views/components/base/Header/AdminHeader";
 import SidebarMenu from "@/views/components/base/Sidebar/SidebarMenu";
 import Box from "@mui/material/Box";
 import AppProvider from "@/views/contexts/AppContext";
@@ -9,7 +9,7 @@ import SnackbarProvider from "@/views/contexts/SnackbarContext";
 import AlertDialog from "../base/Dialog/AlertDialog";
 import AlertProvider from "@/views/contexts/AlertContext";
 
-export default function AppLayout({
+export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
