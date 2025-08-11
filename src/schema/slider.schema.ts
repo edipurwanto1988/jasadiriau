@@ -17,7 +17,7 @@ export type CreateSliderSchema = z.infer<typeof createSliderSchema>;
 
 export const updateSliderSchema = createSliderSchema.extend({
   id: z.coerce.number().int().nonoptional(),
-  file: z.instanceof(Blob).optional().nullish(),
+  file: z.file().optional().nullish(),
 });
 
 export type UpdateSliderSchema = z.infer<typeof updateSliderSchema>;
