@@ -1,10 +1,6 @@
-import InputLargeSearch from "@/views/components/base/Input/InputLargeSearch";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Image from "next/image";
 
 const jasaList = [
   {
@@ -37,9 +33,24 @@ const jasaList = [
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuChOR1M5xijyjniSYtlqfiC-5SPa-1D6XndpGpUHhctBArpbQtusCXvranHrzDFi1Hrd4pmYOvEEogaEWqnDVS4lWC-sP5MisVE3s437Yhsc8Baex0iGh9d7FOOrCcOtFWLm3txU6YID-11OH9JawUkTf2E01vaEseRPzggzK7JS70q9lqcRQNUq7p0QzHGX8Bi1ukc1bquMsuVCkR1NZvdIfG1cy25Wb38iQ3Br4BvA-y4tvbqLcEJGwl1TkohGcnVgQYTGsxdKBwt",
   },
+  {
+    title: "Jasa Pertamanan",
+    image:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuB28uac8lAPOsc1TkBFPB1hp2q7PCxk2q4zZjmZ_wLvybEiq-hoL7gPKphPPdUuM6xB8xE-7loLlD6WMG7lJNpLUwrQQZ5dwGuQDj243IpAqTYkgAcdiCWIn088dTH7Gc0jxegiKjMfjgpsOjNqEQGyl-1lAxLom727y07a-x0DzJQWHV28gGYT6orPqxki6pdqO8_xWanzGUw96o-g-l-6r-Oh6MbJRbzYQgBiRsVQEMAdNxhJCAokkJhxcjOluaQ5V5sOVvtQyuR-",
+  },
+  {
+    title: "Jasa Perbaikan Rumah",
+    image:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuAYIuHkyzuA3Jd6JvEd9aN-FChep-Vnvv3rg8qChO_MQYnFM75CfDDKxy7Tvmos_sbLHXhigdCVRfB3xqH-c0nart7rF1QcGuTMvfZRYmi5wvW6rV8BNPPUKlFNYyxQadmvVVBsmP55PyYE6fiFHciYEU24TrWlyt7vrrxN2A-7JWcR9pAHHkxwe4OMDFr_wzPWDrnIsHGv21omsaLy8lwLY7D59AjI18toyr9HtYA4b8oVVWBxTGtdkE02y5MukvTDCcJqthLb5GYQ",
+  },
+  {
+    title: "Jasa Perawatan Hewan",
+    image:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuChOR1M5xijyjniSYtlqfiC-5SPa-1D6XndpGpUHhctBArpbQtusCXvranHrzDFi1Hrd4pmYOvEEogaEWqnDVS4lWC-sP5MisVE3s437Yhsc8Baex0iGh9d7FOOrCcOtFWLm3txU6YID-11OH9JawUkTf2E01vaEseRPzggzK7JS70q9lqcRQNUq7p0QzHGX8Bi1ukc1bquMsuVCkR1NZvdIfG1cy25Wb38iQ3Br4BvA-y4tvbqLcEJGwl1TkohGcnVgQYTGsxdKBwt",
+  },
 ];
 
-const CategoryPopulerSection = () => {
+const AllCategorySection = () => {
   return (
     <Stack
       sx={{
@@ -55,7 +66,7 @@ const CategoryPopulerSection = () => {
           lineHeight={1.25}
           letterSpacing={"-0.015em"}
         >
-          Kategori Jasa Populer
+          Semua Kategori
         </Typography>
       </Box>
 
@@ -64,37 +75,34 @@ const CategoryPopulerSection = () => {
         alignItems={"stretch"}
         gap={"12px"}
         sx={{
-          flex: 1,
-          flexWrap: "nowrap",
+          display: "grid",
+          gridTemplateColumns: "repeat(5, 176px)",
           width: "100%",
-          overflow: "auto hidden",
-          pb: 2,
+          gap: "12px",
         }}
       >
         {jasaList.map((value, i) => (
-          <Stack key={i} flexShrink={0} width={160} spacing={2}>
-            <Box
-              sx={{
-                overflow: "hidden",
-                borderRadius: "var(--mui-shape-borderRadius)",
-                position: "relative",
-                width: 160,
-                height: 160,
-                backgroundImage: `url(${value.image})`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                backgroundSize: "cover",
-                aspectRatio: "1/1",
-              }}
-            ></Box>
-            <Box>
-              <Typography fontWeight={500}>{value.title}</Typography>
-            </Box>
-          </Stack>
+          <Box
+            key={i}
+            sx={{
+              p:2,
+              borderRadius: "var(--mui-shape-borderRadius)",
+              border: 1,
+              borderColor: "#cedbe8",
+              width: 176,
+              height: 74,
+              display:'flex',
+              flexDirection:"row",
+              alignItems:'center',
+              justifyContent:'center'
+            }}
+          >
+            <Typography fontWeight={700} lineHeight={1.25}> {value.title}</Typography>
+          </Box>
         ))}
       </Stack>
     </Stack>
   );
 };
 
-export default CategoryPopulerSection;
+export default AllCategorySection;

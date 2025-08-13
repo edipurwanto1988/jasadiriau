@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-const SectionSearch = () => {
+const SearchSection = () => {
   return (
     <Box
       sx={{
@@ -133,4 +133,4 @@ const SectionSearch = () => {
   );
 };
 
-export default SectionSearch;
+export default SearchSection;

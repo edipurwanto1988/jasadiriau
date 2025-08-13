@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";

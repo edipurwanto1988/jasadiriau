@@ -92,9 +92,10 @@ type BusinessProfile = {
 
 type User = {
   id: number;
-  name: number;
+  name: string;
   email: string;
-  phoneNumber?: string;
+  phoneNumber?: string | null;
+  role?: "user" | "operator" | "admin" | null;
 };
 
 type Service = {

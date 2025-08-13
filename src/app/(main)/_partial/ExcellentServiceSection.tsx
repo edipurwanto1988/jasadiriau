@@ -30,10 +30,11 @@ const ExcellentServiceSection = () => {
           flexWrap: "nowrap",
           width: "100%",
           overflow: "auto hidden",
+          pb: 2,
         }}
       >
-        {[...Array(3)].map((_, i) => (
-          <Stack key={i} flexShrink={0} width={223} spacing={1}>
+        {[...Array(100)].map((_, i) => (
+          <Stack key={i} width={223} spacing={2}>
             <Box
               sx={{
                 overflow: "hidden",
@@ -41,17 +42,13 @@ const ExcellentServiceSection = () => {
                 position: "relative",
                 width: 223,
                 height: 223,
+                backgroundImage: `url('/images/placeholder.webp')`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                aspectRatio: "1/1",
               }}
-            >
-              <Image
-                src={"/images/placeholder.webp"}
-                alt=""
-                objectFit="cover"
-                width={223}
-                height={223}
-                priority
-              />
-            </Box>
+            ></Box>
             <Box>
               <Typography>Jasa Pembersih AC</Typography>
             </Box>

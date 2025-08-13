@@ -37,14 +37,15 @@ let theme = createTheme({
           props: (props) => props.variant === "outlined",
           style: (theme) => ({
             "& .MuiInputBase-input": {
-              color: "#4A739C",
+              color: "var(--blue-color)",
+              minHeight: 40,
               "&::placeholder": {
-                color: "#4A739C",
+                color: "var(--blue-color)",
                 opacity: 1,
               },
             },
             "& .MuiOutlinedInput-root": {
-              backgroundColor: "#E8EDF5",
+              backgroundColor: "var(--input-bg-color)",
             },
             "& .MuiOutlinedInput-notchedOutline": {
               border: "unset",

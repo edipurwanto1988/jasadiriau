@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 const SearchIcon = LoadComponent(() => import("@mui/icons-material/Search"));
 const TextField = LoadComponent(() => import("@mui/material/TextField"));
 
-const InputLargeSearch = (props?: TextFieldProps) => {
+const InputSearch = (props?: TextFieldProps) => {
   return (
     <Box flexGrow={1}>
       <form>
@@ -29,4 +29,4 @@ const InputLargeSearch = (props?: TextFieldProps) => {
   );
 };
 
-export default InputLargeSearch;
+export default InputSearch;

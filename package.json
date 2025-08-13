@@ -2,6 +2,9 @@
   "name": "jasanesia",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "tsx  prisma/seed/index.ts"
+  },
   "scripts": {
     "dev": "next dev --turbopack -p 4000",
     "build": "next build",
@@ -18,15 +21,18 @@
     "@mui/material-nextjs": "^7.2.0",
     "@prisma/client": "^6.12.0",
     "@types/lodash": "^4.17.20",
+    "bcryptjs": "^3.0.2",
     "dayjs": "^1.11.13",
     "ezhooks": "^1.4.4",
     "frexp": "^0.2.7",
+    "jose": "^6.0.12",
     "lodash": "^4.17.21",
     "next": "15.4.2",
     "pg": "^8.16.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-draggable": "^4.5.0",
+    "sharp": "^0.34.3",
     "zod": "^4.0.14"
   },
   "devDependencies": {

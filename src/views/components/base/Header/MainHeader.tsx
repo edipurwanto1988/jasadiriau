@@ -8,10 +8,15 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
+import AuthMenuHeader from "./AuthMenuHeader";
 
 const SearchIcon = LoadComponent(() => import("@mui/icons-material/Search"));
 
-const MainHeader = () => {
+type Props = {
+  isLogin?: boolean;
+};
+
+const MainHeader = ({ isLogin }: Props) => {
   return (
     <header>
       <AppBar
@@ -73,7 +78,7 @@ const MainHeader = () => {
                 <Box>
                   <Link
                     variant="subtitle2"
-                    href=""
+                    href="category"
                     underline="none"
                     color="text.primary"
                   >
@@ -109,7 +114,7 @@ const MainHeader = () => {
               direction={"row"}
               justifyContent={"flex-end"}
               alignItems={"center"}
-              spacing={5}
+              spacing={4}
             >
               <Box
                 component={"form"}
@@ -139,30 +144,7 @@ const MainHeader = () => {
                 />
               </Box>
 
-              <Stack
-                direction={"row"}
-                spacing={1.5}
-                sx={{
-                  alignItems: "center",
-                  "& .MuiButtonBase-root": {
-                    minHeight: 40,
-                    fontWeight: 700,
-                    fontSize: 14,
-                  },
-                }}
-              >
-                <div>
-                  <Button variant="contained" disableElevation>
-                    Daftar
-                  </Button>
-                </div>
-
-                <div>
-                  <Button variant="contained" color="inherit" disableElevation>
-                    Masuk
-                  </Button>
-                </div>
-              </Stack>
+              <AuthMenuHeader isLogin={isLogin} />
             </Stack>
           </Stack>
         </Toolbar>

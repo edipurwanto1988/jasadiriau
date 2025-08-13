@@ -45,6 +45,17 @@ export const PUT = api(async (req) => {
   const validated = await updateSliderSchema.parseAsync(
     Object.fromEntries(payload.entries())
   );
-  const result = await updateSlider(validated);
+  let url;
+  const blob = payload.get("file") as Blob;
+  if (blob) {
+    const ext = blob.type.split("/")[1] || "bin";
+    const fileName = `${uniqueImage(ext)}`;
+    const arrayBuffer = await blob.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    fs.writeFileSync(path.join(uploadDir, fileName), buffer);
+    url = `/images/${fileName}`;
+  }
+
+  const result = await updateSlider({ ...omit(validated, ["file"]), url });
   return NextResponse.json(new SliderResource(result, true));
 });

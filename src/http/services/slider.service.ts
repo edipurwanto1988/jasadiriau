@@ -1,13 +1,8 @@
 import prisma from "@/lib/db";
 import { NotFoundException } from "@/utils/exception";
 import { CreateSliderSchema, UpdateSliderSchema } from "@/schema/slider.schema";
-import path from "path";
-import fs from "fs";
 import { fillNextNumber } from "@/utils/input";
 import { StatusType } from "@/generated/prisma";
-
-const uploadDir = path.join(process.cwd(), "public", "images");
-fs.mkdirSync(uploadDir, { recursive: true });
 
 export const sliderAll = async () => {
   return prisma.slider.findMany({
@@ -46,13 +41,13 @@ export const createSlider = async ({
 
 export const updateSlider = async ({
   id,
-  file,
+  url,
   ...payload
-}: UpdateSliderSchema) => {
+}: Omit<UpdateSliderSchema, "file"> & { url?: string }) => {
   return prisma.$transaction(async (tx) => {
     const current = await tx.slider.findFirstOrThrow({ where: { id } });
 
-    let url = current.imageUrl;
+    let currentUrl = current.imageUrl;
     if (payload.sortOrder !== current.sortOrder) {
       await tx.slider.updateMany({
         where: { sortOrder: payload.sortOrder, id: { not: current.id } },
@@ -60,8 +55,8 @@ export const updateSlider = async ({
       });
     }
 
-    if (file) {
-      url = `/images/${file?.name}`;
+    if (url) {
+      currentUrl = url;
     }
 
     const updated = await tx.slider.update({
@@ -69,17 +64,11 @@ export const updateSlider = async ({
       data: {
         ...payload,
         status: payload.status as StatusType,
-        imageUrl: url,
-        link: url,
+        imageUrl: currentUrl,
+        link: currentUrl,
       },
     });
 
-    if (file) {
-      fs.writeFileSync(
-        path.join(uploadDir, file.name),
-        Buffer.from(await file.arrayBuffer())
-      );
-    }
     return updated;
   });
 };

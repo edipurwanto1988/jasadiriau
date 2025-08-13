@@ -1,11 +1,16 @@
+"use client";
 import React, { Suspense, lazy, useRef } from "react";
 import IconButton from "@mui/material/IconButton";
 import { TextFieldProps } from "@mui/material/TextField";
+import LoadComponent from "../LoadComponent/LoadComponent";
+import InputAdornment from "@mui/material/InputAdornment";
 const VisibilityOff = lazy(() => import("@mui/icons-material/VisibilityOff"));
 
 type InputPasswordProps = TextFieldProps & {};
 
 const TextField = React.lazy(() => import("@mui/material/TextField"));
+
+const KeyIcon = LoadComponent(() => import("@mui/icons-material/Key"));
 
 const InputPassword = (props: InputPasswordProps) => {
   const ref = useRef<HTMLInputElement>(null);
@@ -30,32 +35,40 @@ const InputPassword = (props: InputPasswordProps) => {
       <TextField
         id="password"
         type="password"
+        name="password"
         autoComplete=""
-        InputProps={{
-          inputRef: ref,
-          endAdornment: (
-            <IconButton
-              size="small"
-              ref={show}
-              onClick={(e) => {
-                e.preventDefault();
-                if (ref.current !== null && ref.current.type === "password") {
-                  ref.current.type = "text";
-                  show.current!.innerHTML = off;
-                } else if (
-                  ref.current !== null &&
-                  ref.current.type === "text"
-                ) {
-                  ref.current.type = "password";
-                  show.current!.innerHTML = visibility;
-                }
-              }}
-            >
-              <Suspense fallback="loading">
-                <VisibilityOff fontSize="inherit" />
-              </Suspense>
-            </IconButton>
-          ),
+        slotProps={{
+          input: {
+            inputRef: ref,
+            startAdornment: (
+              <InputAdornment position="start">
+                <KeyIcon />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <IconButton
+                size="small"
+                ref={show}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (ref.current !== null && ref.current.type === "password") {
+                    ref.current.type = "text";
+                    show.current!.innerHTML = off;
+                  } else if (
+                    ref.current !== null &&
+                    ref.current.type === "text"
+                  ) {
+                    ref.current.type = "password";
+                    show.current!.innerHTML = visibility;
+                  }
+                }}
+              >
+                <Suspense fallback="loading">
+                  <VisibilityOff fontSize="inherit" />
+                </Suspense>
+              </IconButton>
+            ),
+          },
         }}
         {...props}
       />
