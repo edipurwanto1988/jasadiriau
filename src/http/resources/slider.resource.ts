@@ -6,8 +6,8 @@ export default class sliderResource extends Resource {
       id: +this.id,
       title: this.title,
       caption: this.caption,
-      imageUrl: `${process.env.BASE_URL}${this.imageUrl}`,
-      link: `${process.env.BASE_URL}${this.imageUrl}`,
+      imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${this.imageUrl}`,
+      link: `${process.env.NEXT_PUBLIC_BASE_URL}${this.imageUrl}`,
       sortOrder: +this.sortOrder,
       status: this.status,
     };
