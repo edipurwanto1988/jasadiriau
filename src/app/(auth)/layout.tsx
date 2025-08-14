@@ -19,6 +19,13 @@ export default async function Layout({
 }>) {
   return (
     <html lang="en" className={PlusJakartaSans.variable}>
+      <head>
+        <script
+          src="https://accounts.google.com/gsi/client"
+          async
+          defer
+        ></script>
+      </head>
       <body>
         <AppRouterCacheProvider options={{ key: "css", enableCssLayer: true }}>
           <ThemeProvider theme={theme}>

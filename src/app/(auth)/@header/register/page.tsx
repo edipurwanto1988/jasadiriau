@@ -2,7 +2,7 @@ import AppBar from "@mui/material/AppBar";
 import Link from "@mui/material/Link";
 import Toolbar from "@mui/material/Toolbar";
 
-export default function Page() {
+export default async function Page() {
   return (
     <AppBar elevation={0} color="transparent">
       <Toolbar>

@@ -16,6 +16,7 @@ export const getBusinessProfile = async (
 
   const res = await fetch(urlQuery, {
     signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
 
   return res.json();
@@ -26,6 +27,7 @@ export const postBusinessProfile = async (event?: EventSend) => {
   const res = await fetch(url.business, {
     method: isNewRecord ? "post" : "put",
     signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
     headers: {
       "content-type": "application/json",
     },
@@ -43,6 +45,7 @@ export const deleteBusinessProfile = (event?: EventSend) => {
   return fetch(`${url.business}/${event?.params?.id}`, {
     method: "delete",
     signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
 };
 
@@ -51,6 +54,7 @@ export const getBusinessProfileID = async (
 ): Promise<HttpResponse<BusinessProfile>> => {
   const res = await fetch(`${url.business}/${event?.params?.id}`, {
     signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
   return res.json();
 };

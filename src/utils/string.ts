@@ -62,3 +62,18 @@ export const uniqueImage = (ext = "") => {
 export const textLoading = (loading?: boolean, pending?: boolean) => {
   return loading ? "Mengambil data..." : pending ? "Memuat data..." : "";
 };
+
+export const decodeJwtResponse = (token: string) => {
+  let base64Url = token.split(".")[1];
+  let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  let jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+
+  return JSON.parse(jsonPayload);
+};

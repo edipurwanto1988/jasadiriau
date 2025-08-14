@@ -4,7 +4,7 @@ import authMiddleware from "./middlewares/auth.middleware";
 export default async function middleware(req: NextRequest) {
   const auth = await authMiddleware(req);
   if (auth) return auth;
-  
+
   return NextResponse.next();
 }
 

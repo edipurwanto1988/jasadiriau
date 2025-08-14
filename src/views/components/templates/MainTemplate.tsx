@@ -14,7 +14,7 @@ const MainTemplate = (props: Props) => {
       px={"10rem"}
       py={"1.25rem"}
       boxSizing={"border-box"}
-      minHeight={'100vh'}
+      minHeight={'100%'}
     >
       <Stack direction={"column"} maxWidth={"960px"} width={'960px'} gap={'12px'}>
         {props.children}

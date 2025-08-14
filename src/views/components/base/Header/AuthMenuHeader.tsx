@@ -22,7 +22,7 @@ const AuthMenuHeader = ({ isLogin }: Props) => {
   return (
     <Stack
       direction={"row"}
-      spacing={3}
+      spacing={2}
       sx={{
         alignItems: "center",
         "& .MuiButtonBase-root": {
@@ -61,7 +61,7 @@ const AuthMenuHeader = ({ isLogin }: Props) => {
         </>
       ) : (
         <>
-          <div>
+          {/* <div>
             <Button
               variant="contained"
               LinkComponent={"a"}
@@ -70,14 +70,14 @@ const AuthMenuHeader = ({ isLogin }: Props) => {
             >
               Daftar
             </Button>
-          </div>
+          </div> */}
 
           <div>
             <Button
               variant="contained"
               LinkComponent={"a"}
               href="login"
-              color="inherit"
+              // color="inherit"
               disableElevation
             >
               Masuk
