@@ -3,5 +3,6 @@ type SessionPayload = {
   email: string;
   name: string;
   role: string;
+  picture?: string;
   expiresAt: Date;
 };

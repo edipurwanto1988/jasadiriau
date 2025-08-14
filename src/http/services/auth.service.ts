@@ -18,6 +18,6 @@ export const authRegister = async (credential: string) => {
     update: input,
   });
 
-  await createSession(user);
+  await createSession({ ...user, picture: data.picture });
   return user;
 };

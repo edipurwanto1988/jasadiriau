@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { decodeJwtResponse } from "@/utils/string";
 import MainTemplate from "@/views/components/templates/MainTemplate";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";

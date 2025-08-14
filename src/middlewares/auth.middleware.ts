@@ -21,7 +21,7 @@ export default async function authMiddleware(req: NextRequest) {
     }
 
     if (admin && session.role !== Role.admin) {
-      return NextResponse.rewrite("/404");
+      return NextResponse.redirect(new URL("/404", req.nextUrl));
     }
   }
 

@@ -9,7 +9,7 @@ export default async function Page() {
         <Link
           fontWeight={900}
           fontSize={18}
-          href=""
+          href="/"
           underline="none"
           color="text.primary"
           variant="subtitle1"
