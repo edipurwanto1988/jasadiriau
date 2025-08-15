@@ -42,7 +42,7 @@ export default function Page() {
     if (typeof window === "undefined" && !(window as any).google) return;
 
     window.google?.accounts?.id?.initialize({
-      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      client_id: '92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com',
       callback: handleCredentialResponse,
       auto_select: true,
     });
@@ -84,6 +84,12 @@ export default function Page() {
         ) : (
           <div id="google-signin"></div>
         )}
+
+        <div>
+          <Typography variant="caption">
+            Dengan melanjutkan, Anda menyetujui Syarat & Kebijakan Privasi kami.
+          </Typography>
+        </div>
       </Stack>
     </MainTemplate>
   );
