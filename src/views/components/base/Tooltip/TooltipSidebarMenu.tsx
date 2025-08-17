@@ -11,6 +11,7 @@ import { styled } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
 import { SiderBarMenu } from "../Sidebar/SidebarMenu";
 import Loading from "@/views/components/base/Skeleton/Spinner";
+import ListItemText from "@mui/material/ListItemText";
 
 const ListItemButton = styled(MUIListItemButton)(({}) => ({
   "&.Mui-selected": {
@@ -90,6 +91,19 @@ const TooltipSidebarMenu = (props: Props) => {
               </React.Suspense>
             </ListItemIcon>
           ) : null}
+          <ListItemText
+            primary={props.name}
+            slotProps={{
+              primary: {
+                fontWeight: 500,
+                variant: "subtitle2",
+              },
+            }}
+            sx={{
+              ...(open ? { opacity: 1 } : { opacity: 0 }),
+              transition: "all .35s ease",
+            }}
+          />
         </ListItemButton>
       </div>
     </Tooltip>

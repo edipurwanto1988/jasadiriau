@@ -6,8 +6,8 @@ import MainTemplate from "@/views/components/templates/MainTemplate";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Metadata } from "next";
-import CategoryPopulerSection from "./_partial/CategoryPopulerSection";
-import AllCategorySection from "./_partial/AllCategorySection";
+import CategoryPopulerSection from "@/views/pages/category/CategoryPopulerSection";
+import AllCategorySection from "@/views/pages/category/AllCategorySection";
 
 export const metadata: Metadata = {
   title: "Kategori",

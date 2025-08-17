@@ -73,5 +73,5 @@ export const verifySession = cache(async () => {
   const session = await decrypt(cookie);
   if (!session?.userId) return null;
 
-  return { isAuth: true, userId: session.userId };
+  return { isAuth: true, userId: +session.userId };
 });

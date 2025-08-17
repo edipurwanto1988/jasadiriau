@@ -1,8 +1,5 @@
 "use client";
 import React from "react";
-import MainTemplate from "@/views/components/templates/MainTemplate";
-import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import useMutation from "ezhooks/lib/useMutation";
 import { postRegister } from "@/views/services/auth.service";

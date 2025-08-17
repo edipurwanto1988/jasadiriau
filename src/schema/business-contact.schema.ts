@@ -1,4 +1,4 @@
-import * as z from "zod";
+import z from "./zod.schema";
 
 export const createBusinessContactSchema = z.object({
   whatsappNumber: z.string(),

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import z from "./zod.schema";
 
 export const createCatgorySchema = z.object({
   name: z.string().nonempty().nonoptional(),

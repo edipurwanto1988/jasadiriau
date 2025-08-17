@@ -5,6 +5,7 @@ import theme from "@/views/public.theme";
 import { PlusJakartaSans } from "@/lib/plus-jakarta-sans.font";
 import Toolbar from "@mui/material/Toolbar";
 import "./globals.css";
+import Box from "@mui/material/Box";
 
 export const metadata: Metadata = {
   title: "Jasa di Riau",
@@ -22,11 +23,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={PlusJakartaSans.variable}>
-      <body>
+      <body className="main-body">
         <AppRouterCacheProvider options={{ key: "css", enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
             {header}
-            <Toolbar />
+
             {children}
             {footer}
           </ThemeProvider>

@@ -22,11 +22,7 @@ export default async function Layout({
   return (
     <html lang="en" className={PlusJakartaSans.variable}>
       <head>
-        <script
-          src="https://accounts.google.com/gsi/client"
-          async
-          defer
-        ></script>
+        <script src="https://accounts.google.com/gsi/client" async></script>
       </head>
       <body>
         <AppRouterCacheProvider options={{ key: "css", enableCssLayer: true }}>
@@ -35,7 +31,7 @@ export default async function Layout({
               {header}
               <Toolbar />
               {children}
-              <Snackbar/>
+              <Snackbar />
             </SnackbarProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>

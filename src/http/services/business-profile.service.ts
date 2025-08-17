@@ -1,11 +1,13 @@
 import prisma from "@/lib/db";
 import { NotFoundException } from "@/utils/exception";
 import {
+  CreateAccountBusinessProfileSchema,
   CreateBusinessProfileSchema,
+  UpdateAccountBusinessProfileSchema,
   UpdateBusinessProfileSchema,
 } from "@/schema/business-profile.schema";
 import { Platform, Prisma, Role, StatusType } from "@/generated/prisma";
-import { omit } from "lodash";
+import omit from "lodash/omit";
 
 export const businessProfilePaginate = async (qs: Record<string, any>) => {
   const where: Prisma.BusinessProfileWhereInput = {};
@@ -105,4 +107,78 @@ export const updateBusinessProfile = ({
 
 export const deleteBusinessProfile = (id: number) => {
   return prisma.businessProfile.delete({ where: { id } });
+};
+
+export const createAccountBusinessProfile = (
+  userId: number,
+  {
+    businessContact,
+    businessSocial,
+    ...payload
+  }: CreateAccountBusinessProfileSchema
+) => {
+  return prisma.$transaction(async (tx) => {
+    const data: Prisma.BusinessProfileUncheckedCreateInput = {
+      ...payload,
+      userId,
+      status: StatusType.pending,
+      BusinessContact: {
+        createMany: {
+          data: businessContact.map((val) => ({
+            ...val,
+            whatsappNumber: `62${val.whatsappNumber.trim()}`,
+          })),
+        },
+      },
+      BusinessSocial: {
+        createMany: {
+          data: businessSocial.map((val) => ({
+            ...val,
+            platform: val.platform as Platform,
+          })),
+        },
+      },
+    };
+    const profile = await tx.businessProfile.create({ data });
+    await tx.validation.create({
+      data: {
+        targetType: "profile",
+        targetId: profile.id,
+      },
+    });
+    return profile;
+  });
+};
+
+export const updateAccountBusinessProfile = ({
+  id,
+  businessContact,
+  businessSocial,
+  ...payload
+}: UpdateAccountBusinessProfileSchema) => {
+  return prisma.$transaction(async (tx) => {
+    const data: Prisma.BusinessProfileUpdateInput = {
+      ...payload,
+    };
+
+    for (const { id, ...contact } of businessContact) {
+      if (id) {
+        await tx.businessContact.update({ data: contact, where: { id } });
+      }
+    }
+
+    for (const { id, ...social } of businessSocial) {
+      if (id) {
+        await tx.businessSocial.update({
+          data: { ...social, platform: social.platform as Platform },
+          where: { id },
+        });
+      }
+    }
+
+    return tx.businessProfile.update({
+      where: { id: +id! },
+      data,
+    });
+  });
 };

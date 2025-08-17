@@ -1,4 +1,4 @@
-import * as z from "zod";
+import z from "./zod.schema";
 
 import { Platform } from "@/generated/prisma";
 

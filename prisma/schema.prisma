@@ -64,6 +64,7 @@ model User {
   registerKey     String?           @map("register_key")
   isActive        Boolean?          @default(false) @map("is_active")
   googleTokenId   String?           @map("google_token_id")
+  imageUrl        String?           @map("image_url")
   createdAt       DateTime?         @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt       DateTime?         @updatedAt @map("updated_at")
   BusinessProfile BusinessProfile[]
@@ -248,12 +249,23 @@ model Validation {
   operatorName String?    @map("operator_name")
   targetType   TargetType @map("target_type")
   targetId     Int        @map("target_id")
-  action       Action     @map("action")
+  action       Action?    @map("action")
   note         String?    @map("note") @db.Text()
-  validatedAt  DateTime   @map("validated_at") @db.Timestamptz()
+  validatedAt  DateTime?   @map("validated_at") @db.Timestamptz()
   createdAt    DateTime?  @default(now()) @map("created_at")
   updatedAt    DateTime?  @updatedAt @map("updated_at")
   operator     User?      @relation(fields: [operatorId], references: [id], onDelete: SetNull)
 
   @@map("validations")
+}
+
+model Image {
+  id         Int        @id @default(autoincrement())
+  entityType TargetType @default(profile) @map("entity_type")
+  entityId   Int        @map("entity_id")
+  imageUrl   String     @map("image_url")
+  createdAt  DateTime?  @default(now()) @map("created_at")
+  updatedAt  DateTime?  @updatedAt @map("updated_at")
+
+  @@map("images")
 }

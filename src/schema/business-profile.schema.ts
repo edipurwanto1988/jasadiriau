@@ -1,4 +1,4 @@
-import * as z from "zod";
+import z from "./zod.schema";
 
 import { StatusType } from "@/generated/prisma";
 import { createBusinessSocialSchema } from "./business-social.schema";
@@ -44,4 +44,31 @@ export const updateBusinessProfileSchema = createBusinessProfileSchema.extend({
 
 export type UpdateBusinessProfileSchema = z.infer<
   typeof updateBusinessProfileSchema
+>;
+
+export const createAccountBusinessProfileSchema =
+  createBusinessProfileSchema.omit({ user: true, status: true });
+
+export type CreateAccountBusinessProfileSchema = z.infer<
+  typeof createAccountBusinessProfileSchema
+>;
+
+export const updateAccountBusinessProfileSchema = updateBusinessProfileSchema
+  .omit({ user: true, status: true })
+  .extend({
+    id: z.coerce.number().int().nonoptional(),
+    businessSocial: z.array(
+      createBusinessSocialSchema.extend({
+        id: z.coerce.number().int().optional().nullish(),
+      })
+    ),
+    businessContact: z.array(
+      createBusinessContactSchema.extend({
+        id: z.coerce.number().int().optional().nullish(),
+      })
+    ),
+  });
+
+export type UpdateAccountBusinessProfileSchema = z.infer<
+  typeof updateAccountBusinessProfileSchema
 >;

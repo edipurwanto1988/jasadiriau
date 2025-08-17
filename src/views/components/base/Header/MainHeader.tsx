@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
 import AuthMenuHeader from "./AuthMenuHeader";
+import { Divider } from "@mui/material";
 
 const SearchIcon = LoadComponent(() => import("@mui/icons-material/Search"));
 
@@ -21,9 +22,16 @@ const MainHeader = ({ isLogin }: Props) => {
       <AppBar
         elevation={0}
         color="inherit"
-        sx={{ borderBottom: 1, borderColor: "divider" }}
+        position="fixed"
+        sx={{
+          borderBottom: 1,
+          backgroundColor:"var(--bg-color)",
+          borderColor: "divider",
+          zIndex: "calc(var(--mui-zIndex-drawer) + 1)",
+        }}
       >
         <Toolbar sx={{ overflow: "hidden" }}>
+          <Divider/>
           <Stack
             flex={1}
             direction={"row"}

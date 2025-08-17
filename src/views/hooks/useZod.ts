@@ -1,5 +1,5 @@
 import React from "react";
-import * as z from "zod";
+import z from "./zod.schema";
 
 export type UseZodProps<T> = {
   schema: z.ZodObject;

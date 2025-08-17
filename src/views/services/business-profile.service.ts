@@ -1,7 +1,8 @@
 import { EventSend } from "ezhooks";
 
 const url = {
-  business: `/api/admin/business-profile`,
+  business: `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/business-profile`,
+  account: `${process.env.NEXT_PUBLIC_BASE_URL}/api/account/business-profile`,
 };
 
 export const getBusinessProfile = async (
@@ -56,5 +57,25 @@ export const getBusinessProfileID = async (
     signal: event?.ctr?.signal,
     next: { revalidate: 0 },
   });
+  return res.json();
+};
+
+export const postAccountBusinessProfile = async (
+  event?: EventSend
+): Promise<HttpResponse<BusinessProfile>> => {
+  const isNewRecord = !(event?.data && event.data().id);
+  const res = await fetch(url.account, {
+    method: isNewRecord ? "post" : "put",
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(event!.data!()),
+  });
+
+  if (!res.ok) {
+    throw res;
+  }
   return res.json();
 };

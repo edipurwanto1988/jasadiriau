@@ -26,8 +26,8 @@ const PageTemplate = (props: Props) => {
     <Stack
       flex={1}
       width={"100%"}
-      height={"100%"}
-      minHeight={"100%"}
+      height={"100vh"}
+      minHeight={"100vh"}
       overflow={"hidden"}
       direction={"column"}
     >
@@ -40,7 +40,7 @@ const PageTemplate = (props: Props) => {
           px: 2,
           boxSizing: "border-box",
           borderBottom: 1,
-          borderColor: "divider",
+          borderColor: "var(--mui-palette-default-divider)",
           minHeight: "37px",
         }}
       >
