@@ -21,7 +21,25 @@ export const businessProfilePaginate = async (qs: Record<string, any>) => {
     take: +(qs.take ?? 10),
     skip: +(qs.skip ?? 0),
   });
-  return { total: count, data: results };
+
+  const images = await prisma.image.findMany({
+    where: {
+      entityId: {
+        in: results.map((v) => v.id),
+      },
+      entityType: "profile",
+    },
+  });
+
+  const newResult = results.map((val) => {
+    const image = images.find((f) => f.entityId === val.id);
+    if (image) {
+      Object.assign(val, { imageUrl: image.imageUrl });
+    }
+    return val;
+  });
+
+  return { total: count, data: newResult };
 };
 
 export const getBusinessProfileID = async (id: number) => {
@@ -32,6 +50,11 @@ export const getBusinessProfileID = async (id: number) => {
   if (!model) {
     throw new NotFoundException("BusinessProfile");
   }
+
+  const image = await prisma.image.findFirst({
+    where: { entityId: model.id, entityType: "profile" },
+  });
+  Object.assign(model, { imageUrl: image?.imageUrl });
   return model;
 };
 

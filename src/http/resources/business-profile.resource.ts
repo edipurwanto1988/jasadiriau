@@ -14,6 +14,9 @@ export default class BusinessProfileResource extends Resource {
       websiteUrl: this.websiteUrl,
       status: this.status,
       user: new UserResource(this.User),
+      imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${
+        this.imageUrl ?? "/images/placeholder.webp"
+      }`,
       businessSocial: BusinessSocialResource.collection(this.BusinessSocial),
       businessContact: BusinessContactResource.collection(this.BusinessContact),
     };

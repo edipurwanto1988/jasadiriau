@@ -8,6 +8,7 @@ export default class UserResource extends Resource {
       email: this.email,
       isActive: this.isActive,
       role: this.role,
+      imageUrl: this.imageUrl,
     };
   }
 }

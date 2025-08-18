@@ -79,3 +79,12 @@ export const postAccountBusinessProfile = async (
   }
   return res.json();
 };
+
+
+export const deleteAccountBusinessProfile = (event?: EventSend) => {
+  return fetch(`${url.account}/${event?.params?.id}`, {
+    method: "delete",
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
+  });
+};

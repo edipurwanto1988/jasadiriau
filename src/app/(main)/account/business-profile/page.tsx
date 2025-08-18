@@ -7,7 +7,10 @@ import useTable from "ezhooks/lib/useTable";
 import { getPagination } from "@/utils/table";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { useAlert } from "@/views/contexts/AlertContext";
-import { getBusinessProfile } from "@/views/services/business-profile.service";
+import {
+  deleteAccountBusinessProfile,
+  getBusinessProfile,
+} from "@/views/services/business-profile.service";
 import { statusActiveLabel } from "@/utils/string";
 import { useRouter } from "next/navigation";
 import { ccFormat } from "@/utils/format";
@@ -40,20 +43,22 @@ export default function Page() {
         confirm: {
           onClick: () => {
             alert.set({ loading: true });
-            // mutation.send({
-            //   service: (event) => deleteCategory({ ...event, params: { id } }),
-            //   onSuccess: () => {
-            //     openSnackbar("Profil Bisnis berhasil dihapuskan.");
-            //     alert.reset();
-            //     const timer = setTimeout(() => {
-            //       table.reload();
-            //       clearTimeout(timer);
-            //     }, 1000);
-            //   },
-            //   onAlways: () => {
-            //     alert.set({ loading: false });
-            //   },
-            // });
+            deleteAccountBusinessProfile({ params: { id } })
+              .then((resp) => {
+                if (!resp.ok) {
+                  throw resp;
+                }
+                openSnackbar("Profil Bisnis berhasil dihapuskan.");
+                alert.reset();
+                const timer = setTimeout(() => {
+                  table.reload();
+                  clearTimeout(timer);
+                }, 1000);
+              })
+              .catch((e) => {})
+              .finally(() => {
+                alert.set({ loading: false });
+              });
           },
         },
       });
@@ -87,8 +92,13 @@ export default function Page() {
           },
           {
             label: "Foto",
-            value: (_) => (
-              <Avatar variant="rounded" sx={{ width: 32, height: 32 }} />
+            value: (value) => (
+              <Avatar
+                alt={value.businessName}
+                src={value.imageUrl}
+                variant="rounded"
+                sx={{ width: 32, height: 32 }}
+              />
             ),
             head: { padding: "checkbox", align: "center" },
             align: "center",

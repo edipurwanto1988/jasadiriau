@@ -1,4 +1,5 @@
 import { CreateBusinessProfileSchema } from "@/schema/business-profile.schema";
+import { CreateImageSchema } from "@/schema/image.schema";
 import { InputSettingSchema } from "@/schema/setting.schema";
 
 export const imgUrl = "/images/placeholder.webp";
@@ -166,3 +167,9 @@ export const dummySocials = [
   "youtube",
   "twitter",
 ];
+
+export const inputImage: CreateImageSchema = {
+  entityType: "",
+  entityId: 0,
+  file: null,
+};

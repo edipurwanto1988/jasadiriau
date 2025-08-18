@@ -9,6 +9,8 @@ import IconButton from "@mui/material/IconButton";
 import { Box } from "@mui/material";
 import { signout } from "@/actions/auth.action";
 import Dropdown from "../Dropdown/Dropdown";
+import useRequest from "ezhooks/lib/useRequest";
+import { getCurrent } from "@/views/services/user.service";
 
 const NotificationsOutlinedIcon = LoadComponent(
   () => import("@mui/icons-material/NotificationsOutlined")
@@ -19,6 +21,30 @@ type Props = {
 };
 
 const AuthMenuHeader = ({ isLogin }: Props) => {
+  const client = useRequest({
+    data: {
+      user: {
+        name: "",
+        imageUrl: undefined,
+      },
+    },
+  });
+  React.useEffect(() => {
+    if (!isLogin) return;
+    client.exec({
+      service: getCurrent,
+      onSuccess: (resp) => {
+        return {
+          user: resp.data,
+        };
+      },
+    });
+
+    return () => {
+      client.cancel();
+    };
+  }, [isLogin]);
+
   return (
     <Stack
       direction={"row"}
@@ -48,7 +74,17 @@ const AuthMenuHeader = ({ isLogin }: Props) => {
           </Box>
 
           <Dropdown
-            icon={<Avatar />}
+            icon={
+              <Avatar
+                src={client.data.user.imageUrl}
+                alt={client.data.user.name}
+                slotProps={{
+                  img: {
+                    referrerPolicy: "no-referrer",
+                  },
+                }}
+              />
+            }
             menu={[
               {
                 text: "Logout",

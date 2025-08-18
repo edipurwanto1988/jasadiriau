@@ -20,16 +20,33 @@ import { getBusinessProfileID } from "@/views/services/business-profile.service"
 import useRequest from "ezhooks/lib/useRequest";
 import { ucwords } from "@/utils/string";
 import { useParams, useRouter } from "next/navigation";
+import BusinessSocialItem from "@/views/pages/busines-profile/BusinessSocialItem";
+import BusinessContactItem from "@/views/pages/busines-profile/BusinessContactItem";
+import BusinessWebsiteItem from "@/views/pages/busines-profile/BusinessWebsiteItem";
+import ProfileUpload from "@/views/pages/image/ProfileUpload";
+import useDialog from "@/views/hooks/useDialog";
+import useMutation from "ezhooks/lib/useMutation";
+import { inputImage } from "@/lib/dummy";
+import { postImage } from "@/views/services/image.service";
+
+const EditIcon = LoadComponent(() => import("@mui/icons-material/Edit"));
 
 export default function Page() {
   const { id } = useParams();
   const router = useRouter();
-
+  const dialog = useDialog();
+  const openSnackbar = useSnackbar();
   const [tab, setTab] = React.useState("overview");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
   };
+
+  const mutation = useMutation({
+    defaultValue: {
+      image: inputImage,
+    },
+  });
 
   const client = useRequest<BusinessProfile>({
     data: {
@@ -43,7 +60,31 @@ export default function Page() {
     client.exec({
       service: (event) => getBusinessProfileID({ ...event, params: { id } }),
       onSuccess: (resp) => {
+        mutation.setData({
+          image: {
+            entityType: "profile",
+            entityId: +id!,
+          },
+        });
         return resp.data;
+      },
+    });
+  };
+
+  const onSaveImage = (blob: Blob, close: () => void) => {
+    mutation.send({
+      data: {
+        ...mutation.data().image,
+        file: new File([blob], `cropped.webp`, {
+          type: blob.type,
+          lastModified: Date.now(),
+        }),
+      },
+      service: postImage,
+      onSuccess: (resp) => {
+        fetchData();
+        openSnackbar("Profil baru berhasil diunggah.");
+        close();
       },
     });
   };
@@ -70,7 +111,24 @@ export default function Page() {
       <Box sx={{ width: "100%", minHeight: "100%", overflow: "hidden auto" }}>
         <Stack direction={"column"} spacing={4} sx={{ px: 3, py: 2 }}>
           <Stack direction={"row"} spacing={2}>
-            <Avatar variant="rounded" sx={{ width: 128, height: 128 }} />
+            <Stack direction={"column"} alignItems={"center"} spacing={1}>
+              <Avatar
+                src={client.data.imageUrl}
+                alt={client.data.businessName}
+                variant="rounded"
+                sx={{ width: 128, height: 128 }}
+              />
+
+              <Box>
+                <Button
+                  size="small"
+                  endIcon={<EditIcon fontSize="inherit" />}
+                  onClick={dialog.openDialog}
+                >
+                  Ubah Profil
+                </Button>
+              </Box>
+            </Stack>
 
             <Stack direction={"column"}>
               <ListItemText
@@ -153,56 +211,13 @@ export default function Page() {
                   </Box>
 
                   <Stack direction={"column"} spacing={2}>
-                    {(client.data.businessSocial ?? []).map((social, i) => (
-                      <Stack
-                        key={i}
-                        direction={"row"}
-                        alignItems={"center"}
-                        spacing={2}
-                      >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            backgroundColor: "var(--input-bg-color)",
-                            p: 1,
-                            borderRadius: "var(--mui-shape-borderRadius)",
-                          }}
-                        >
-                          <Image
-                            src={`/icons/${social.platform}.svg`}
-                            alt={social.platform}
-                            width={24}
-                            height={24}
-                            loading="lazy"
-                          />
-                        </Box>
-                        <Box flexGrow={1}>
-                          <Typography>
-                            Ikuti kami di {ucwords(social.platform)}
-                          </Typography>
-                        </Box>
-                        <Box>
-                          <Link
-                            variant="subtitle1"
-                            href={social.url}
-                            underline="none"
-                            target="_blank"
-                            sx={{
-                              display: "inline-block",
-                              backgroundColor: "var(--input-bg-color)",
-                              p: 0.5,
-                              textAlign: "center",
-                              color: "text.primary",
-                              minWidth: 84,
-                              borderRadius: "var(--mui-shape-borderRadius)",
-                            }}
-                          >
-                            Ikuti
-                          </Link>
-                        </Box>
-                      </Stack>
-                    ))}
+                    <BusinessWebsiteItem url={client.data.websiteUrl} />
+                    <BusinessContactItem
+                      data={client.data.businessContact ?? []}
+                    />
+                    <BusinessSocialItem
+                      data={client.data.businessSocial ?? []}
+                    />
                   </Stack>
                 </Stack>
               </Stack>
@@ -223,6 +238,13 @@ export default function Page() {
         <Toolbar />
         <Toolbar />
         <SnacbarLoading loading={client.loading} />
+        <ProfileUpload
+          dialog={dialog}
+          onSave={(img, close) => {
+            console.log(img);
+            onSaveImage(img as Blob, close);
+          }}
+        />
       </Box>
     </PageTemplate>
   );

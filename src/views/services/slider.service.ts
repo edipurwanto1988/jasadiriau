@@ -9,8 +9,8 @@ export const getSlider = async (
   event?: EventSend
 ): Promise<HttpResponse<Slider[]>> => {
   const res = await fetch(url.slider, {
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
 
   return res.json();
@@ -21,8 +21,8 @@ export const postSlider = async (event?: EventSend) => {
 
   const res = await fetch(url.slider, {
     method: isNewRecord ? "post" : "put",
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
     body: utils.toFormData(event!.data!()),
   });
 
@@ -35,8 +35,8 @@ next: { revalidate: 0 },
 export const deleteSlider = (event?: EventSend) => {
   return fetch(`${url.slider}/${event?.params?.id}`, {
     method: "delete",
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
 };
 
@@ -44,8 +44,8 @@ export const getSliderID = async (
   event?: EventSend
 ): Promise<HttpResponse<Slider>> => {
   const res = await fetch(`${url.slider}/${event?.params?.id}`, {
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
   return res.json();
 };

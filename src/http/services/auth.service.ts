@@ -10,6 +10,7 @@ export const authRegister = async (credential: string) => {
     name: data.name,
     email: data.email,
     googleTokenId: credential,
+    imageUrl: data.picture,
   };
 
   const user = await prisma.user.upsert({

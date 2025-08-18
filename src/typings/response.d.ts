@@ -88,6 +88,7 @@ type BusinessProfile = {
   user?: User;
   businessSocial?: BusinessSocial[];
   businessContact?: BusinessContact[];
+  imageUrl?: string;
 };
 
 type User = {
@@ -96,6 +97,7 @@ type User = {
   email: string;
   phoneNumber?: string | null;
   role?: "user" | "operator" | "admin" | null;
+  imageUrl?: string;
 };
 
 type Service = {
@@ -109,4 +111,11 @@ type Service = {
   categoryId: number;
   profileId?: number;
   category?: Category;
+};
+
+type Image = {
+  id?: number;
+  entityType: "profile" | "service" | "article";
+  entityId: number;
+  imageUrl?: string;
 };
