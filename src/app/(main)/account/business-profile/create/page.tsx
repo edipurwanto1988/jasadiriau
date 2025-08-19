@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import AccountCreateBusiness from "@/views/pages/busines-profile/AccountCreateBusiness";
 
 export const metadata: Metadata = {
-  title: "Bisnis Profil",
+  title: "Profil Bisinis",
   description:
     "Isi formulir pendaftaran untuk membuat profil bisnis Anda dan mulai menjangkau lebih banyak pelanggan.",
 };

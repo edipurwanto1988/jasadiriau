@@ -50,7 +50,15 @@ export const statusActiveLabel = (value: string) => {
     ? "Tidak Aktif"
     : value === "active"
     ? "Aktif"
-    : "Menunggu";
+    : "Menunggu Persetujuan";
+};
+
+export const actionLabel = (value?: string | null) => {
+  return value === "rejected"
+    ? "Ditolak"
+    : value === "approved"
+    ? "Disetujui"
+    : "Menunggu Persetujuan";
 };
 
 export const uniqueImage = (ext = "") => {

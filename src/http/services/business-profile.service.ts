@@ -55,6 +55,10 @@ export const getBusinessProfileID = async (id: number) => {
     where: { entityId: model.id, entityType: "profile" },
   });
   Object.assign(model, { imageUrl: image?.imageUrl });
+  const validations = await prisma.validation.findMany({
+    where: { targetId: model.id, targetType: "profile" },
+  });
+  Object.assign(model, { validations: validations });
   return model;
 };
 

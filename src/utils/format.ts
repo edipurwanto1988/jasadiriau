@@ -45,9 +45,10 @@ export const rupiah = (value: number) => {
 };
 
 export const dateFormat = (
-  value: string,
+  value?: string,
   option?: { locale?: "en" | "id"; time?: boolean; date?: boolean }
 ) => {
+  if (!value) return "-";
   let format = "DD-MM-YYYY";
   const opt = {
     locale: "id",

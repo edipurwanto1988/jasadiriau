@@ -11,14 +11,10 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
 import Fade from "@mui/material/Fade";
-import Avatar from "@mui/material/Avatar";
-import Image from "next/image";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { getBusinessProfileID } from "@/views/services/business-profile.service";
 import useRequest from "ezhooks/lib/useRequest";
-import { ucwords } from "@/utils/string";
 import { useParams, useRouter } from "next/navigation";
 import BusinessSocialItem from "@/views/pages/busines-profile/BusinessSocialItem";
 import BusinessContactItem from "@/views/pages/busines-profile/BusinessContactItem";
@@ -28,8 +24,16 @@ import useDialog from "@/views/hooks/useDialog";
 import useMutation from "ezhooks/lib/useMutation";
 import { inputImage } from "@/lib/dummy";
 import { postImage } from "@/views/services/image.service";
+import StatusChip from "@/views/components/base/Chip/StatusChip";
+import Badge from "@mui/material/Badge";
+import Image from "next/image";
+import Paper from "@mui/material/Paper";
+import ActionChip from "@/views/components/base/Chip/ActionChip";
+import { dateFormat } from "@/utils/format";
 
 const EditIcon = LoadComponent(() => import("@mui/icons-material/Edit"));
+
+const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
 export default function Page() {
   const { id } = useParams();
@@ -53,6 +57,7 @@ export default function Page() {
       id: 0,
       businessName: "",
       status: "pending",
+      imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`,
     },
   });
 
@@ -112,12 +117,25 @@ export default function Page() {
         <Stack direction={"column"} spacing={4} sx={{ px: 3, py: 2 }}>
           <Stack direction={"row"} spacing={2}>
             <Stack direction={"column"} alignItems={"center"} spacing={1}>
-              <Avatar
-                src={client.data.imageUrl}
-                alt={client.data.businessName}
-                variant="rounded"
-                sx={{ width: 128, height: 128 }}
-              />
+              <Box
+                sx={{
+                  position: "relative",
+                  overflow: "hidden",
+                  width: 128,
+                  height: 128,
+                  borderRadius: "8px",
+                  backgroundColor: "var(--input-bg-color)",
+                }}
+              >
+                <Image
+                  src={client.data.imageUrl ?? profile}
+                  alt={client.data.businessName}
+                  width={128}
+                  height={128}
+                  priority
+                  style={{ objectFit: "cover" }}
+                />
+              </Box>
 
               <Box>
                 <Button
@@ -130,24 +148,28 @@ export default function Page() {
               </Box>
             </Stack>
 
-            <Stack direction={"column"}>
-              <ListItemText
-                primary={client.data.businessName}
-                secondary={"Kategori"}
-                slotProps={{
-                  primary: {
-                    fontSize: 22,
-                    fontWeight: 700,
-                    letterSpacing: "-0.015em",
-                    lineHeight: 1.25,
-                  },
-                  secondary: {
-                    variant: "subtitle1",
-                    color: "var(--blue-color)",
-                    fontWeight: 400,
-                  },
-                }}
-              />
+            <Stack direction={"column"} justifyContent={"flex-start"}>
+              <Box>
+                <ListItemText
+                  primary={client.data.businessName}
+                  secondary={"Kategori"}
+                  slotProps={{
+                    primary: {
+                      fontSize: 22,
+                      fontWeight: 700,
+                      letterSpacing: "-0.015em",
+                      lineHeight: 1.25,
+                    },
+                    secondary: {
+                      variant: "subtitle1",
+                      color: "var(--blue-color)",
+                      fontWeight: 400,
+                    },
+                  }}
+                />
+              </Box>
+
+              <StatusChip status={client.data.status} icon />
             </Stack>
           </Stack>
 
@@ -170,7 +192,29 @@ export default function Page() {
             >
               <Tab value="overview" label="Overview" />
               <Tab value="description" label="Services" />
-              <Tab value="galeri" label="Reviews" />
+              <Tab value="review" label="Reviews" />
+              <Tab
+                value="validation"
+                label={
+                  <Badge
+                    variant="dot"
+                    color="error"
+                    invisible={
+                      !(client.data.validations ?? []).some(
+                        (v) => v.action === null
+                      )
+                    }
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        top: 11,
+                        right: -7,
+                      },
+                    }}
+                  >
+                    <Box component={"span"}>validasi</Box>
+                  </Badge>
+                }
+              />
             </Tabs>
 
             <Fade key={"overview"} in={tab === "overview"} unmountOnExit>
@@ -231,6 +275,40 @@ export default function Page() {
                   p={2}
                   spacing={2}
                 ></Stack>
+              </Stack>
+            </Fade>
+
+            <Fade key={"validation"} in={tab === "validation"} unmountOnExit>
+              <Stack direction={"column"} width={400} py={2}>
+                {(client.data.validations ?? []).map((value) => (
+                  <Paper variant="outlined" key={value.id} sx={{ p: 2 }}>
+                    <Stack direction={"column"} spacing={1}>
+                      <ActionChip action={value.action} icon />
+                      <Typography variant="body2">
+                        Divalidasi Tanggal:{" "}
+                        {dateFormat(value.validatedAt, { time: true })}
+                      </Typography>
+
+                      <ListItemText
+                        primary="Catatan"
+                        secondary={value.note ?? "-"}
+                        slotProps={{
+                          primary: {
+                            variant: "body2",
+                          },
+                          secondary: {
+                            variant: "body2",
+                          },
+                        }}
+                      />
+
+                      <Typography variant="body2" textAlign={"right"}>
+                        Dibuat Tanggal:{" "}
+                        {dateFormat(value.createdAt, { time: true })}
+                      </Typography>
+                    </Stack>
+                  </Paper>
+                ))}
               </Stack>
             </Fade>
           </Box>

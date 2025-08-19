@@ -4,7 +4,6 @@ import React from "react";
 import List from "@mui/material/List";
 import { SvgIconTypeMap } from "@mui/material/SvgIcon";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { useRouter } from "next/navigation";
 import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import TooltipAccountSidebarMenu from "../Tooltip/TooltipAccountSidebarMenu";
@@ -29,6 +28,9 @@ const AddBusinessOutlinedIcon = React.lazy(
 const SettingsOutlinedIcon = React.lazy(
   () => import("@mui/icons-material/SettingsOutlined")
 );
+const MiscellaneousServicesIcon = React.lazy(
+  () => import("@mui/icons-material/MiscellaneousServices")
+);
 
 const menu: SiderBarMenu = [
   {
@@ -36,6 +38,12 @@ const menu: SiderBarMenu = [
     key: "business-profile",
     name: "Profil Bisnis",
     icon: AddBusinessOutlinedIcon,
+  },
+    {
+    path: "/account/service",
+    key: "service",
+    name: "Layanan",
+    icon: MiscellaneousServicesIcon,
   },
   {
     path: "/account/setting",
@@ -48,8 +56,6 @@ const menu: SiderBarMenu = [
 const drawerWidth = 240;
 
 const AccountSidebarMenu = () => {
-  const router = useRouter();
-
   return (
     <Drawer
       variant={"permanent"}

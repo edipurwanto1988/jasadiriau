@@ -89,6 +89,7 @@ type BusinessProfile = {
   businessSocial?: BusinessSocial[];
   businessContact?: BusinessContact[];
   imageUrl?: string;
+  validations?: Validation[];
 };
 
 type User = {
@@ -118,4 +119,16 @@ type Image = {
   entityType: "profile" | "service" | "article";
   entityId: number;
   imageUrl?: string;
+};
+
+type Validation = {
+  id?: number;
+  operatorId?: number;
+  operatorName?: string;
+  targetType: string;
+  targetId: number;
+  action?: "rejected" | "approved";
+  note?: string;
+  validatedAt?: string;
+  createdAt: string;
 };

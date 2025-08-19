@@ -69,6 +69,7 @@ model User {
   updatedAt       DateTime?         @updatedAt @map("updated_at")
   BusinessProfile BusinessProfile[]
   Validation      Validation[]
+  Notification    Notification[]
 
   @@map("users")
 }
@@ -251,7 +252,7 @@ model Validation {
   targetId     Int        @map("target_id")
   action       Action?    @map("action")
   note         String?    @map("note") @db.Text()
-  validatedAt  DateTime?   @map("validated_at") @db.Timestamptz()
+  validatedAt  DateTime?  @map("validated_at") @db.Timestamptz()
   createdAt    DateTime?  @default(now()) @map("created_at")
   updatedAt    DateTime?  @updatedAt @map("updated_at")
   operator     User?      @relation(fields: [operatorId], references: [id], onDelete: SetNull)
@@ -268,4 +269,20 @@ model Image {
   updatedAt  DateTime?  @updatedAt @map("updated_at")
 
   @@map("images")
+}
+
+model Notification {
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  title     String?   @map("title")
+  message   String?   @map("message")
+  isRead    Boolean   @default(false) @map("is_read")
+  url       String?   @db.VarChar()
+  type      String?   @db.VarChar()
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
 }
