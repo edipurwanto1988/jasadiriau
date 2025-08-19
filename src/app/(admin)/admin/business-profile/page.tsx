@@ -8,6 +8,7 @@ import { getPagination } from "@/utils/table";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { useAlert } from "@/views/contexts/AlertContext";
 import {
+  deleteBusinessProfile,
   getBusinessMeta,
   getBusinessProfile,
 } from "@/views/services/business-profile.service";
@@ -53,20 +54,22 @@ export default function Page() {
         confirm: {
           onClick: () => {
             alert.set({ loading: true });
-            // mutation.send({
-            //   service: (event) => deleteCategory({ ...event, params: { id } }),
-            //   onSuccess: () => {
-            //     openSnackbar("Profil Bisnis berhasil dihapuskan.");
-            //     alert.reset();
-            //     const timer = setTimeout(() => {
-            //       table.reload();
-            //       clearTimeout(timer);
-            //     }, 1000);
-            //   },
-            //   onAlways: () => {
-            //     alert.set({ loading: false });
-            //   },
-            // });
+            deleteBusinessProfile({ params: { id } })
+              .then((resp) => {
+                if (!resp.ok) {
+                  throw resp;
+                }
+                openSnackbar("Profil Bisnis berhasil dihapuskan.");
+                alert.reset();
+                const timer = setTimeout(() => {
+                  table.reload();
+                  clearTimeout(timer);
+                }, 1000);
+              })
+              .catch((e) => {})
+              .finally(() => {
+                alert.set({ loading: false });
+              });
           },
         },
       });
@@ -108,7 +111,7 @@ export default function Page() {
         >
           <div>
             <Button
-              variant={table.has("status") ? "contained" : "outlined"}
+              variant={"text"}
               size="small"
               disableElevation
               onClick={() => {
