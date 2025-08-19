@@ -8,9 +8,10 @@ import { ucwords } from "@/utils/string";
 
 type Props = {
   data: BusinessSocial[];
+  loading?: boolean;
 };
 
-const BusinessSocialItem = ({ data }: Props) => {
+const BusinessSocialItem = ({ data, loading }: Props) => {
   if (!data.length) {
     return null;
   }

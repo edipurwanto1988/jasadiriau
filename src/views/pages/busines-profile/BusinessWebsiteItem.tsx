@@ -11,9 +11,10 @@ const LanguageIcon = LoadComponent(
 
 type Props = {
   url?: string;
+  loading?: boolean;
 };
 
-const BusinessWebsiteItem = ({ url }: Props) => {
+const BusinessWebsiteItem = ({ url, loading }: Props) => {
   return (
     <Stack direction={"row"} alignItems={"center"} spacing={2}>
       <Box

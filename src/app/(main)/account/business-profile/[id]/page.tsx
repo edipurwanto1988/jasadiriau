@@ -22,7 +22,7 @@ import BusinessWebsiteItem from "@/views/pages/busines-profile/BusinessWebsiteIt
 import ProfileUpload from "@/views/pages/image/ProfileUpload";
 import useDialog from "@/views/hooks/useDialog";
 import useMutation from "ezhooks/lib/useMutation";
-import { inputImage } from "@/lib/dummy";
+import { inputImage, inputValidasi } from "@/lib/dummy";
 import { postImage } from "@/views/services/image.service";
 import StatusChip from "@/views/components/base/Chip/StatusChip";
 import Badge from "@mui/material/Badge";
@@ -30,6 +30,8 @@ import Image from "next/image";
 import Paper from "@mui/material/Paper";
 import ActionChip from "@/views/components/base/Chip/ActionChip";
 import { dateFormat } from "@/utils/format";
+import Skeleton from "@mui/material/Skeleton";
+import BusinessValidationItem from "@/views/pages/busines-profile/BusinessValidationItem";
 
 const EditIcon = LoadComponent(() => import("@mui/icons-material/Edit"));
 
@@ -151,7 +153,13 @@ export default function Page() {
             <Stack direction={"column"} justifyContent={"flex-start"}>
               <Box>
                 <ListItemText
-                  primary={client.data.businessName}
+                  primary={
+                    client.loading ? (
+                      <Skeleton width={100} />
+                    ) : (
+                      client.data.businessName
+                    )
+                  }
                   secondary={"Kategori"}
                   slotProps={{
                     primary: {
@@ -233,6 +241,9 @@ export default function Page() {
                     </Typography>
                   </Box>
 
+                  <Fade in={client.loading} unmountOnExit>
+                    <Skeleton width={"80%"} />
+                  </Fade>
                   <Box>
                     <Typography variant="subtitle1">
                       {client.data.description ?? "Tidak ada deskripsi"}
@@ -255,11 +266,19 @@ export default function Page() {
                   </Box>
 
                   <Stack direction={"column"} spacing={2}>
-                    <BusinessWebsiteItem url={client.data.websiteUrl} />
+                    <Fade in={client.loading} unmountOnExit>
+                      <Skeleton width={"80%"} />
+                    </Fade>
+                    <BusinessWebsiteItem
+                      loading={client.loading}
+                      url={client.data.websiteUrl}
+                    />
                     <BusinessContactItem
+                      loading={client.loading}
                       data={client.data.businessContact ?? []}
                     />
                     <BusinessSocialItem
+                      loading={client.loading}
                       data={client.data.businessSocial ?? []}
                     />
                   </Stack>
@@ -279,37 +298,12 @@ export default function Page() {
             </Fade>
 
             <Fade key={"validation"} in={tab === "validation"} unmountOnExit>
-              <Stack direction={"column"} width={400} py={2}>
-                {(client.data.validations ?? []).map((value) => (
-                  <Paper variant="outlined" key={value.id} sx={{ p: 2 }}>
-                    <Stack direction={"column"} spacing={1}>
-                      <ActionChip action={value.action} icon />
-                      <Typography variant="body2">
-                        Divalidasi Tanggal:{" "}
-                        {dateFormat(value.validatedAt, { time: true })}
-                      </Typography>
-
-                      <ListItemText
-                        primary="Catatan"
-                        secondary={value.note ?? "-"}
-                        slotProps={{
-                          primary: {
-                            variant: "body2",
-                          },
-                          secondary: {
-                            variant: "body2",
-                          },
-                        }}
-                      />
-
-                      <Typography variant="body2" textAlign={"right"}>
-                        Dibuat Tanggal:{" "}
-                        {dateFormat(value.createdAt, { time: true })}
-                      </Typography>
-                    </Stack>
-                  </Paper>
-                ))}
-              </Stack>
+              <div>
+                <BusinessValidationItem
+                  data={client.data.validations ?? []}
+                  loading={client.loading}
+                />
+              </div>
             </Fade>
           </Box>
         </Stack>

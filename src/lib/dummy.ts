@@ -1,6 +1,7 @@
 import { CreateBusinessProfileSchema } from "@/schema/business-profile.schema";
 import { CreateImageSchema } from "@/schema/image.schema";
 import { InputSettingSchema } from "@/schema/setting.schema";
+import { UpdateValidationSchema } from "@/schema/validation.schema";
 
 export const imgUrl = "/images/placeholder.webp";
 
@@ -172,4 +173,10 @@ export const inputImage: CreateImageSchema = {
   entityType: "",
   entityId: 0,
   file: null,
+};
+
+
+export const inputValidasi: UpdateValidationSchema = {
+  id: 0,
+  action: "rejected"
 };

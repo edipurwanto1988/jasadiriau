@@ -40,7 +40,7 @@ const PageTemplate = (props: Props) => {
           px: 2,
           boxSizing: "border-box",
           borderBottom: 1,
-          borderColor: "var(--mui-palette-default-divider)",
+          borderColor: "divider",
           minHeight: "37px",
         }}
       >

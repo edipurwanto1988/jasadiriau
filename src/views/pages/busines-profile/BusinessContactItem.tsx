@@ -11,9 +11,10 @@ const WhatsAppIcon = LoadComponent(
 
 type Props = {
   data: BusinessContact[];
+  loading?: boolean;
 };
 
-const BusinessContactItem = ({ data }: Props) => {
+const BusinessContactItem = ({ data, loading }: Props) => {
   if (!data.length) {
     return null;
   }

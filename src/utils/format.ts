@@ -128,12 +128,10 @@ export const parseFormData = (formData: FormData) => {
 
 export const paginate = (search: URLSearchParams) => {
   if (search.has("page") && search.has("perPage")) {
-    const skip = String(
-      +(search.get("page") ?? 0) * +(search.get("perPage") ?? 10)
-    );
-    const take = search.get("perPage") ?? 10;
-    return { skip, take };
+    const skip = +(search.get("page") ?? 0) * +(search.get("perPage") ?? 25);
+    const take = +(search.get("perPage") ?? 25);
+    return { skip: +skip, take: +take };
   }
 
-  return { skip: 0, take: 10 };
+  return { skip: 0, take: 25 };
 };

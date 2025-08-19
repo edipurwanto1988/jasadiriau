@@ -19,3 +19,10 @@ export function fillNextNumber(arr: number[]): number {
 
   return sorted[sorted.length - 1] + 1;
 }
+
+export const paginate = (qs: any) => {
+  return {
+    skip: +(qs.page ?? 0) * +(qs.perPage ?? 25),
+    take: +(qs.perPage ?? 25),
+  };
+};

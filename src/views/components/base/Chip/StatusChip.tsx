@@ -10,7 +10,7 @@ const PendingActionsIcon = LoadComponent(
 );
 
 const CheckCircleOutlineIcon = LoadComponent(
-  () => import("@mui/icons-material/CheckCircleOutline")
+  () => import("@mui/icons-material/Check")
 );
 
 const BlockIcon = LoadComponent(() => import("@mui/icons-material/Block"));
@@ -22,16 +22,21 @@ type Props = {
 const StatusChip = ({ status, icon }: Props) => {
   if (icon) {
     return (
-      <Stack direction={"row"} spacing={1} alignItems={"center"}>
+      <Stack direction={"row"} spacing={0.5} alignItems={"center"}>
         {status === "active" ? (
-          <CheckCircleOutlineIcon fontSize="small" />
+          <CheckCircleOutlineIcon fontSize="small" color="success" />
         ) : status === "pending" ? (
           <PendingActionsIcon fontSize="small" />
         ) : (
           <BlockIcon fontSize="small" />
         )}
         <Box flexGrow={1} minHeight={"24px"}>
-          <Typography>{statusActiveLabel(status)}</Typography>
+          <Typography
+            variant="subtitle2"
+            color={status === "active" ? "success" : "textPrimary"}
+          >
+            {statusActiveLabel(status)}
+          </Typography>
         </Box>
       </Stack>
     );
@@ -51,7 +56,8 @@ const StatusChip = ({ status, icon }: Props) => {
       slotProps={{
         label: {
           sx: {
-            fontWeight: 500,
+            fontWeight: 600,
+            px:2
           },
         },
       }}

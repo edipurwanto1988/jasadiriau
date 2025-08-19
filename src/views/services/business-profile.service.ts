@@ -3,6 +3,7 @@ import { EventSend } from "ezhooks";
 const url = {
   business: `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/business-profile`,
   account: `${process.env.NEXT_PUBLIC_BASE_URL}/api/account/business-profile`,
+  meta: `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/business-profile/meta`,
 };
 
 export const getBusinessProfile = async (
@@ -80,11 +81,18 @@ export const postAccountBusinessProfile = async (
   return res.json();
 };
 
-
 export const deleteAccountBusinessProfile = (event?: EventSend) => {
   return fetch(`${url.account}/${event?.params?.id}`, {
     method: "delete",
     signal: event?.ctr?.signal,
     next: { revalidate: 0 },
   });
+};
+
+export const getBusinessMeta = async (event?: EventSend) => {
+  const res = await fetch(url.meta, {
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
+  });
+  return res.json();
 };

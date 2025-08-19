@@ -8,18 +8,21 @@ import {
 } from "@/schema/business-profile.schema";
 import { Platform, Prisma, Role, StatusType } from "@/generated/prisma";
 import omit from "lodash/omit";
+import { paginate } from "@/utils/format";
 
-export const businessProfilePaginate = async (qs: Record<string, any>) => {
-  const where: Prisma.BusinessProfileWhereInput = {};
+export const businessProfilePaginate = async (qs: URLSearchParams) => {
+  const where: Prisma.BusinessProfileWhereInput = {
+    ...(qs.has("status") && { status: qs.get("status") as StatusType}),
+  };
   const count = await prisma.businessProfile.count({ where });
+
   const results = await prisma.businessProfile.findMany({
     where,
     include: {
       User: true,
       BusinessContact: true,
     },
-    take: +(qs.take ?? 10),
-    skip: +(qs.skip ?? 0),
+    ...paginate(qs),
   });
 
   const images = await prisma.image.findMany({
@@ -39,7 +42,10 @@ export const businessProfilePaginate = async (qs: Record<string, any>) => {
     return val;
   });
 
-  return { total: count, data: newResult };
+  return {
+    total: count,
+    data: newResult,
+  };
 };
 
 export const getBusinessProfileID = async (id: number) => {
@@ -208,4 +214,14 @@ export const updateAccountBusinessProfile = ({
       data,
     });
   });
+};
+
+export const getMeta = async () => {
+  const totalPending = await prisma.businessProfile.count({
+    where: { status: "pending" },
+  });
+
+  return {
+    totalPending,
+  };
 };
