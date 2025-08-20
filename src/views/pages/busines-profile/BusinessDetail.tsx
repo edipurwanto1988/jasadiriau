@@ -22,7 +22,7 @@ import BusinessWebsiteItem from "@/views/pages/busines-profile/BusinessWebsiteIt
 import ProfileUpload from "@/views/pages/image/ProfileUpload";
 import useDialog from "@/views/hooks/useDialog";
 import useMutation from "ezhooks/lib/useMutation";
-import { inputImage } from "@/lib/dummy";
+import { dummyBusinessProfile, inputImage } from "@/lib/dummy";
 import { postImage } from "@/views/services/image.service";
 import StatusChip from "@/views/components/base/Chip/StatusChip";
 import Badge from "@mui/material/Badge";
@@ -40,6 +40,13 @@ const BusinessDetail = () => {
   const router = useRouter();
   const dialog = useDialog();
   const openSnackbar = useSnackbar();
+  const [data, setData] = React.useState<BusinessProfile>({
+    id: 0,
+    businessName: "",
+    status: "pending",
+    imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`,
+  });
+
   const [tab, setTab] = React.useState("overview");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -71,7 +78,9 @@ const BusinessDetail = () => {
             entityId: +id!,
           },
         });
-        return resp.data;
+
+        setData(resp.data);
+        return {};
       },
     });
   };
@@ -105,7 +114,7 @@ const BusinessDetail = () => {
 
   return (
     <PageTemplate
-      title={client.data.businessName}
+      title={data.businessName}
       onReload={fetchData}
       onUpdate={() => {
         router.push(`${id}/update`);
@@ -128,8 +137,8 @@ const BusinessDetail = () => {
                 }}
               >
                 <Image
-                  src={client.data.imageUrl ?? profile}
-                  alt={client.data.businessName}
+                  src={data.imageUrl ?? profile}
+                  alt={data.businessName}
                   width={128}
                   height={128}
                   priority
@@ -155,7 +164,7 @@ const BusinessDetail = () => {
                     client.loading ? (
                       <Skeleton width={100} />
                     ) : (
-                      client.data.businessName
+                      data.businessName
                     )
                   }
                   secondary={"Kategori"}
@@ -175,7 +184,7 @@ const BusinessDetail = () => {
                 />
               </Box>
 
-              <StatusChip status={client.data.status} icon />
+              <StatusChip status={data.status} icon />
             </Stack>
           </Stack>
 
@@ -206,9 +215,7 @@ const BusinessDetail = () => {
                     variant="dot"
                     color="error"
                     invisible={
-                      !(client.data.validations ?? []).some(
-                        (v) => v.action === null
-                      )
+                      !(data.validations ?? []).some((v) => v.action === null)
                     }
                     sx={{
                       "& .MuiBadge-badge": {
@@ -244,7 +251,7 @@ const BusinessDetail = () => {
                   </Fade>
                   <Box>
                     <Typography variant="subtitle1">
-                      {client.data.description ?? "Tidak ada deskripsi"}
+                      {data.description ?? "Tidak ada deskripsi"}
                     </Typography>
                   </Box>
                 </Stack>
@@ -269,15 +276,15 @@ const BusinessDetail = () => {
                     </Fade>
                     <BusinessWebsiteItem
                       loading={client.loading}
-                      url={client.data.websiteUrl}
+                      url={data.websiteUrl}
                     />
                     <BusinessContactItem
                       loading={client.loading}
-                      data={client.data.businessContact ?? []}
+                      data={data.businessContact ?? []}
                     />
                     <BusinessSocialItem
                       loading={client.loading}
-                      data={client.data.businessSocial ?? []}
+                      data={data.businessSocial ?? []}
                     />
                   </Stack>
                 </Stack>
@@ -298,7 +305,7 @@ const BusinessDetail = () => {
             <Fade key={"validation"} in={tab === "validation"} unmountOnExit>
               <div>
                 <BusinessValidationItem
-                  data={client.data.validations ?? []}
+                  data={data.validations ?? []}
                   loading={client.loading}
                 />
               </div>
