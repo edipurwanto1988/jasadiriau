@@ -14,7 +14,6 @@ import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { getBusinessProfileID } from "@/views/services/business-profile.service";
-import useRequest from "ezhooks/lib/useRequest";
 import { useParams, useRouter } from "next/navigation";
 import BusinessSocialItem from "@/views/pages/busines-profile/BusinessSocialItem";
 import BusinessContactItem from "@/views/pages/busines-profile/BusinessContactItem";
@@ -22,7 +21,7 @@ import BusinessWebsiteItem from "@/views/pages/busines-profile/BusinessWebsiteIt
 import ProfileUpload from "@/views/pages/image/ProfileUpload";
 import useDialog from "@/views/hooks/useDialog";
 import useMutation from "ezhooks/lib/useMutation";
-import { dummyBusinessProfile, inputImage } from "@/lib/dummy";
+import { inputImage } from "@/lib/dummy";
 import { postImage } from "@/views/services/image.service";
 import StatusChip from "@/views/components/base/Chip/StatusChip";
 import Badge from "@mui/material/Badge";
@@ -40,14 +39,16 @@ const BusinessDetail = () => {
   const router = useRouter();
   const dialog = useDialog();
   const openSnackbar = useSnackbar();
+
+  const [loading, setLoading] = React.useState(true);
+  const [tab, setTab] = React.useState("overview");
+  const [isPending, startTransaction] = React.useTransition();
   const [data, setData] = React.useState<BusinessProfile>({
     id: 0,
     businessName: "",
     status: "pending",
     imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`,
   });
-
-  const [tab, setTab] = React.useState("overview");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
@@ -59,30 +60,24 @@ const BusinessDetail = () => {
     },
   });
 
-  const client = useRequest<BusinessProfile>({
-    data: {
-      id: 0,
-      businessName: "",
-      status: "pending",
-      imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`,
-    },
-  });
-
   const fetchData = () => {
-    client.exec({
-      service: (event) => getBusinessProfileID({ ...event, params: { id } }),
-      onSuccess: (resp) => {
-        mutation.setData({
-          image: {
-            entityType: "profile",
-            entityId: +id!,
-          },
-        });
+    getBusinessProfileID({ params: { id } })
+      .then((resp) => {
+        startTransaction(() => {
+          mutation.setData({
+            image: {
+              entityType: "profile",
+              entityId: +id!,
+            },
+          });
 
-        setData(resp.data);
-        return {};
-      },
-    });
+          setData(resp.data);
+        });
+      })
+      .catch((e) => {})
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onSaveImage = (blob: Blob, close: () => void) => {
@@ -105,11 +100,7 @@ const BusinessDetail = () => {
 
   React.useEffect(() => {
     if (!id) return;
-
     fetchData();
-    return () => {
-      client.cancel();
-    };
   }, [id]);
 
   return (
@@ -161,11 +152,7 @@ const BusinessDetail = () => {
               <Box>
                 <ListItemText
                   primary={
-                    client.loading ? (
-                      <Skeleton width={100} />
-                    ) : (
-                      data.businessName
-                    )
+                    loading ? <Skeleton width={100} /> : data.businessName
                   }
                   secondary={"Kategori"}
                   slotProps={{
@@ -246,7 +233,7 @@ const BusinessDetail = () => {
                     </Typography>
                   </Box>
 
-                  <Fade in={client.loading} unmountOnExit>
+                  <Fade in={loading} unmountOnExit>
                     <Skeleton width={"80%"} />
                   </Fade>
                   <Box>
@@ -271,19 +258,19 @@ const BusinessDetail = () => {
                   </Box>
 
                   <Stack direction={"column"} spacing={2}>
-                    <Fade in={client.loading} unmountOnExit>
+                    <Fade in={loading} unmountOnExit>
                       <Skeleton width={"80%"} />
                     </Fade>
                     <BusinessWebsiteItem
-                      loading={client.loading}
+                      loading={loading}
                       url={data.websiteUrl}
                     />
                     <BusinessContactItem
-                      loading={client.loading}
+                      loading={loading}
                       data={data.businessContact ?? []}
                     />
                     <BusinessSocialItem
-                      loading={client.loading}
+                      loading={loading}
                       data={data.businessSocial ?? []}
                     />
                   </Stack>
@@ -306,7 +293,7 @@ const BusinessDetail = () => {
               <div>
                 <BusinessValidationItem
                   data={data.validations ?? []}
-                  loading={client.loading}
+                  loading={loading}
                 />
               </div>
             </Fade>
@@ -314,7 +301,7 @@ const BusinessDetail = () => {
         </Stack>
         <Toolbar />
         <Toolbar />
-        <SnacbarLoading loading={client.loading} />
+        <SnacbarLoading loading={loading} pending={isPending} />
         <ProfileUpload
           dialog={dialog}
           onSave={(img, close) => {
