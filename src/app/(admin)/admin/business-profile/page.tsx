@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import dynamic from "next/dynamic";
 
@@ -6,6 +7,6 @@ const DynamicComponentWithNoSSR = dynamic(
   { ssr: false }
 )
 
-export default async function Page() {
+export default function Page() {
   return <DynamicComponentWithNoSSR />;
 }
