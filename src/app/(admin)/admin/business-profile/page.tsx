@@ -84,13 +84,17 @@ export default function Page() {
     [table.data]
   );
 
-  React.useEffect(() => {
+  const getMeta = () => {
     client.exec({
       service: getBusinessMeta,
       onSuccess: (resp) => {
         return resp.data;
       },
     });
+  };
+  
+  React.useEffect(() => {
+    getMeta();
     return () => {
       client.cancel();
     };
