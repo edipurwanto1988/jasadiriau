@@ -36,11 +36,11 @@ const AdminBusiness = () => {
     replaceUrl: true,
   });
 
-  const client = useRequest({
-    data: {
-      totalPending: 0,
-    },
-  });
+  // const client = useRequest({
+  //   data: {
+  //     totalPending: 0,
+  //   },
+  // });
 
   const onClickDelete = React.useCallback(
     (id: number) => () => {
@@ -84,18 +84,18 @@ const AdminBusiness = () => {
   );
 
   const getMeta = () => {
-    client.exec({
-      service: getBusinessMeta,
-      onSuccess: (resp) => {
-        return resp.data;
-      },
-    });
+    // client.exec({
+    //   service: getBusinessMeta,
+    //   onSuccess: (resp) => {
+    //     return resp.data;
+    //   },
+    // });
   };
 
   React.useEffect(() => {
     getMeta();
     return () => {
-      client.cancel();
+      // client.cancel();
     };
   }, []);
 
@@ -127,7 +127,7 @@ const AdminBusiness = () => {
             >
               Menunggu Persetujuan (
               <Box component={"span"} sx={{ fontWeight: 600 }}>
-                {client.data.totalPending}
+                {/* {client.data.totalPending} */}
               </Box>
               )
             </Button>
