@@ -97,6 +97,8 @@ export default function Page() {
   };
 
   React.useEffect(() => {
+
+    if (typeof window === 'undefined') return;
     if (!id) return;
 
     fetchData();

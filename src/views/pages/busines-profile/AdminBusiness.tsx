@@ -93,6 +93,7 @@ const AdminBusiness = () => {
   };
 
   React.useEffect(() => {
+    if (typeof window === "undefined") return;
     getMeta();
     return () => {
       client.cancel();
