@@ -29,7 +29,7 @@ const Register = () => {
             const timer = setTimeout(() => {
               redirect("/");
               clearTimeout(timer);
-            }, 1500);
+            }, 500);
           }
         },
       });

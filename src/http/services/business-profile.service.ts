@@ -10,9 +10,13 @@ import { Platform, Prisma, Role, StatusType } from "@/generated/prisma";
 import omit from "lodash/omit";
 import { paginate } from "@/utils/format";
 
-export const businessProfilePaginate = async (qs: URLSearchParams) => {
+export const businessProfilePaginate = async (
+  qs: URLSearchParams,
+  userId?: number
+) => {
   const where: Prisma.BusinessProfileWhereInput = {
     ...(qs.has("status") && { status: qs.get("status") as StatusType }),
+    ...(userId && { userId }),
   };
   const count = await prisma.businessProfile.count({ where });
 
