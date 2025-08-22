@@ -23,11 +23,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={PlusJakartaSans.variable}>
+       <head>
+        <script src="https://accounts.google.com/gsi/client" async></script>
+      </head>
       <body className="main-body">
         <AppRouterCacheProvider options={{ key: "css", enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
             {header}
-
             {children}
             {footer}
           </ThemeProvider>

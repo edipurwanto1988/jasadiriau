@@ -15,17 +15,17 @@ import Badge from "@mui/material/Badge";
 import Image from "next/image";
 import useSWR, { useSWRConfig } from "swr";
 import Skeleton from "@mui/material/Skeleton";
-import BusinessValidationItem from "@/views/pages/busines-profile/BusinessValidationItem";
 import { serviceUrl } from "@/views/services/service.service";
 import { useRouter } from "next/navigation";
 import useDialog from "@/views/hooks/useDialog";
 import ServiceUpdate from "./ServiceUpdate";
+import ValidationItem from "../validation/ValidationItem";
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
-const ServiceDetail = ({ id }: { id: number }) => {
+const ServiceDetail = ({ id, role }: { id: number; role?: RoleType }) => {
   const router = useRouter();
-  const dialog = useDialog()
+  const dialog = useDialog();
   const [tab, setTab] = React.useState("description");
 
   const { mutate } = useSWRConfig();
@@ -69,10 +69,9 @@ const ServiceDetail = ({ id }: { id: number }) => {
                 <Image
                   src={data?.imageUrl ?? profile}
                   alt={data?.name ?? "service"}
-                  width={128}
-                  height={128}
+                  fill
+                  sizes="100%"
                   priority
-                  style={{ objectFit: "cover" }}
                 />
               </Box>
 
@@ -90,7 +89,7 @@ const ServiceDetail = ({ id }: { id: number }) => {
                 ) : (
                   <Typography
                     sx={{
-                      fontSize: 22,
+                      fontSize: 18,
                       fontWeight: 700,
                       letterSpacing: "-0.015em",
                       lineHeight: 1.25,
@@ -180,8 +179,8 @@ const ServiceDetail = ({ id }: { id: number }) => {
             </Tabs>
 
             <Fade key={"description"} in={tab === "description"} unmountOnExit>
-              <Stack direction={"column"} justifyContent={"center"}>
-                <Stack direction={"column"} p={2} spacing={2}>
+              <Stack direction={"column"} justifyContent={"center"} py={2} spacing={2}>
+                <Stack direction={"column"} spacing={2}>
                   <Box>
                     <Typography
                       sx={{
@@ -206,7 +205,7 @@ const ServiceDetail = ({ id }: { id: number }) => {
                   </Box>
                 </Stack>
 
-                <Stack direction={"column"} p={2} spacing={3}>
+                <Stack direction={"column"} spacing={3}>
                   <Box>
                     <Typography
                       sx={{
@@ -237,7 +236,8 @@ const ServiceDetail = ({ id }: { id: number }) => {
 
             <Fade key={"validation"} in={tab === "validation"} unmountOnExit>
               <div>
-                <BusinessValidationItem
+                <ValidationItem
+                  role={role}
                   data={data?.validations ?? []}
                   loading={isLoading}
                 />

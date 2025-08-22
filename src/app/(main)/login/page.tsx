@@ -2,11 +2,13 @@ import MainTemplate from "@/views/components/templates/MainTemplate";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Register from "./_partial/Register";
+import Toolbar from "@mui/material/Toolbar";
+import Register from "@/views/pages/auth/Register";
 
-export default function Page() {
+export default async function Page() {
   return (
     <MainTemplate>
+      <Toolbar/>
       <Stack alignItems={"center"} spacing={3}>
         <Avatar sx={{ width: 64, height: 64 }} />
 
@@ -25,6 +27,7 @@ export default function Page() {
         </Stack>
 
         <Register />
+        
         <div>
           <Typography variant="caption">
             Dengan melanjutkan, Anda menyetujui Syarat & Kebijakan Privasi kami.

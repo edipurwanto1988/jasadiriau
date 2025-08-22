@@ -1,6 +1,26 @@
 import prisma from "@/lib/db";
-import { UpdateValidationSchema } from "@/schema/validation.schema";
+import {
+  CreateValidationSchema,
+  UpdateValidationSchema,
+} from "@/schema/validation.schema";
 import dayjs from "dayjs";
+
+export const createValidation = (payload: CreateValidationSchema) => {
+  return prisma.$transaction(async (tx) => {
+    if (payload.targetType === "profile") {
+      await tx.businessProfile.update({
+        where: { id: payload.targetId },
+        data: { status: "pending" },
+      });
+    } else if (payload.targetType === "service") {
+      await tx.service.update({
+        where: { id: payload.targetId },
+        data: { status: "pending" },
+      });
+    }
+    return tx.validation.create({ data: payload });
+  });
+};
 
 export const updateValidation = async (
   userId: number,

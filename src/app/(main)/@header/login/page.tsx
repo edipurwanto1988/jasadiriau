@@ -4,7 +4,7 @@ import Toolbar from "@mui/material/Toolbar";
 
 export default async function Page() {
   return (
-    <AppBar elevation={0} color="transparent">
+    <AppBar elevation={0} color="inherit">
       <Toolbar>
         <Link
           fontWeight={900}

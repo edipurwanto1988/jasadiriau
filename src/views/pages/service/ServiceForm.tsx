@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import InputSelectUncontrolled from "@/views/components/base/Input/InputSelectUncontrolled";
 import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";

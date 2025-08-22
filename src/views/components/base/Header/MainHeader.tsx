@@ -14,9 +14,10 @@ const SearchIcon = LoadComponent(() => import("@mui/icons-material/Search"));
 
 type Props = {
   isLogin?: boolean;
+  role?: "user" | "operator" | "admin";
 };
 
-const MainHeader = ({ isLogin }: Props) => {
+const MainHeader = ({ isLogin, role }: Props) => {
   return (
     <header>
       <AppBar
@@ -25,13 +26,13 @@ const MainHeader = ({ isLogin }: Props) => {
         position="fixed"
         sx={{
           borderBottom: 1,
-          backgroundColor:"var(--bg-color)",
+          backgroundColor: "var(--bg-color)",
           borderColor: "divider",
           zIndex: "calc(var(--mui-zIndex-drawer) + 1)",
         }}
       >
         <Toolbar sx={{ overflow: "hidden" }}>
-          <Divider/>
+          <Divider />
           <Stack
             flex={1}
             direction={"row"}
@@ -49,7 +50,7 @@ const MainHeader = ({ isLogin }: Props) => {
                 <Link
                   fontWeight={900}
                   fontSize={18}
-                  href=""
+                  href="/"
                   underline="none"
                   color="text.primary"
                   variant="subtitle1"
@@ -71,16 +72,20 @@ const MainHeader = ({ isLogin }: Props) => {
                   xl: "flex",
                 }}
               >
-                <Box>
-                  <Link
-                    variant="subtitle2"
-                    href=""
-                    underline="none"
-                    color="text.primary"
-                  >
-                    Beranda
-                  </Link>
-                </Box>
+                {isLogin ? (
+                  <Box>
+                    <Link
+                      variant="subtitle2"
+                      href={
+                        role === "user" ? "/account/business-profile" : "/admin"
+                      }
+                      underline="none"
+                      color="text.primary"
+                    >
+                      Beranda
+                    </Link>
+                  </Box>
+                ) : null}
 
                 <Box>
                   <Link

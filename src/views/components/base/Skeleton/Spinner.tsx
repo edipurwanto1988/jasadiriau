@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { styled } from "@mui/material/styles";
 
 const Spinner = styled("div")(({ theme }) => ({
@@ -21,9 +21,6 @@ export default function Loading() {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
-        width: "100%",
-        height: "100%",
       }}
     >
       <Spinner />

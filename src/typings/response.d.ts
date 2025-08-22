@@ -90,6 +90,7 @@ type BusinessProfile = {
   businessContact?: BusinessContact[];
   imageUrl?: string;
   validations?: Validation[];
+  services?: Service[];
 };
 
 type User = {

@@ -1,4 +1,4 @@
-import SigninForm from "./_partial/SigninForm";
+import SigninForm from "@/views/pages/auth/SigninForm";
 import Template from "./template";
 
 export default async function Page() {

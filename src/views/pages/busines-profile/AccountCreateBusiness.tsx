@@ -82,6 +82,7 @@ const AccountCreateBusiness = () => {
           onSubmit={onSubmit}
           px={3}
           py={2}
+          className="default-form"
         >
           <Stack direction={"column"} flexGrow={1} spacing={4}>
             <ListItemText
@@ -204,7 +205,7 @@ const AccountCreateBusiness = () => {
                   slotProps={{
                     input: {
                       startAdornment: (
-                        <InputAdornment position="start" sx={{ py: 2.5 }}>
+                        <InputAdornment position="start" sx={{ py: 1 }}>
                           <LanguageOutlinedIcon
                             fontSize="inherit"
                             sx={{ width: 24, height: 24 }}

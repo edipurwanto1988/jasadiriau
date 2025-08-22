@@ -63,6 +63,7 @@ export const getServiceID = async (id: number) => {
   Object.assign(model, { imageUrl: image?.imageUrl });
   const validations = await prisma.validation.findMany({
     where: { targetId: model.id, targetType: "service" },
+    orderBy: { createdAt: "desc" },
   });
   Object.assign(model, { validations: validations });
   return model;
@@ -82,7 +83,7 @@ export const createService = (payload: CreateServiceSchema) => {
       data: {
         ...payload,
         status: "pending",
-        slug: `${padStart}-${payload.name.replaceAll(" ", "-")}`,
+        slug: `${padStart}-${payload.name.replaceAll(" ", "-").toLowerCase()}`,
       },
     });
 

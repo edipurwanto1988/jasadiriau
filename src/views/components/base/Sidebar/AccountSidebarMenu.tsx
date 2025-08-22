@@ -21,13 +21,10 @@ export type SiderBarMenu = Array<{
   sub?: SiderBarMenu;
 }>;
 
-const DashboardIcon = React.lazy(() => import("@mui/icons-material/Dashboard"));
 const AddBusinessOutlinedIcon = React.lazy(
   () => import("@mui/icons-material/AddBusinessOutlined")
 );
-const SettingsOutlinedIcon = React.lazy(
-  () => import("@mui/icons-material/SettingsOutlined")
-);
+
 const MiscellaneousServicesIcon = React.lazy(
   () => import("@mui/icons-material/MiscellaneousServices")
 );
@@ -39,17 +36,11 @@ const menu: SiderBarMenu = [
     name: "Profil Bisnis",
     icon: AddBusinessOutlinedIcon,
   },
-    {
+  {
     path: "/account/service",
     key: "service",
     name: "Layanan",
     icon: MiscellaneousServicesIcon,
-  },
-  {
-    path: "/account/setting",
-    key: "setting",
-    name: "Setting",
-    icon: SettingsOutlinedIcon,
   },
 ];
 

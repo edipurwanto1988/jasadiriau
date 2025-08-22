@@ -1,3 +1,4 @@
+import { getAuth } from "@/lib/auth";
 import ServiceDetail from "@/views/pages/service/ServiceDetail";
 import { Metadata, ResolvingMetadata } from "next";
 
@@ -19,6 +20,7 @@ export async function generateMetadata(
 
 export default async function Page({ params }: Props) {
   const id = (await params).id;
+  const auth = await getAuth();
 
-  return <ServiceDetail id={id} />;
+  return <ServiceDetail id={id} role={auth?.role} />;
 }

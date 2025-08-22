@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import Fade from "@mui/material/Fade";
 
-export default function Register() {
+const Register = () => {
   const [loading, setLoading] = React.useState(true);
   const openSnackbar = useSnackbar();
   const mutation = useMutation({
@@ -67,4 +67,6 @@ export default function Register() {
       <div id="google-signin" />
     </>
   );
-}
+};
+
+export default Register;

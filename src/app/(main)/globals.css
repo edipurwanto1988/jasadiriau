@@ -36,3 +36,7 @@ body {
 .default-form *::after {
   box-sizing: unset;
 }
+
+#buttonDiv {
+  display: block;
+}

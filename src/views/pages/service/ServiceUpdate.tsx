@@ -119,17 +119,18 @@ const ServiceUpdate = ({ id, dialog, callback }: Props) => {
 
   React.useEffect(() => {
     if (!data) return;
-    mutation.setData(omit(data, ["bussinessName", "categoryName"]));
+    React.startTransition(() => {
+      mutation.setData(omit(data, ["bussinessName", "categoryName"]));
 
-    if (businessRef.current) {
-      businessRef.current.value = String(data.profileId);
-    }
+      if (businessRef.current) {
+        businessRef.current.value = String(data?.profileId ?? "");
+      }
 
-    if (categoryRef.current) {
-      categoryRef.current.value = String(data.categoryId);
-    }
-    return () => {};
-  }, [data]);
+      if (categoryRef.current) {
+        categoryRef.current.value = String(data?.categoryId ?? "");
+      }
+    });
+  }, [data, dialog.open]);
 
   return (
     <Dialog

@@ -12,7 +12,7 @@ import { paginate } from "@/utils/format";
 
 export const businessProfilePaginate = async (qs: URLSearchParams) => {
   const where: Prisma.BusinessProfileWhereInput = {
-    ...(qs.has("status") && { status: qs.get("status") as StatusType}),
+    ...(qs.has("status") && { status: qs.get("status") as StatusType }),
   };
   const count = await prisma.businessProfile.count({ where });
 
@@ -51,7 +51,25 @@ export const businessProfilePaginate = async (qs: URLSearchParams) => {
 export const getBusinessProfileID = async (id: number) => {
   const model = await prisma.businessProfile.findFirst({
     where: { id },
-    include: { BusinessContact: true, BusinessSocial: true, User: true },
+    include: {
+      BusinessContact: true,
+      BusinessSocial: true,
+      User: true,
+      Service: {
+        include: {
+          category: {
+            select: {
+              name: true,
+            },
+          },
+          businessProfile: {
+            select: {
+              businessName: true,
+            },
+          },
+        },
+      },
+    },
   });
   if (!model) {
     throw new NotFoundException("BusinessProfile");
@@ -63,6 +81,7 @@ export const getBusinessProfileID = async (id: number) => {
   Object.assign(model, { imageUrl: image?.imageUrl });
   const validations = await prisma.validation.findMany({
     where: { targetId: model.id, targetType: "profile" },
+    orderBy: { createdAt: "desc" },
   });
   Object.assign(model, { validations: validations });
   return model;

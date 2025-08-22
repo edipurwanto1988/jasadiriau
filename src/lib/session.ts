@@ -2,7 +2,7 @@ import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { cache, use } from "react";
-import { Role, User } from "@/generated/prisma";
+import { User } from "@/generated/prisma";
 
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -28,7 +28,7 @@ export async function createSession(user: User & { picture?: string }) {
     userId: user.id,
     email: user.email,
     name: user.name,
-    role: user.role ?? Role.user,
+    role: user.role ?? 'user',
     picture: user.picture,
     expiresAt,
   });
@@ -73,5 +73,9 @@ export const verifySession = cache(async () => {
   const session = await decrypt(cookie);
   if (!session?.userId) return null;
 
-  return { isAuth: true, userId: +session.userId, role: session.role };
+  return {
+    isAuth: true,
+    userId: +session.userId,
+    role: session.role as RoleType,
+  };
 });

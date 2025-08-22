@@ -55,6 +55,10 @@ const PageTemplate = (props: Props) => {
           variant="subtitle1"
           fontWeight={500}
           color="textSecondary"
+          maxWidth={'25%'}
+          whiteSpace={'nowrap'}
+          overflow={'hidden'}
+          textOverflow={'ellipsis'}
         >
           {props.title || ""}
         </Typography>

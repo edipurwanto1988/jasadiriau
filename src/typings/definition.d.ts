@@ -6,3 +6,7 @@ type SessionPayload = {
   picture?: string;
   expiresAt: Date;
 };
+
+type RoleType = "user" | "admin" | "operator";
+
+type ActionType = "approved" | "rejected";
