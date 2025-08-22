@@ -1,13 +1,13 @@
 import { EventSend } from "ezhooks";
 
-const url = {
-  business: `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/service`,
+export const serviceUrl = {
+  serviceAccount: `${process.env.NEXT_PUBLIC_BASE_URL}/api/account/service`,
 };
 
 export const getService = async (
   event?: EventSend
 ): Promise<HttpResponse<Service[]>> => {
-  let urlQuery = url.business;
+  let urlQuery = serviceUrl.serviceAccount;
   const search = new URLSearchParams(event?.params);
   if (search.size > 0) {
     urlQuery += "?";
@@ -15,8 +15,8 @@ export const getService = async (
   }
 
   const res = await fetch(urlQuery, {
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
 
   return res.json();
@@ -24,10 +24,10 @@ next: { revalidate: 0 },
 
 export const postService = async (event?: EventSend) => {
   const isNewRecord = !(event?.data && event.data().id);
-  const res = await fetch(url.business, {
+  const res = await fetch(serviceUrl.serviceAccount, {
     method: isNewRecord ? "post" : "put",
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
     headers: {
       "content-type": "application/json",
     },
@@ -42,19 +42,19 @@ next: { revalidate: 0 },
 };
 
 export const deleteService = (event?: EventSend) => {
-  return fetch(`${url.business}/${event?.params?.id}`, {
+  return fetch(`${serviceUrl.serviceAccount}/${event?.params?.id}`, {
     method: "delete",
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
 };
 
 export const getServiceID = async (
   event?: EventSend
 ): Promise<HttpResponse<Service>> => {
-  const res = await fetch(`${url.business}/${event?.params?.id}`, {
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+  const res = await fetch(`${serviceUrl.serviceAccount}/${event?.params?.id}`, {
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
   return res.json();
 };

@@ -1,12 +1,11 @@
-"use client";
+import BusinessDetail from "@/views/pages/busines-profile/BusinessDetail";
 import React from "react";
-import dynamic from "next/dynamic";
 
-const BusinessDetail = dynamic(
-  () => import("@/views/pages/busines-profile/BusinessDetail"),
-  { ssr: false }
-);
-
-export default function Page() {
-  return <BusinessDetail />;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: number }>;
+}) {
+  const { id } = await params;
+  return <BusinessDetail id={id} />;
 }

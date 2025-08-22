@@ -30,3 +30,9 @@ body {
   margin: 0;
   background-color: var(--bg-color);
 }
+
+.default-form * ,
+.default-form *::before,
+.default-form *::after {
+  box-sizing: unset;
+}

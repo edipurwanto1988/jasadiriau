@@ -4,40 +4,33 @@ import SnacbarLoading from "@/views/components/base/Skeleton/SnacbarLoading";
 import PageTemplate from "@/views/components/templates/PageTemplate";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
-import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
-import BusinessSocialItem from "@/views/pages/busines-profile/BusinessSocialItem";
-import BusinessContactItem from "@/views/pages/busines-profile/BusinessContactItem";
-import BusinessWebsiteItem from "@/views/pages/busines-profile/BusinessWebsiteItem";
+import ProfileUpload from "@/views/pages/image/ProfileUpload";
 import StatusChip from "@/views/components/base/Chip/StatusChip";
 import Badge from "@mui/material/Badge";
 import Image from "next/image";
+import useSWR, { useSWRConfig } from "swr";
 import Skeleton from "@mui/material/Skeleton";
 import BusinessValidationItem from "@/views/pages/busines-profile/BusinessValidationItem";
-import { useAlert } from "@/views/contexts/AlertContext";
-import { postValidation } from "@/views/services/validation.service";
-import useSWR, { useSWRConfig } from "swr";
-import { UpdateValidationSchema } from "@/schema/validation.schema";
-import { useSnackbar } from "@/views/contexts/SnackbarContext";
-import { businessUrl } from "@/views/services/business-profile.service";
-import { useParams, useRouter } from "next/navigation";
+import { serviceUrl } from "@/views/services/service.service";
+import { useRouter } from "next/navigation";
+import useDialog from "@/views/hooks/useDialog";
+import ServiceUpdate from "./ServiceUpdate";
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
-export default function Page() {
-  const { id } = useParams();
+const ServiceDetail = ({ id }: { id: number }) => {
   const router = useRouter();
-  const alert = useAlert();
-  const openSnackbar = useSnackbar();
-  const [tab, setTab] = React.useState("overview");
+  const dialog = useDialog()
+  const [tab, setTab] = React.useState("description");
 
   const { mutate } = useSWRConfig();
-  const { data, isLoading } = useSWR<BusinessProfile>(
-    `${businessUrl.business}/${id}`,
+  const { data, isLoading } = useSWR<Service>(
+    `${serviceUrl.serviceAccount}/${id}`,
     (url) =>
       fetch(url)
         .then((resp) => resp.json())
@@ -48,54 +41,15 @@ export default function Page() {
     setTab(newValue);
   };
 
-  const onClickValidation = React.useCallback(
-    (id: number, action: string) => () => {
-      alert.set({
-        open: true,
-        textfield: true,
-        title:
-          action === "approved"
-            ? "Setujui Permintaan Ini?"
-            : "Tolak Permintaan Ini?",
-        message:
-          action === "approved"
-            ? "Tindakan ini akan menyetujui permintaan dan tidak bisa dibatalkan."
-            : "Tindakan ini akan menolak permintaan dan mungkin tidak bisa dibatalkan.",
-        type: action === "approved" ? "success" : "warning",
-        confirm: {
-          onClick: (remark) => {
-            alert.set({ loading: true });
-            postValidation({
-              id,
-              action: action as UpdateValidationSchema["action"],
-              note: remark,
-            }).then((resp) => {
-              openSnackbar(
-                action === "approved"
-                  ? "Permintaan berhasil disetujui."
-                  : "Permintaan berhasil ditolak."
-              );
-              alert.reset();
-            });
-          },
-        },
-      });
-    },
-    [data?.validations]
-  );
-
   const reload = () => {
-    mutate(`${businessUrl.business}/${id}`);
+    mutate(`${serviceUrl.serviceAccount}/${id}`);
   };
 
   return (
     <PageTemplate
-      title={data?.businessName}
+      title={data?.name}
       onReload={reload}
-      onUpdate={() => {
-        router.push(`${id}/update`);
-      }}
-      onDelete={console.log}
+      onUpdate={dialog.openDialog}
       onBack={router.back}
     >
       <Box sx={{ width: "100%", minHeight: "100%", overflow: "hidden auto" }}>
@@ -114,39 +68,73 @@ export default function Page() {
               >
                 <Image
                   src={data?.imageUrl ?? profile}
-                  alt={data?.businessName ?? ""}
+                  alt={data?.name ?? "service"}
                   width={128}
                   height={128}
                   priority
                   style={{ objectFit: "cover" }}
                 />
               </Box>
+
+              <ProfileUpload entityId={+id!} type="service" callback={reload} />
             </Stack>
 
-            <Stack direction={"column"} justifyContent={"flex-start"}>
+            <Stack
+              direction={"column"}
+              justifyContent={"flex-start"}
+              spacing={0.5}
+            >
               <Box>
-                <ListItemText
-                  primary={
-                    isLoading ? <Skeleton width={100} /> : data?.businessName
-                  }
-                  secondary={"Kategori"}
-                  slotProps={{
-                    primary: {
+                {isLoading ? (
+                  <Skeleton width={200} />
+                ) : (
+                  <Typography
+                    sx={{
                       fontSize: 22,
                       fontWeight: 700,
                       letterSpacing: "-0.015em",
                       lineHeight: 1.25,
-                    },
-                    secondary: {
-                      variant: "subtitle1",
-                      color: "var(--blue-color)",
-                      fontWeight: 400,
-                    },
-                  }}
-                />
+                    }}
+                  >
+                    {data?.name}
+                  </Typography>
+                )}
               </Box>
 
-              <StatusChip status={data?.status ?? "pending"} icon />
+              <Box>
+                {isLoading ? (
+                  <Skeleton width={150} />
+                ) : (
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      color: "var(--blue-color)",
+                      fontWeight: 400,
+                    }}
+                  >
+                    {data?.bussinessName}
+                  </Typography>
+                )}
+              </Box>
+
+              <Box>
+                {isLoading ? (
+                  <Skeleton width={100} />
+                ) : (
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      fontWeight: 400,
+                    }}
+                  >
+                    {data?.categoryName}
+                  </Typography>
+                )}
+              </Box>
+
+              <Box>
+                <StatusChip status={data?.status ?? "pending"} icon />
+              </Box>
             </Stack>
           </Stack>
 
@@ -167,9 +155,8 @@ export default function Page() {
                 },
               }}
             >
-              <Tab value="overview" label="Overview" />
-              <Tab value="description" label="Services" />
-              <Tab value="review" label="Reviews" />
+              <Tab value="description" label="Deskripsi" />
+              <Tab value="gallery" label="Galeri" />
               <Tab
                 value="validation"
                 label={
@@ -192,13 +179,13 @@ export default function Page() {
               />
             </Tabs>
 
-            <Fade key={"overview"} in={tab === "overview"} unmountOnExit>
+            <Fade key={"description"} in={tab === "description"} unmountOnExit>
               <Stack direction={"column"} justifyContent={"center"}>
                 <Stack direction={"column"} p={2} spacing={2}>
                   <Box>
                     <Typography
                       sx={{
-                        fontSize: 22,
+                        fontSize: 18,
                         fontWeight: 700,
                         letterSpacing: "-0.015em",
                         lineHeight: 1.25,
@@ -211,6 +198,7 @@ export default function Page() {
                   <Fade in={isLoading} unmountOnExit>
                     <Skeleton width={"80%"} />
                   </Fade>
+
                   <Box>
                     <Typography variant="subtitle1">
                       {data?.description ?? "Tidak ada deskripsi"}
@@ -222,13 +210,13 @@ export default function Page() {
                   <Box>
                     <Typography
                       sx={{
-                        fontSize: 22,
+                        fontSize: 18,
                         fontWeight: 700,
                         letterSpacing: "-0.015em",
                         lineHeight: 1.25,
                       }}
                     >
-                      Kontak
+                      Syarat & Ketentuan
                     </Typography>
                   </Box>
 
@@ -236,31 +224,14 @@ export default function Page() {
                     <Fade in={isLoading} unmountOnExit>
                       <Skeleton width={"80%"} />
                     </Fade>
-                    <BusinessWebsiteItem
-                      loading={isLoading}
-                      url={data?.websiteUrl}
-                    />
-                    <BusinessContactItem
-                      loading={isLoading}
-                      data={data?.businessContact ?? []}
-                    />
-                    <BusinessSocialItem
-                      loading={isLoading}
-                      data={data?.businessSocial ?? []}
-                    />
+
+                    <Box>
+                      <Typography variant="subtitle1">
+                        {data?.terms ?? "Tidak ada deskripsi"}
+                      </Typography>
+                    </Box>
                   </Stack>
                 </Stack>
-              </Stack>
-            </Fade>
-
-            <Fade key={"description"} in={tab === "description"} unmountOnExit>
-              <Stack direction={"row"} justifyContent={"center"}>
-                <Stack
-                  direction={"column"}
-                  flexBasis={"60%"}
-                  p={2}
-                  spacing={2}
-                ></Stack>
               </Stack>
             </Fade>
 
@@ -269,7 +240,6 @@ export default function Page() {
                 <BusinessValidationItem
                   data={data?.validations ?? []}
                   loading={isLoading}
-                  onValidation={onClickValidation}
                 />
               </div>
             </Fade>
@@ -278,7 +248,10 @@ export default function Page() {
         <Toolbar />
         <Toolbar />
         <SnacbarLoading loading={isLoading} />
+        <ServiceUpdate id={id} dialog={dialog} callback={reload} />
       </Box>
     </PageTemplate>
   );
-}
+};
+
+export default ServiceDetail;

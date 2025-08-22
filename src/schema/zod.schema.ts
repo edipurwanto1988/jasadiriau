@@ -9,6 +9,16 @@ z.config({
       }
     }
 
+    if (iss.code === "invalid_type") {
+      if (iss.expected === "number") {
+        if (iss.input === "" || isNaN(Number(iss.input))) {
+          message = "Field ini wajib diisi";
+        }
+      }
+    }
+
+    console.log(iss);
+
     return message;
   },
 });

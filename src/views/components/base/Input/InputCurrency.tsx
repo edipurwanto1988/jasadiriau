@@ -62,7 +62,7 @@ const InputCurrency = ({
     <Suspense fallback="loading">
       <TextField
         {...props}
-        value={formatValue(String(props.value))}
+        value={formatValue(String(props.value ?? props.defaultValue))}
         onChange={(e) => {
           if (props.onChange) {
             e.target.value = e.target.value.replace(/[^0-9]/g, "");

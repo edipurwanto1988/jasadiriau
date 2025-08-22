@@ -2,7 +2,7 @@ import { EventSend } from "ezhooks";
 import * as utils from "ezhooks/lib/utils";
 
 const url = {
-  slider: `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/slider`,
+  slider: `${process.env.NEXT_PUBLIC_BASE_URL}/api/slider`,
 };
 
 export const getSlider = async (

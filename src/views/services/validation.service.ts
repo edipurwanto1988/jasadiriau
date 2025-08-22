@@ -1,20 +1,18 @@
-import { EventSend } from "ezhooks";
-
+import { UpdateValidationSchema } from "@/schema/validation.schema";
 const url = {
-  index: `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/validation`,
+  index: `${process.env.NEXT_PUBLIC_BASE_URL}/api/validation`,
 };
 
 export const postValidation = async (
-  event?: EventSend
+  data: UpdateValidationSchema
 ): Promise<HttpResponse<Validation>> => {
   const res = await fetch(url.index, {
     method: "post",
-    signal: event?.ctr?.signal,
     next: { revalidate: 0 },
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify(event!.data!()),
+    body: JSON.stringify(data),
   });
 
   if (!res.ok) {

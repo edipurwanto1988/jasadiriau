@@ -26,3 +26,46 @@ export const paginate = (qs: any) => {
     take: +(qs.perPage ?? 25),
   };
 };
+
+export const formatValueRupiah = (val: string): string => {
+  const prefix = "Rp";
+  const decimalSeparator = ",";
+  const thousandSeparator = ".";
+  const allowNegative = false;
+  const decimalScale = 2;
+  if (val === "" || val === null || val === undefined) return "";
+
+  if (!prefix) return val;
+
+  // Remove prefix for formatting
+  let rawValue = val.startsWith(prefix) ? val.substring(prefix.length) : val;
+
+  // Remove non-numeric characters (except decimal and negative sign)
+  const numericValue = rawValue.replace(
+    new RegExp(`[^0-9${decimalSeparator}-]`, "g"),
+    ""
+  );
+
+  // Handle negative values
+  const isNegative = allowNegative && numericValue[0] === "-";
+  const absValue = isNegative ? numericValue.substring(1) : numericValue;
+
+  // Split into integer and decimal parts
+  let [integer, decimal] = absValue.split(decimalSeparator || ",");
+
+  // Add thousand separators to the integer part
+  integer = integer.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator ?? "");
+
+  // Limit decimal places if applicable
+  if (decimalScale !== null && decimal !== undefined) {
+    decimal = decimal.substring(0, decimalScale);
+  }
+
+  // Combine prefix, integer, and decimal parts
+  const formattedValue = `${integer}${
+    decimal !== undefined ? `${decimalSeparator}${decimal}` : ""
+  }`;
+  return isNegative
+    ? `-${prefix}${formattedValue}`
+    : `${prefix}${formattedValue}`;
+};

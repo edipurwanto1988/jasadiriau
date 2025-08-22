@@ -84,7 +84,7 @@ type BusinessProfile = {
   description?: string;
   address?: string;
   websiteUrl?: string;
-  status: StatusType;
+  status: "active" | "inactive" | "pending";
   user?: User;
   businessSocial?: BusinessSocial[];
   businessContact?: BusinessContact[];
@@ -102,7 +102,7 @@ type User = {
 };
 
 type Service = {
-  id?: number;
+  id: number;
   name: string;
   slug?: string;
   description?: string;
@@ -112,6 +112,10 @@ type Service = {
   categoryId: number;
   profileId?: number;
   category?: Category;
+  bussinessName?: string;
+  categoryName?: string;
+  imageUrl?: string;
+  validations?: Validation[];
 };
 
 type Image = {

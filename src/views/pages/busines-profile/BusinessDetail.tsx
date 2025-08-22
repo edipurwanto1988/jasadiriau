@@ -9,108 +9,51 @@ import Typography from "@mui/material/Typography";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
 import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
-import { useSnackbar } from "@/views/contexts/SnackbarContext";
-import { getBusinessProfileID } from "@/views/services/business-profile.service";
-import { useParams, useRouter } from "next/navigation";
 import BusinessSocialItem from "@/views/pages/busines-profile/BusinessSocialItem";
 import BusinessContactItem from "@/views/pages/busines-profile/BusinessContactItem";
 import BusinessWebsiteItem from "@/views/pages/busines-profile/BusinessWebsiteItem";
 import ProfileUpload from "@/views/pages/image/ProfileUpload";
-import useDialog from "@/views/hooks/useDialog";
-import useMutation from "ezhooks/lib/useMutation";
-import { inputImage } from "@/lib/dummy";
-import { postImage } from "@/views/services/image.service";
 import StatusChip from "@/views/components/base/Chip/StatusChip";
 import Badge from "@mui/material/Badge";
 import Image from "next/image";
+import useSWR, { useSWRConfig } from "swr";
+import { businessUrl } from "@/views/services/business-profile.service";
+import { useRouter } from "next/navigation";
 
 import Skeleton from "@mui/material/Skeleton";
 import BusinessValidationItem from "@/views/pages/busines-profile/BusinessValidationItem";
 
-const EditIcon = LoadComponent(() => import("@mui/icons-material/Edit"));
-
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
-const BusinessDetail = () => {
-  const { id } = useParams();
+const BusinessDetail = ({ id }: { id: number }) => {
   const router = useRouter();
-  const dialog = useDialog();
-  const openSnackbar = useSnackbar();
-
-  const [loading, setLoading] = React.useState(true);
   const [tab, setTab] = React.useState("overview");
-  const [isPending, startTransaction] = React.useTransition();
-  const [data, setData] = React.useState<BusinessProfile>({
-    id: 0,
-    businessName: "",
-    status: "pending",
-    imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`,
-  });
+
+  const { mutate } = useSWRConfig();
+  const { data, isLoading } = useSWR<BusinessProfile>(
+    `${businessUrl.business}/${id}`,
+    (url) =>
+      fetch(url)
+        .then((resp) => resp.json())
+        .then((resp) => resp.data)
+  );
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
   };
 
-  const mutation = useMutation({
-    defaultValue: {
-      image: inputImage,
-    },
-  });
-
-  const fetchData = () => {
-    getBusinessProfileID({ params: { id } })
-      .then((resp) => {
-        startTransaction(() => {
-          mutation.setData({
-            image: {
-              entityType: "profile",
-              entityId: +id!,
-            },
-          });
-
-          setData(resp.data);
-        });
-      })
-      .catch((e) => {})
-      .finally(() => {
-        setLoading(false);
-      });
+  const reload = () => {
+    mutate(`${businessUrl.business}/${id}`);
   };
-
-  const onSaveImage = (blob: Blob, close: () => void) => {
-    mutation.send({
-      data: {
-        ...mutation.data().image,
-        file: new File([blob], `cropped.webp`, {
-          type: blob.type,
-          lastModified: Date.now(),
-        }),
-      },
-      service: postImage,
-      onSuccess: (resp) => {
-        fetchData();
-        openSnackbar("Profil baru berhasil diunggah.");
-        close();
-      },
-    });
-  };
-
-  React.useEffect(() => {
-    if (!id) return;
-    fetchData();
-  }, [id]);
 
   return (
     <PageTemplate
-      title={data.businessName}
-      onReload={fetchData}
+      title={data?.businessName}
+      onReload={reload}
       onUpdate={() => {
         router.push(`${id}/update`);
       }}
-      onDelete={console.log}
       onBack={router.back}
     >
       <Box sx={{ width: "100%", minHeight: "100%", overflow: "hidden auto" }}>
@@ -128,8 +71,8 @@ const BusinessDetail = () => {
                 }}
               >
                 <Image
-                  src={data.imageUrl ?? profile}
-                  alt={data.businessName}
+                  src={data?.imageUrl ?? profile}
+                  alt={data?.businessName ?? "profile"}
                   width={128}
                   height={128}
                   priority
@@ -137,22 +80,14 @@ const BusinessDetail = () => {
                 />
               </Box>
 
-              <Box>
-                <Button
-                  size="small"
-                  endIcon={<EditIcon fontSize="inherit" />}
-                  onClick={dialog.openDialog}
-                >
-                  Ubah Profil
-                </Button>
-              </Box>
+              <ProfileUpload entityId={+id!} callback={reload} />
             </Stack>
 
             <Stack direction={"column"} justifyContent={"flex-start"}>
               <Box>
                 <ListItemText
                   primary={
-                    loading ? <Skeleton width={100} /> : data.businessName
+                    isLoading ? <Skeleton width={100} /> : data?.businessName
                   }
                   secondary={"Kategori"}
                   slotProps={{
@@ -171,7 +106,7 @@ const BusinessDetail = () => {
                 />
               </Box>
 
-              <StatusChip status={data.status} icon />
+              <StatusChip status={data?.status?? "pending"} icon />
             </Stack>
           </Stack>
 
@@ -202,7 +137,7 @@ const BusinessDetail = () => {
                     variant="dot"
                     color="error"
                     invisible={
-                      !(data.validations ?? []).some((v) => v.action === null)
+                      !(data?.validations ?? []).some((v) => v.action === null)
                     }
                     sx={{
                       "& .MuiBadge-badge": {
@@ -233,12 +168,12 @@ const BusinessDetail = () => {
                     </Typography>
                   </Box>
 
-                  <Fade in={loading} unmountOnExit>
+                  <Fade in={isLoading} unmountOnExit>
                     <Skeleton width={"80%"} />
                   </Fade>
                   <Box>
                     <Typography variant="subtitle1">
-                      {data.description ?? "Tidak ada deskripsi"}
+                      {data?.description ?? "Tidak ada deskripsi"}
                     </Typography>
                   </Box>
                 </Stack>
@@ -258,20 +193,20 @@ const BusinessDetail = () => {
                   </Box>
 
                   <Stack direction={"column"} spacing={2}>
-                    <Fade in={loading} unmountOnExit>
+                    <Fade in={isLoading} unmountOnExit>
                       <Skeleton width={"80%"} />
                     </Fade>
                     <BusinessWebsiteItem
-                      loading={loading}
-                      url={data.websiteUrl}
+                      loading={isLoading}
+                      url={data?.websiteUrl}
                     />
                     <BusinessContactItem
-                      loading={loading}
-                      data={data.businessContact ?? []}
+                      loading={isLoading}
+                      data={data?.businessContact ?? []}
                     />
                     <BusinessSocialItem
-                      loading={loading}
-                      data={data.businessSocial ?? []}
+                      loading={isLoading}
+                      data={data?.businessSocial ?? []}
                     />
                   </Stack>
                 </Stack>
@@ -292,8 +227,8 @@ const BusinessDetail = () => {
             <Fade key={"validation"} in={tab === "validation"} unmountOnExit>
               <div>
                 <BusinessValidationItem
-                  data={data.validations ?? []}
-                  loading={loading}
+                  data={data?.validations ?? []}
+                  loading={isLoading}
                 />
               </div>
             </Fade>
@@ -301,14 +236,7 @@ const BusinessDetail = () => {
         </Stack>
         <Toolbar />
         <Toolbar />
-        <SnacbarLoading loading={loading} pending={isPending} />
-        <ProfileUpload
-          dialog={dialog}
-          onSave={(img, close) => {
-            console.log(img);
-            onSaveImage(img as Blob, close);
-          }}
-        />
+        <SnacbarLoading loading={isLoading} />
       </Box>
     </PageTemplate>
   );

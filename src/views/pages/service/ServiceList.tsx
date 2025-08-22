@@ -7,22 +7,35 @@ import useTable from "ezhooks/lib/useTable";
 import { getPagination } from "@/utils/table";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { useAlert } from "@/views/contexts/AlertContext";
-import {
-  deleteAccountBusinessProfile,
-  getBusinessProfile,
-} from "@/views/services/business-profile.service";
+import { deleteAccountBusinessProfile } from "@/views/services/business-profile.service";
+import { statusActiveLabel } from "@/utils/string";
 import { useRouter } from "next/navigation";
 import Avatar from "@mui/material/Avatar";
 import Link from "@mui/material/Link";
+import { Metadata } from "next";
 import StatusChip from "@/views/components/base/Chip/StatusChip";
+import { deleteService, getService } from "@/views/services/service.service";
+import useDialog from "@/views/hooks/useDialog";
+import ServiceCreate from "./ServiceCreate";
+import useMultiDialog from "@/views/hooks/useMultiDialog";
+import ServiceUpdate from "./ServiceUpdate";
 
-const AccountBusiness = () => {
-  const router = useRouter();
+const ServiceTable = () => {
   const openSnackbar = useSnackbar();
   const alert = useAlert();
+  const [id, setID] = React.useState(0);
+
+  const dialog = useMultiDialog({
+    keys: ["create", "update"],
+    onClose: {
+      update: () => {
+        setID(0);
+      },
+    },
+  });
 
   const table = useTable({
-    service: getBusinessProfile,
+    service: getService,
     selector: (resp) => resp.data,
     total: (resp) => resp.total ?? 0,
     pagination: {
@@ -35,19 +48,19 @@ const AccountBusiness = () => {
     (id: number) => () => {
       alert.set({
         open: true,
-        title: "Hapus Profil Bisnis",
+        title: "Hapus Layanan",
         message:
           "Tindakan ini akan menghapus data secara permanen. Anda yakin ingin melanjutkan?",
         type: "warning",
         confirm: {
           onClick: () => {
             alert.set({ loading: true });
-            deleteAccountBusinessProfile({ params: { id } })
+            deleteService({ params: { id } })
               .then((resp) => {
                 if (!resp.ok) {
                   throw resp;
                 }
-                openSnackbar("Profil Bisnis berhasil dihapuskan.");
+                openSnackbar("Layanan berhasil dihapuskan.");
                 alert.reset();
                 const timer = setTimeout(() => {
                   table.reload();
@@ -66,16 +79,17 @@ const AccountBusiness = () => {
   );
 
   const onClickUpdate = React.useCallback(
-    (id: number) => () => {
-      router.push(`business-profile/${id}/update`);
+    (_id: number) => () => {
+      setID(_id);
+      dialog.getDialog("update").openDialog();
     },
     [table.data]
   );
 
   return (
     <PageTemplate
-      title="Profil Bisnis"
-      onCreate={() => router.push("business-profile/create")}
+      title="Layanan"
+      onCreate={dialog.getDialog("create").openDialog}
       onReload={table.reload}
     >
       <DataTablePage
@@ -93,7 +107,7 @@ const AccountBusiness = () => {
             label: "Foto",
             value: (value) => (
               <Avatar
-                alt={value.businessName}
+                alt={value.name}
                 src={value.imageUrl}
                 variant="rounded"
                 sx={{ width: 32, height: 32 }}
@@ -103,19 +117,29 @@ const AccountBusiness = () => {
             align: "center",
           },
           {
-            label: "Nama Bisnis",
+            label: "Layanan",
             value: (value) => (
-              <Link href={`business-profile/${value.id}`} underline="none">
-                {value.businessName}
+              <Link href={`service/${value.id}`} underline="none">
+                {value.name}
               </Link>
             ),
           },
           {
-            label: "Layanan",
-            value: (_, i) => 0,
-            head: { align: "center" },
-            align: "center",
+            label: "Profil Bisnis",
+            value: (value) => (
+              <Link
+                href={`business-profile/${value.profileId}`}
+                underline="none"
+              >
+                {value.bussinessName ?? ""}
+              </Link>
+            ),
           },
+          {
+            label: "Kategori",
+            value: (value) => value.categoryName,
+          },
+
           {
             label: "Status",
             value: (value) => <StatusChip status={value.status} />,
@@ -138,8 +162,18 @@ const AccountBusiness = () => {
         ]}
         pagination={getPagination(table.pagination)}
       />
+
+      <ServiceCreate
+        dialog={dialog.getDialog("create")}
+        callback={table.reload}
+      />
+      <ServiceUpdate
+        id={id}
+        dialog={dialog.getDialog("update")}
+        callback={table.reload}
+      />
     </PageTemplate>
   );
 };
 
-export default AccountBusiness;
+export default ServiceTable;

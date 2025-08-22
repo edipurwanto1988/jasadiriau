@@ -2,7 +2,7 @@ import { EventSend } from "ezhooks";
 import * as utils from "ezhooks/lib/utils";
 
 const url = {
-  setting: `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/setting`,
+  setting: `${process.env.NEXT_PUBLIC_BASE_URL}/api/setting`,
 };
 
 export const getSetting = async (

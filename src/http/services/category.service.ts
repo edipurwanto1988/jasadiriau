@@ -4,6 +4,7 @@ import {
   CreateCategorySchema,
   UpdateCategorySchema,
 } from "@/schema/category.schema";
+import { paginate } from "@/utils/format";
 
 export const createCategory = (payload: CreateCategorySchema) => {
   return prisma.$transaction(async (tx) => {
@@ -24,8 +25,24 @@ export const categoryPaginate = (qs: URLSearchParams) => {
 
   return Promise.all([
     prisma.category.count({ where }),
-    prisma.category.findMany({ where, include: { children: true } }),
+    prisma.category.findMany({
+      where,
+      include: { children: true },
+      ...paginate(qs),
+    }),
   ]);
+};
+
+export const categoryAll = () => {
+  const where: Prisma.CategoryWhereInput = {
+    parentId: null,
+  };
+
+  return prisma.category.findMany({
+    where,
+    include: { children: true },
+    orderBy: { name: "asc" },
+  });
 };
 
 export const categoryDetail = (id: number) => {

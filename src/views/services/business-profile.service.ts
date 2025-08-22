@@ -1,15 +1,15 @@
 import { EventSend } from "ezhooks";
 
-const url = {
-  business: `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/business-profile`,
+export const businessUrl = {
+  business: `${process.env.NEXT_PUBLIC_BASE_URL}/api/business-profile`,
   account: `${process.env.NEXT_PUBLIC_BASE_URL}/api/account/business-profile`,
-  meta: `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/business-profile/meta`,
+  meta: `${process.env.NEXT_PUBLIC_BASE_URL}/api/business-profile/meta`,
 };
 
 export const getBusinessProfile = async (
   event?: EventSend
 ): Promise<HttpResponse<BusinessProfile[]>> => {
-  let urlQuery = url.business;
+  let urlQuery = businessUrl.business;
   const search = new URLSearchParams(event?.params);
   if (search.size > 0) {
     urlQuery += "?";
@@ -26,7 +26,7 @@ export const getBusinessProfile = async (
 
 export const postBusinessProfile = async (event?: EventSend) => {
   const isNewRecord = !(event?.data && event.data().id);
-  const res = await fetch(url.business, {
+  const res = await fetch(businessUrl.business, {
     method: isNewRecord ? "post" : "put",
     signal: event?.ctr?.signal,
     next: { revalidate: 0 },
@@ -44,7 +44,7 @@ export const postBusinessProfile = async (event?: EventSend) => {
 };
 
 export const deleteBusinessProfile = (event?: EventSend) => {
-  return fetch(`${url.business}/${event?.params?.id}`, {
+  return fetch(`${businessUrl.business}/${event?.params?.id}`, {
     method: "delete",
     signal: event?.ctr?.signal,
     next: { revalidate: 0 },
@@ -54,7 +54,7 @@ export const deleteBusinessProfile = (event?: EventSend) => {
 export const getBusinessProfileID = async (
   event?: EventSend
 ): Promise<HttpResponse<BusinessProfile>> => {
-  const res = await fetch(`${url.business}/${event?.params?.id}`, {
+  const res = await fetch(`${businessUrl.business}/${event?.params?.id}`, {
     signal: event?.ctr?.signal,
     next: { revalidate: 0 },
   });
@@ -65,7 +65,7 @@ export const postAccountBusinessProfile = async (
   event?: EventSend
 ): Promise<HttpResponse<BusinessProfile>> => {
   const isNewRecord = !(event?.data && event.data().id);
-  const res = await fetch(url.account, {
+  const res = await fetch(businessUrl.account, {
     method: isNewRecord ? "post" : "put",
     signal: event?.ctr?.signal,
     next: { revalidate: 0 },
@@ -82,7 +82,7 @@ export const postAccountBusinessProfile = async (
 };
 
 export const deleteAccountBusinessProfile = (event?: EventSend) => {
-  return fetch(`${url.account}/${event?.params?.id}`, {
+  return fetch(`${businessUrl.account}/${event?.params?.id}`, {
     method: "delete",
     signal: event?.ctr?.signal,
     next: { revalidate: 0 },
@@ -90,7 +90,7 @@ export const deleteAccountBusinessProfile = (event?: EventSend) => {
 };
 
 export const getBusinessMeta = async (event?: EventSend) => {
-  const res = await fetch(url.meta, {
+  const res = await fetch(businessUrl.meta, {
     signal: event?.ctr?.signal,
     next: { revalidate: 0 },
   });

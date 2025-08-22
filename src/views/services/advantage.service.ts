@@ -1,7 +1,7 @@
 import { EventSend } from "ezhooks";
 
 const url = {
-  advantage: `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/advantage`,
+  advantage: `${process.env.NEXT_PUBLIC_BASE_URL}/api/advantage`,
 };
 
 export const getAdvantage = async (

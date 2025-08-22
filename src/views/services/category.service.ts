@@ -1,13 +1,14 @@
 import { EventSend } from "ezhooks";
 
-const url = {
-  category: `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/category`,
+export const categoryUrl = {
+  category: `${process.env.NEXT_PUBLIC_BASE_URL}/api/category`,
+  all: `${process.env.NEXT_PUBLIC_BASE_URL}/api/category/all`,
 };
 
 export const getCategory = async (
   event?: EventSend
 ): Promise<HttpResponse<Category[]>> => {
-  let urlQuery = url.category;
+  let urlQuery = categoryUrl.category;
   const search = new URLSearchParams(event?.params);
   if (search.size > 0) {
     urlQuery += "?";
@@ -15,8 +16,8 @@ export const getCategory = async (
   }
 
   const res = await fetch(urlQuery, {
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
 
   return res.json();
@@ -24,10 +25,10 @@ next: { revalidate: 0 },
 
 export const postCategory = async (event?: EventSend) => {
   const isNewRecord = !(event?.data && event.data().id);
-  const res = await fetch(url.category, {
+  const res = await fetch(categoryUrl.category, {
     method: isNewRecord ? "post" : "put",
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
     headers: {
       "content-type": "application/json",
     },
@@ -42,19 +43,19 @@ next: { revalidate: 0 },
 };
 
 export const deleteCategory = (event?: EventSend) => {
-  return fetch(`${url.category}/${event?.params?.id}`, {
+  return fetch(`${categoryUrl.category}/${event?.params?.id}`, {
     method: "delete",
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
 };
 
 export const getCategoryID = async (
   event?: EventSend
 ): Promise<HttpResponse<Category>> => {
-  const res = await fetch(`${url.category}/${event?.params?.id}`, {
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+  const res = await fetch(`${categoryUrl.category}/${event?.params?.id}`, {
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
   return res.json();
 };
