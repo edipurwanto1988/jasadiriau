@@ -29,6 +29,7 @@ import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { businessUrl } from "@/views/services/business-profile.service";
 import { useRouter } from "next/navigation";
 import ServiceListCard from "../service/ServiceListCard";
+import BusinessLocationlItem from "./BusinessLocationlItem";
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
@@ -195,6 +196,7 @@ const BusinessDetail = ({ id, role }: { id: number; role?: RoleType }) => {
               }}
             >
               <Tab value="overview" label="Umum" />
+              <Tab value="location" label="Lokasi" />
               <Tab value="service" label="Layanan" />
               <Tab value="review" label="Reviews" />
               <Tab
@@ -225,7 +227,12 @@ const BusinessDetail = ({ id, role }: { id: number; role?: RoleType }) => {
               unmountOnExit
               timeout={{ enter: 1000, exit: 0 }}
             >
-              <Stack direction={"column"} justifyContent={"center"} spacing={3} py={2}>
+              <Stack
+                direction={"column"}
+                justifyContent={"center"}
+                spacing={3}
+                py={2}
+              >
                 <Stack direction={"column"} spacing={2}>
                   <Typography
                     component={"div"}
@@ -285,6 +292,20 @@ const BusinessDetail = ({ id, role }: { id: number; role?: RoleType }) => {
                   </Stack>
                 </Stack>
               </Stack>
+            </Fade>
+
+            <Fade
+              key={"location"}
+              in={tab === "location"}
+              unmountOnExit
+              timeout={{ enter: 1000, exit: 0 }}
+            >
+              <div>
+                <BusinessLocationlItem
+                  loading={isLoading}
+                  data={data?.businessLocation ?? []}
+                />
+              </div>
             </Fade>
 
             <Fade

@@ -11,7 +11,7 @@ const Search = React.lazy(() => import("@mui/icons-material/Search"));
 export type FilterCellProps = {
   type: "text" | "date" | "select" | "datetime-local";
   value: any;
-  items: InputSelectItem[];
+  items?: InputSelectItem[];
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   options?: TextFieldProps;
   filterOptions?: TextFieldProps;
@@ -43,20 +43,26 @@ const FilterCell = ({
             variant="outlined"
             size="small"
             value={value}
-            InputProps={{
-              endAdornment:
-                type === "text" ? (
-                  <InputAdornment position="end">
-                    <React.Suspense fallback="loading...">
-                      <Search color="disabled" />
-                    </React.Suspense>
-                  </InputAdornment>
-                ) : null,
+            placeholder="Cari disini..."
+            slotProps={{
+              input: {
+                endAdornment:
+                  type === "text" ? (
+                    <InputAdornment position="end">
+                      <React.Suspense fallback="loading...">
+                        <Search color="disabled" />
+                      </React.Suspense>
+                    </InputAdornment>
+                  ) : null,
+              },
             }}
             sx={{
               "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "transparent",
-                borderRadius: 0,
+                borderColor: "unset",
+                borderRadius: "0 !important",
+              },
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "unset",
               },
               m: 0,
               p: 0,
@@ -75,7 +81,7 @@ const FilterCell = ({
           margin="none"
           size="small"
           value={value}
-          items={items}
+          items={items ?? []}
           onChange={onChange}
           {...filterOptions}
           {...options}
@@ -85,6 +91,9 @@ const FilterCell = ({
               borderColor: "transparent",
               borderRadius: 0,
             },
+            "& .MuiOutlinedInput-root": {
+                backgroundColor: "unset",
+              },
           }}
         />
       ) : null}

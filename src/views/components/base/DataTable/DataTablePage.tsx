@@ -148,7 +148,7 @@ const DataTablePage = <T,>({
           ) : data.length === 0 ? (
             <TableRow>
               <TableCell variant="body" colSpan={column.length} align="center">
-                {emptyText ?? "Data not available"}
+                {emptyText ?? "Data belum tersedia"}
               </TableCell>
             </TableRow>
           ) : (

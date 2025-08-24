@@ -85,3 +85,15 @@ export const decodeJwtResponse = (token: string) => {
 
   return JSON.parse(jsonPayload);
 };
+
+export const slugify = (text: string): string => {
+  return text
+    .toString()
+    .normalize("NFD") // hapus accent
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "") // hapus karakter spesial
+    .replace(/\s+/g, "-") // spasi jadi -
+    .replace(/-+/g, "-"); // multiple - jadi 1
+};

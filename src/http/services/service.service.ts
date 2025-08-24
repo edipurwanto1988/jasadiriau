@@ -15,6 +15,23 @@ export const servicePaginate = async (qs: URLSearchParams, userId?: number) => {
         userId,
       },
     }),
+    ...(qs.has("name") && {
+      name: {
+        contains: String(qs.get("name")),
+        mode: "insensitive",
+      },
+    }),
+    ...(qs.has("ctg") && {
+      categoryId: Number(qs.get("ctg")),
+    }),
+    ...(qs.has("profile") && {
+      businessProfile: {
+        businessName: {
+          contains: String(qs.get("profile")),
+          mode: "insensitive",
+        },
+      },
+    }),
   };
   const count = await prisma.service.count({ where });
   const results = await prisma.service.findMany({

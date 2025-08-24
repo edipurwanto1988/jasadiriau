@@ -23,9 +23,8 @@ type Props = {
 
 const ServiceUpdate = ({ id, dialog, callback }: Props) => {
   const ref = React.useRef<HTMLFormElement | null>(null);
-  const businessRef = React.useRef<HTMLSelectElement | null>(null);
-  const categoryRef = React.useRef<HTMLSelectElement | null>(null);
   const openSnackbar = useSnackbar();
+  const [time, setTime] = React.useState(0);
 
   const { data } = useSWR<Service>(
     dialog.open ? `${serviceUrl.serviceAccount}/${id}` : null,
@@ -121,16 +120,13 @@ const ServiceUpdate = ({ id, dialog, callback }: Props) => {
     if (!data) return;
     React.startTransition(() => {
       mutation.setData(omit(data, ["bussinessName", "categoryName"]));
-
-      if (businessRef.current) {
-        businessRef.current.value = String(data?.profileId ?? "");
-      }
-
-      if (categoryRef.current) {
-        categoryRef.current.value = String(data?.categoryId ?? "");
-      }
     });
   }, [data, dialog.open]);
+
+  React.useEffect(() => {
+    if (!data) return;
+    setTime(new Date().getTime());
+  }, [data, dataBusiness, dataCategory]);
 
   return (
     <Dialog
@@ -150,13 +146,12 @@ const ServiceUpdate = ({ id, dialog, callback }: Props) => {
       ]}
     >
       <ServiceForm
+        time={time}
         mutation={mutation}
         validation={validation}
         categories={categoryMemo}
         businesses={businessMemo}
         ref={ref}
-        businessRef={businessRef}
-        categoryRef={categoryRef}
         onSubmit={onSubmit}
       />
     </Dialog>

@@ -19,6 +19,8 @@ import useDialog from "@/views/hooks/useDialog";
 import ServiceCreate from "./ServiceCreate";
 import useMultiDialog from "@/views/hooks/useMultiDialog";
 import ServiceUpdate from "./ServiceUpdate";
+import useSWRImmutable from "swr/immutable";
+import { categoryUrl } from "@/views/services/category.service";
 
 const ServiceTable = () => {
   const openSnackbar = useSnackbar();
@@ -43,6 +45,14 @@ const ServiceTable = () => {
     },
     replaceUrl: true,
   });
+
+  const { data: dataCategory } = useSWRImmutable<Category[]>(
+    categoryUrl.all,
+    (url) =>
+      fetch(url)
+        .then((resp) => resp.json())
+        .then((resp) => resp.data)
+  );
 
   const onClickDelete = React.useCallback(
     (id: number) => () => {
@@ -86,6 +96,13 @@ const ServiceTable = () => {
     [table.data]
   );
 
+  const categoryMemo = React.useMemo(() => {
+    return (dataCategory ?? []).map((val) => ({
+      primary: val.name,
+      value: val.id,
+    }));
+  }, [dataCategory]);
+
   return (
     <PageTemplate
       title="Layanan"
@@ -103,19 +120,19 @@ const ServiceTable = () => {
             head: { padding: "checkbox", align: "center" },
             align: "center",
           },
-          {
-            label: "Foto",
-            value: (value) => (
-              <Avatar
-                alt={value.name}
-                src={value.imageUrl}
-                variant="rounded"
-                sx={{ width: 32, height: 32 }}
-              />
-            ),
-            head: { padding: "checkbox", align: "center" },
-            align: "center",
-          },
+          // {
+          //   label: "Foto",
+          //   value: (value) => (
+          //     <Avatar
+          //       alt={value.name}
+          //       src={value.imageUrl}
+          //       variant="rounded"
+          //       sx={{ width: 32, height: 32 }}
+          //     />
+          //   ),
+          //   head: { padding: "checkbox", align: "center" },
+          //   align: "center",
+          // },
           {
             label: "Layanan",
             value: (value) => (
@@ -123,6 +140,11 @@ const ServiceTable = () => {
                 {value.name}
               </Link>
             ),
+            filter: {
+              type: "text",
+              value: table.query("name", ""),
+              onChange: (e) => table.setQuery({ name: e.target.value }),
+            },
           },
           {
             label: "Profil Bisnis",
@@ -134,10 +156,24 @@ const ServiceTable = () => {
                 {value.bussinessName ?? ""}
               </Link>
             ),
+            filter: {
+              type: "text",
+              value: table.query("profile", ""),
+              onChange: (e) => table.setQuery({ profile: e.target.value }),
+            },
           },
           {
             label: "Kategori",
             value: (value) => value.categoryName,
+            filter: {
+              type: "select",
+              items: categoryMemo,
+              value: table.query("ctg", ""),
+              onChange: (e) =>
+                table.setQuery({
+                  ctg: e.target.value === "00" ? "" : +e.target.value,
+                }),
+            },
           },
 
           {
@@ -145,6 +181,20 @@ const ServiceTable = () => {
             value: (value) => <StatusChip status={value.status} />,
             head: { align: "center" },
             align: "center",
+            filter: {
+              type: "select",
+              items: [
+                { primary: "Aktif", value: "active" },
+                { primary: "Tidak Akif", value: "inactive" },
+                { primary: "Menunggu", value: "pending" },
+              ],
+              value: table.query("status", ""),
+              onChange: (e) =>
+                table.setQuery({
+                  status: e.target.value === "00" ? "" : e.target.value,
+                }),
+            },
+            width: "15%",
           },
           {
             label: "",

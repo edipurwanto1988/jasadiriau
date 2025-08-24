@@ -12,6 +12,7 @@ const TextField = LoadComponent(() => import("@mui/material/TextField"));
 
 type Props = {
   ref?: React.Ref<HTMLFormElement>;
+  time: number;
   businessRef?: React.RefObject<HTMLSelectElement | null>;
   categoryRef?: React.RefObject<HTMLSelectElement | null>;
   businesses: { primary: string; value: any }[];
@@ -23,8 +24,7 @@ type Props = {
 
 const ServiceForm = ({
   ref,
-  businessRef,
-  categoryRef,
+  time,
   businesses,
   categories,
   mutation,
@@ -35,6 +35,7 @@ const ServiceForm = ({
     <form ref={ref} noValidate className="default-form" onSubmit={onSubmit}>
       <Stack direction={"column"} spacing={3}>
         <InputSelectUncontrolled
+          key={`${time}-business`}
           label="Profil Bisnis"
           name="profileId"
           items={businesses}
@@ -42,12 +43,6 @@ const ServiceForm = ({
           error={validation.error("profileId")}
           helperText={validation.message("profileId")}
           required
-            slotProps={{
-            select: {
-              native: true,
-              ref: businessRef,
-            },
-          }}
         />
 
         <TextField
@@ -61,6 +56,7 @@ const ServiceForm = ({
         />
 
         <InputSelectUncontrolled
+          key={`${time}-category`}
           label="Kategori"
           name="categoryId"
           items={categories}
@@ -68,12 +64,6 @@ const ServiceForm = ({
           error={validation.error("categoryId")}
           helperText={validation.message("categoryId")}
           required
-          slotProps={{
-            select: {
-              native: true,
-              ref: categoryRef,
-            },
-          }}
         />
 
         <TextField

@@ -109,10 +109,15 @@ const AccountBusiness = () => {
                 {value.businessName}
               </Link>
             ),
+            filter: {
+              type: "text",
+              value: table.query("name", ""),
+              onChange: (e) => table.setQuery({ name: e.target.value }),
+            },
           },
           {
             label: "Layanan",
-            value: (_, i) => 0,
+            value: (value) => value.totalService,
             head: { align: "center" },
             align: "center",
           },
@@ -121,6 +126,20 @@ const AccountBusiness = () => {
             value: (value) => <StatusChip status={value.status} />,
             head: { align: "center" },
             align: "center",
+            filter: {
+              type: "select",
+              items: [
+                { primary: "Aktif", value: "active" },
+                { primary: "Tidak Akif", value: "inactive" },
+                { primary: "Menunggu", value: "pending" },
+              ],
+              value: table.query("status", ""),
+              onChange: (e) =>
+                table.setQuery({
+                  status: e.target.value === "00" ? "" : e.target.value,
+                }),
+            },
+            width: "15%",
           },
           {
             label: "",

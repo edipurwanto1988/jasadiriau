@@ -158,7 +158,14 @@ export const dummyBusinessProfile: CreateBusinessProfileSchema = {
     isActive: null,
     role: null,
   },
-  address: "",
+  businessLocation: [
+    {
+      provinceId: 0,
+      regencyId: 0,
+      districtId: 0,
+      addres: "",
+    },
+  ],
 };
 
 export const dummySocials = [

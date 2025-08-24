@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  reactStrictMode: false,
   output: "standalone",
   images: {
     remotePatterns: [new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/**`)],

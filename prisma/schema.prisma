@@ -54,6 +54,13 @@ enum Action {
   rejected
 }
 
+enum LocationType {
+  provinsi
+  kabupaten
+  kota
+  kecamatan
+}
+
 model User {
   id              Int               @id @default(autoincrement())
   name            String            @db.VarChar
@@ -201,19 +208,20 @@ model Setting {
 }
 
 model BusinessProfile {
-  id              Int               @id @default(autoincrement())
-  userId          Int?              @map("user_id") @db.Integer()
-  businessName    String            @map("business_name")
-  description     String?           @map("description")
-  address         String?           @map("address")
-  websiteUrl      String?           @map("website_url")
-  status          StatusType        @default(inactive) @map("status")
-  createdAt       DateTime?         @default(now()) @map("created_at")
-  updatedAt       DateTime?         @updatedAt @map("updated_at")
-  User            User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  BusinessSocial  BusinessSocial[]
-  BusinessContact BusinessContact[]
-  Service         Service[]
+  id               Int                @id @default(autoincrement())
+  userId           Int?               @map("user_id") @db.Integer()
+  businessName     String             @map("business_name")
+  description      String?            @map("description")
+  websiteUrl       String?            @map("website_url")
+  slug             String?            @unique
+  status           StatusType         @default(inactive) @map("status")
+  createdAt        DateTime?          @default(now()) @map("created_at")
+  updatedAt        DateTime?          @updatedAt @map("updated_at")
+  User             User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  BusinessSocial   BusinessSocial[]
+  BusinessContact  BusinessContact[]
+  Service          Service[]
+  BusinessLocation BusinessLocation[]
 
   @@map("business_profiles")
 }
@@ -285,4 +293,64 @@ model Notification {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("notifications")
+}
+
+model Province {
+  id               Int                @id @default(autoincrement())
+  name             String
+  slug             String?            @unique
+  createdAt        DateTime?          @default(now()) @map("created_at")
+  updatedAt        DateTime?          @updatedAt @map("updated_at")
+  regencies        Regency[]
+  businessLocation BusinessLocation[]
+
+  @@map("provinces")
+}
+
+model Regency {
+  id         Int       @id @default(autoincrement())
+  name       String
+  slug       String?   @unique
+  provinceId Int       @map("province_id")
+  createdAt  DateTime? @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+
+  province         Province           @relation(fields: [provinceId], references: [id])
+  districts        District[]
+  businessLocation BusinessLocation[]
+
+  @@map("regencies")
+}
+
+model District {
+  id        Int       @id @default(autoincrement())
+  name      String
+  slug      String?   @unique
+  regencyId Int       @map("regency_id")
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  regency   Regency            @relation(fields: [regencyId], references: [id])
+  locations BusinessLocation[]
+
+  @@map("districts")
+}
+
+model BusinessLocation {
+  id         Int     @id @default(autoincrement())
+  profileId  Int     @map("profile_id")
+  address    String?
+  provinceId Int     @map("province_id")
+  regencyId  Int     @map("regency_id")
+  districtId Int     @map("district_id")
+
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  businessProfile BusinessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  province        Province        @relation(fields: [provinceId], references: [id], onDelete: Cascade)
+  regency         Regency         @relation(fields: [regencyId], references: [id], onDelete: Cascade)
+  district        District        @relation(fields: [districtId], references: [id], onDelete: Cascade)
+
+  @@map("business_locations")
 }

@@ -11,30 +11,63 @@ import { formatPhoneNumber } from "@/utils/input";
 import { dummySocials } from "@/lib/dummy";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { parseFormData, parseResponseError } from "@/utils/format";
-import { postAccountBusinessProfile } from "@/views/services/business-profile.service";
+import {
+  businessUrl,
+  postAccountBusinessProfile,
+} from "@/views/services/business-profile.service";
 import { useRouter } from "next/navigation";
-import { createAccountBusinessProfileSchema } from "@/schema/business-profile.schema";
+import {
+  createAccountBusinessProfileSchema,
+  UpdateAccountBusinessProfileSchema,
+  updateAccountBusinessProfileSchema,
+} from "@/schema/business-profile.schema";
 import { dummyBusinessProfile } from "@/lib/dummy";
 import useMutation from "ezhooks/lib/useMutation";
 import useZod from "@/views/hooks/useZod";
 import PageTemplate from "@/views/components/templates/PageTemplate";
+import useSWRImmutable from "swr/immutable";
+import { locationUrl } from "@/views/services/location.service";
+import InputSelectUncontrolled from "@/views/components/base/Input/InputSelectUncontrolled";
+import Paper from "@mui/material/Paper";
+import Toolbar from "@mui/material/Toolbar";
+import SnacbarLoading from "@/views/components/base/Skeleton/SnacbarLoading";
 
 const TextField = LoadComponent(() => import("@mui/material/TextField"));
 const LanguageOutlinedIcon = LoadComponent(
   () => import("@mui/icons-material/LanguageOutlined")
 );
 
-const AccountCreateBusiness = () => {
+const AccountCreateBusiness = ({
+  id,
+  current,
+}: {
+  id?: number;
+  current?: UpdateAccountBusinessProfileSchema;
+}) => {
   const router = useRouter();
   const openSnackbar = useSnackbar();
+  const [province, setProvince] = React.useState<number | null>(null);
+  const [regency, setRegency] = React.useState<number | null>(null);
+  const [location, setLocation] = React.useState<Province | null>(null);
+  const [time, setTime] = React.useState(0);
+
+  const { data, isLoading } = useSWRImmutable<Province[]>(
+    locationUrl.province,
+    (url) =>
+      fetch(url)
+        .then((resp) => resp.json())
+        .then((resp) => resp.data)
+  );
 
   const mutation = useMutation({
-    defaultValue: dummyBusinessProfile,
+    defaultValue: { ...dummyBusinessProfile, ...current },
   });
 
   const validation = useZod({
     data: mutation.data(),
-    schema: createAccountBusinessProfileSchema,
+    schema: id
+      ? updateAccountBusinessProfileSchema
+      : createAccountBusinessProfileSchema,
   });
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -54,7 +87,11 @@ const AccountCreateBusiness = () => {
         data: payload,
         service: postAccountBusinessProfile,
         onSuccess: (resp) => {
-          openSnackbar("Profil bisnis Anda sudah berhasil dibuat.");
+          openSnackbar(
+            id
+              ? "Profil bisnis Anda sudah berhasil diperbaharui."
+              : "Profil bisnis anda sudah berhasil dibuat."
+          );
           const timer = setTimeout(() => {
             router.push(`/account/business-profile/${resp.data.id}`);
             clearTimeout(timer);
@@ -69,8 +106,44 @@ const AccountCreateBusiness = () => {
     }
   };
 
+  const provinces = React.useMemo(
+    () => (data ?? []).map((v) => ({ primary: v.name, value: v.id })),
+    [data]
+  );
+
+  const regencies = React.useMemo(
+    () =>
+      location
+        ? location.regencies.map((v) => ({ primary: v.name, value: v.id }))
+        : [],
+    [data, location, province]
+  );
+
+  const districts = React.useMemo(() => {
+    const find = location?.regencies?.find((v) => v.id === regency);
+    if (find) {
+      return find.districts.map((v) => ({ primary: v.name, value: v.id }));
+    }
+    return [];
+  }, [data, location, regencies, province, regency]);
+
+  React.useEffect(() => {
+    if (!current) return;
+    (current.businessLocation ?? []).forEach((v) => {
+      setProvince(v.provinceId);
+      setRegency(v.regencyId);
+      setLocation((data ?? []).find((f) => f.id === +v.provinceId) ?? null);
+    });
+
+    setTime(new Date().getTime());
+  }, [data, current]);
+
   return (
-    <PageTemplate title="Buat Bisnis Profil" onBack={() => router.back()}>
+    <PageTemplate
+      title={id ? "Ubah Profil Binis" : "Buat Profil Bisnis"}
+      onBack={() => router.back()}
+      onReload={router.refresh}
+    >
       <Box sx={{ overflow: "hidden auto" }}>
         <Stack
           direction={"row"}
@@ -91,9 +164,7 @@ const AccountCreateBusiness = () => {
             />
 
             <Stack direction={"column"} spacing={2} sx={{}}>
-              {mutation.has(`id`) ? (
-                <input type="hidden" name={`id`} value={mutation.value(`id`)} />
-              ) : null}
+              {id ? <input type="hidden" name={`id`} value={id} /> : null}
 
               <TextField
                 label="Nama Profil"
@@ -103,18 +174,6 @@ const AccountCreateBusiness = () => {
                 defaultValue={mutation.value("businessName", "")}
                 error={validation.error("businessName")}
                 helperText={validation.message("businessName")}
-              />
-
-              <TextField
-                label="Alamat"
-                rows={2}
-                multiline
-                required
-                placeholder="Masukkan alamat"
-                name="address"
-                defaultValue={mutation.value("address", "")}
-                error={validation.error("address")}
-                helperText={validation.message("address")}
               />
 
               <TextField
@@ -138,7 +197,7 @@ const AccountCreateBusiness = () => {
                   {mutation.has(`businessContact.0.id`) ? (
                     <input
                       type="hidden"
-                      name={`businessContact.0.id`}
+                      name={`businessContact[0][id]`}
                       value={mutation.value(`businessContact.0.id`)}
                     />
                   ) : null}
@@ -172,6 +231,153 @@ const AccountCreateBusiness = () => {
               </Stack>
             </Stack>
 
+            <Stack direction={"column"} spacing={2}>
+              <ListItemText
+                primary="Lokasi Bisnis"
+                secondary="Tambahkan lokasi bisnis anda."
+              />
+
+              <Stack direction={"column"} spacing={3}>
+                {mutation.value("businessLocation", []).map((val, i) => (
+                  <Stack
+                    component={Paper}
+                    direction={"column"}
+                    spacing={2}
+                    p={2}
+                    variant="outlined"
+                    key={i}
+                  >
+                    {mutation.has(`businessLocation.${i}.id`) ? (
+                      <input
+                        type="hidden"
+                        name={`businessLocation[${i}][id]`}
+                        value={mutation.value(`businessLocation.${i}.id`)}
+                      />
+                    ) : null}
+
+                    <InputSelectUncontrolled
+                      key={`${time + i + 1}-prov`}
+                      name={`businessLocation[${i}][provinceId]`}
+                      required
+                      label="Provinsi"
+                      items={provinces}
+                      defaultValue={mutation.value(
+                        `businessLocation.${i}.provinceId`,
+                        ""
+                      )}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setProvince(+value);
+                        setLocation(
+                          (data ?? []).find((f) => f.id === +value) ?? null
+                        );
+                      }}
+                      error={validation.error(
+                        `businessLocation.${i}.provinceId`
+                      )}
+                      helperText={validation.message(
+                        `businessLocation.${i}.provinceId`
+                      )}
+                    />
+
+                    <InputSelectUncontrolled
+                      key={`${time + i + 1}-reg`}
+                      name={`businessLocation[${i}][regencyId]`}
+                      label="Kabupaten / Kota"
+                      items={regencies}
+                      required
+                      defaultValue={mutation.value(
+                        `businessLocation.${i}.regencyId`,
+                        ""
+                      )}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setRegency(+value);
+                      }}
+                      error={validation.error(
+                        `businessLocation.${i}.regencyId`
+                      )}
+                      helperText={validation.message(
+                        `businessLocation.${i}.regencyId`
+                      )}
+                    />
+
+                    <InputSelectUncontrolled
+                      key={`${time + i + 1}-dis`}
+                      name={`businessLocation[${i}][districtId]`}
+                      label="Kecamatan"
+                      required
+                      items={districts}
+                      defaultValue={mutation.value(
+                        `businessLocation.${i}.districtId`,
+                        ""
+                      )}
+                      error={validation.error(
+                        `businessLocation.${i}.districtId`
+                      )}
+                      helperText={validation.message(
+                        `businessLocation.${i}.districtId`
+                      )}
+                    />
+
+                    <TextField
+                      label="Alamat"
+                      rows={2}
+                      multiline
+                      required
+                      placeholder="Masukkan alamat"
+                      name={`businessLocation[${i}][address]`}
+                      defaultValue={mutation.value(
+                        `businessLocation.${i}.address`,
+                        ""
+                      )}
+                    />
+
+                    <Stack direction={"row"} justifyContent={"space-between"}>
+                      {i > 0 ? (
+                        <Box>
+                          <Button
+                            size="small"
+                            color="error"
+                            onClick={() =>
+                              mutation.remove("businessLocation", i)
+                            }
+                          >
+                            Hapus
+                          </Button>
+                        </Box>
+                      ) : null}
+
+                      {mutation.size("businessLocation") - 1 === i ? (
+                        <Box>
+                          <Button
+                            variant="outlined"
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              mutation.add(
+                                "businessLocation",
+                                {
+                                  provinceId: 0,
+                                  regencyId: 0,
+                                  district: 0,
+                                  address: "",
+                                },
+                                "end"
+                              );
+                            }}
+                          >
+                            Tambah Lokasi
+                          </Button>
+                        </Box>
+                      ) : null}
+                    </Stack>
+                  </Stack>
+                ))}
+              </Stack>
+            </Stack>
+
             <Box>
               <Button
                 loading={mutation.processing}
@@ -180,9 +386,10 @@ const AccountCreateBusiness = () => {
                 disableElevation
                 type="submit"
               >
-                Tambah Bisnis
+                {id ? "Simpan Perubahan" : "Tambah Bisnis"}
               </Button>
             </Box>
+            <Toolbar />
           </Stack>
 
           <Stack direction={"column"} spacing={3} flexBasis={"40%"}>
@@ -274,6 +481,7 @@ const AccountCreateBusiness = () => {
           </Stack>
         </Stack>
       </Box>
+      <SnacbarLoading loading={isLoading} />
     </PageTemplate>
   );
 };

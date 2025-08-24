@@ -26,11 +26,11 @@ const FilterRow = ({ column, filterOptions }: FilterRowProps) => {
             filterOptions={filterOptions}
             sx={{
               borderRight: 1,
-              borderRightColor: "divider",
+              borderRightColor: "var( --mui-palette-default-divider)",
               ...(i > 0 &&
                 !column[i - 1] && {
                   borderLeft: 1,
-                  borderLeftColor: "divider",
+                  borderLeftColor: "var( --mui-palette-default-divider)",
                 }),
             }}
             {...val}
@@ -46,7 +46,7 @@ const FilterRow = ({ column, filterOptions }: FilterRowProps) => {
                 ...(!val &&
                   column[i + 1] && {
                     borderRight: 1,
-                    borderRightColor: "divider",
+                    borderRightColor: "var( --mui-palette-default-divider)",
                   }),
               }}
             />

@@ -17,6 +17,12 @@ export const businessProfilePaginate = async (
   const where: Prisma.BusinessProfileWhereInput = {
     ...(qs.has("status") && { status: qs.get("status") as StatusType }),
     ...(userId && { userId }),
+    ...(qs.has("name") && {
+      businessName: {
+        contains: String(qs.get("name")),
+        mode: "insensitive",
+      },
+    }),
   };
   const count = await prisma.businessProfile.count({ where });
 
@@ -25,6 +31,11 @@ export const businessProfilePaginate = async (
     include: {
       User: true,
       BusinessContact: true,
+      _count: {
+        select: {
+          Service: true,
+        },
+      },
     },
     ...paginate(qs),
   });
@@ -71,6 +82,13 @@ export const getBusinessProfileID = async (id: number) => {
               businessName: true,
             },
           },
+        },
+      },
+      BusinessLocation: {
+        include: {
+          province: true,
+          regency: true,
+          district: true,
         },
       },
     },
@@ -170,6 +188,7 @@ export const createAccountBusinessProfile = (
   {
     businessContact,
     businessSocial,
+    businessLocation,
     ...payload
   }: CreateAccountBusinessProfileSchema
 ) => {
@@ -194,6 +213,11 @@ export const createAccountBusinessProfile = (
           })),
         },
       },
+      BusinessLocation: {
+        createMany: {
+          data: businessLocation,
+        },
+      },
     };
     const profile = await tx.businessProfile.create({ data });
     await tx.validation.create({
@@ -210,6 +234,7 @@ export const updateAccountBusinessProfile = ({
   id,
   businessContact,
   businessSocial,
+  businessLocation,
   ...payload
 }: UpdateAccountBusinessProfileSchema) => {
   return prisma.$transaction(async (tx) => {
@@ -228,6 +253,29 @@ export const updateAccountBusinessProfile = ({
         await tx.businessSocial.update({
           data: { ...social, platform: social.platform as Platform },
           where: { id },
+        });
+      }
+    }
+
+    await tx.businessLocation.deleteMany({
+      where: {
+        id: { notIn: businessLocation.filter((v) => !!v.id).map((v) => v.id!) },
+        profileId: id,
+      },
+    });
+
+    for (const { id: locId, ...location } of businessLocation) {
+      if (locId) {
+        await tx.businessLocation.update({
+          data: location,
+          where: { id: locId },
+        });
+      } else {
+        await tx.businessLocation.create({
+          data: {
+            ...location,
+            profileId: id,
+          },
         });
       }
     }

@@ -4,11 +4,11 @@ import { StatusType } from "@/generated/prisma";
 import { createBusinessSocialSchema } from "./business-social.schema";
 import { createBusinessContactSchema } from "./business-contact.schema";
 import { createUserSchema } from "./user.schema";
+import { createBusinessLocationSchema } from "./business-location.schema";
 
 export const createBusinessProfileSchema = z.object({
   businessName: z.string().nonempty(),
   description: z.string().optional().nullish(),
-  address: z.string().nonempty(),
   websiteUrl: z.preprocess(
     (val) => (!val ? undefined : val),
     z.url().optional().nullish()
@@ -19,6 +19,7 @@ export const createBusinessProfileSchema = z.object({
   businessSocial: z.array(createBusinessSocialSchema),
   businessContact: z.array(createBusinessContactSchema),
   user: createUserSchema,
+  businessLocation: z.array(createBusinessLocationSchema),
 });
 
 export type CreateBusinessProfileSchema = z.infer<
@@ -40,6 +41,11 @@ export const updateBusinessProfileSchema = createBusinessProfileSchema.extend({
   user: createUserSchema.extend({
     id: z.coerce.number().int().optional().nullish(),
   }),
+  businessLocation: z.array(
+    createBusinessLocationSchema.extend({
+      id: z.coerce.number().int().optional().nullish(),
+    })
+  ),
 });
 
 export type UpdateBusinessProfileSchema = z.infer<
@@ -64,6 +70,11 @@ export const updateAccountBusinessProfileSchema = updateBusinessProfileSchema
     ),
     businessContact: z.array(
       createBusinessContactSchema.extend({
+        id: z.coerce.number().int().optional().nullish(),
+      })
+    ),
+    businessLocation: z.array(
+      createBusinessLocationSchema.extend({
         id: z.coerce.number().int().optional().nullish(),
       })
     ),

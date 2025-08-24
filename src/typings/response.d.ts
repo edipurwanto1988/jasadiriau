@@ -91,6 +91,8 @@ type BusinessProfile = {
   imageUrl?: string;
   validations?: Validation[];
   services?: Service[];
+  businessLocation?: BusinessLocation[];
+  totalService?: number;
 };
 
 type User = {
@@ -136,4 +138,35 @@ type Validation = {
   note?: string;
   validatedAt?: string;
   createdAt: string;
+};
+
+type Province = {
+  id: number;
+  name: string;
+  slug?: any;
+  regencies: Regency[];
+};
+
+type Regency = {
+  id: number;
+  name: string;
+  slug: string;
+  districts: District[];
+};
+
+type District = {
+  id: number;
+  name: string;
+  slug?: any;
+};
+
+type BusinessLocation = {
+  id: number;
+  provinceId: number;
+  provinceName: string;
+  regencyId: number;
+  regencyName: string;
+  districtId: number;
+  districtName: string;
+  address: string;
 };
