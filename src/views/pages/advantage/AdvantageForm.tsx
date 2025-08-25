@@ -15,7 +15,7 @@ type Props = {
   onSubmit: () => void;
 };
 
-const Form = ({ dialog, mutation, validation, onSubmit }: Props) => {
+const AdvantageForm = ({ dialog, mutation, validation, onSubmit }: Props) => {
   const { setData, value } = mutation;
   return (
     <Dialog
@@ -90,7 +90,7 @@ const Form = ({ dialog, mutation, validation, onSubmit }: Props) => {
 };
 
 export default React.memo(
-  Form,
+  AdvantageForm,
   (prev, next) =>
     prev.dialog.open === next.dialog.open &&
     prev.mutation.loading === next.mutation.loading &&

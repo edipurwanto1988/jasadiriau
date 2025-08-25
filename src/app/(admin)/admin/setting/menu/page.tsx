@@ -1,10 +1,10 @@
-import SliderList from "@/views/pages/slider/SliderList";
+import MenuForm from "@/views/pages/menu/MenuForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Slider",
+  title: "Menu",
 };
 
 export default async function Page() {
-  return <SliderList />;
+  return <MenuForm />;
 }

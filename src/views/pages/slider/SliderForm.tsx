@@ -21,7 +21,7 @@ type Props = {
   onSubmit: () => void;
 };
 
-const Form = ({ dialog, mutation, validation, onSubmit }: Props) => {
+const SliderForm = ({ dialog, mutation, validation, onSubmit }: Props) => {
   const { setData, value } = mutation;
   const setImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) {
@@ -165,7 +165,7 @@ const Form = ({ dialog, mutation, validation, onSubmit }: Props) => {
 };
 
 export default React.memo(
-  Form,
+  SliderForm,
   (prev, next) =>
     prev.dialog.open === next.dialog.open &&
     prev.mutation.loading === next.mutation.loading &&
