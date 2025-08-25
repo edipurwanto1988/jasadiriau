@@ -1,48 +1,53 @@
+import { getAuth } from "@/lib/auth";
 import AlertDialog from "@/views/components/base/Dialog/AlertDialog";
 import Snackbar from "@/views/components/base/Snackbar";
 import AlertProvider from "@/views/contexts/AlertContext";
+import AuthProvider from "@/views/contexts/AuthContext";
 import SnackbarProvider from "@/views/contexts/SnackbarContext";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   sidebar,
 }: Readonly<{
   sidebar: React.ReactNode;
   children: React.ReactNode;
 }>) {
+  const auth = await getAuth()
   return (
     <AlertProvider>
       <SnackbarProvider>
-        <Box
-          id="main"
-          component={"main"}
-          sx={{
-            display: "flex",
-            flex: 1,
-            height: "100vh",
-            margin: 0,
-            padding: 0,
-          }}
-        >
-          {sidebar}
+        <AuthProvider initialState={auth}>
           <Box
+            id="main"
+            component={"main"}
             sx={{
-              flexGrow: 1,
-              backgroundColor: "#F5F5F5",
+              display: "flex",
+              flex: 1,
               height: "100vh",
-              minHeight: "100vh",
-              overflow: "hidden",
+              margin: 0,
+              padding: 0,
             }}
           >
-            <Toolbar />
-            {children}
+            {sidebar}
+            <Box
+              sx={{
+                flexGrow: 1,
+                backgroundColor: "#F5F5F5",
+                height: "100vh",
+                minHeight: "100vh",
+                overflow: "hidden",
+              }}
+            >
+              <Toolbar />
+              {children}
 
-            <Snackbar />
-            <AlertDialog />
+              <Snackbar />
+              <AlertDialog />
+            </Box>
           </Box>
-        </Box>
+        </AuthProvider>
       </SnackbarProvider>
     </AlertProvider>
   );

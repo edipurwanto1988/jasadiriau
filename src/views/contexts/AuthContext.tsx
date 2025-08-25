@@ -3,20 +3,31 @@ import React from "react";
 
 type Props = {
   children: React.ReactNode;
-  initialState: User | null;
+  initialState: {
+    isAuth: boolean;
+    userId: number;
+    role: RoleType;
+  } | null;
 };
 
 const AuthContext = React.createContext({
-  isLogin: false,
+  isAuth: false,
+  userId: 0,
+  role: "user" as RoleType,
 });
 
 const AuthProvider = (props: Props) => {
-  const [isLogin, _setLogin] = React.useState(!!props.initialState);
+  const [auth, setAuth] = React.useState({
+    isAuth: false,
+    userId: 0,
+    role: "user" as RoleType,
+    ...props.initialState,
+  });
 
   return (
     <AuthContext.Provider
       value={{
-        isLogin,
+        ...auth,
       }}
     >
       {props.children}

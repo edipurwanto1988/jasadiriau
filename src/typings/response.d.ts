@@ -7,6 +7,7 @@ type Category = {
   id: number;
   name: string;
   slug: string;
+  imageUrl?: string;
   parentId?: number;
   children?: Category[];
 };
@@ -178,5 +179,5 @@ type INotification = {
   isRead: boolean;
   url: string;
   type: NotificationType;
-  createdAt: string; 
+  createdAt: string;
 };

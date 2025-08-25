@@ -1,3 +1,8 @@
+:root {
+
+  --mui-palette-divider: #e0e0e0;
+  --mui-palette-default-divider: #e0e0e0;
+}
 
 html,
 body {

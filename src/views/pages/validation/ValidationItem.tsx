@@ -12,31 +12,26 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
 import { dateFormat } from "@/utils/format";
+import { useAuth } from "@/views/contexts/AuthContext";
 
 const HistoryIcon = LoadComponent(() => import("@mui/icons-material/History"));
 
 type Props = {
-  role?: RoleType;
   data: Validation[];
   loading?: boolean;
   onValidation?: (id: number, action: string) => () => void;
   onResend?: () => void;
 };
 
-const ValidationItem = ({
-  data,
-  loading,
-  role,
-  onValidation,
-  onResend,
-}: Props) => {
+const ValidationItem = ({ data, loading, onValidation, onResend }: Props) => {
+  const auth = useAuth()
   return (
     <Stack direction={"column"} py={2} spacing={2}>
-      <Stack direction={"row"} alignItems={'center'} spacing={1}>
+      <Stack direction={"row"} alignItems={"center"} spacing={1}>
         <HistoryIcon />
         <Typography fontWeight={600}>Riwayat Validasi</Typography>
       </Stack>
-      
+
       <Fade in={loading} unmountOnExit>
         <Stack direction={"column"} spacing={1}>
           <Skeleton width={"100%"} />
@@ -45,11 +40,7 @@ const ValidationItem = ({
         </Stack>
       </Fade>
 
-      <TransitionGroup
-        component={Stack}
-        direction={"column"}
-        spacing={1}
-      >
+      <TransitionGroup component={Stack} direction={"column"} spacing={1}>
         {data.map((value, i) => (
           <Collapse key={i}>
             <Paper variant="outlined" sx={{ p: 2 }}>
@@ -104,7 +95,7 @@ const ValidationItem = ({
                 </Stack>
 
                 <RoleComponent
-                  role={role}
+                  role={auth.role}
                   permission={["admin", "operator"]}
                   then={
                     value.action === null ? (

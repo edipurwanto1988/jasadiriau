@@ -5,14 +5,20 @@ import {
   UpdateCategorySchema,
 } from "@/schema/category.schema";
 import { paginate } from "@/utils/format";
+import { slugify } from "@/utils/string";
 
-export const createCategory = (payload: CreateCategorySchema) => {
+export const createCategory = ({
+  url,
+  ...payload
+}: Omit<CreateCategorySchema, "file"> & { url?: string }) => {
   return prisma.$transaction(async (tx) => {
     const sc = await tx.seoConfigs.create({ data: { title: payload.name } });
     return tx.category.create({
       data: {
         ...payload,
+        slug: slugify(payload.name),
         seoConfigId: sc.id,
+        imageUrl: url,
       },
     });
   });
@@ -52,12 +58,28 @@ export const categoryDetail = (id: number) => {
   });
 };
 
-export const updateCategory = ({ id, ...payload }: UpdateCategorySchema) => {
-  return prisma.category.update({
-    where: {
-      id,
-    },
-    data: payload,
+export const updateCategory = ({
+  id,
+  url,
+  ...payload
+}: Omit<UpdateCategorySchema, "file"> & { url?: string }) => {
+  return prisma.$transaction(async (tx) => {
+    const current = await tx.category.findFirstOrThrow({ where: { id } });
+
+    let currentUrl = current.imageUrl;
+    if (url) {
+      currentUrl = url;
+    }
+    return tx.category.update({
+      where: {
+        id,
+      },
+      data: {
+        ...payload,
+        slug: slugify(payload.name),
+        imageUrl: currentUrl,
+      },
+    });
   });
 };
 

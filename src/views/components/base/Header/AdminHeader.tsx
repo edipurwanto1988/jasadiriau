@@ -10,6 +10,7 @@ import { styled } from "@mui/material/styles";
 import Dropdown from "../Dropdown/Dropdown";
 import Avatar from "@mui/material/Avatar";
 import { useApp } from "@/views/contexts/AppContext";
+import AdminNotification from "./AdminNotification";
 // import { postLogout } from "@services/authService";
 // import { useNavigate } from "react-router";
 
@@ -50,7 +51,6 @@ const AppBar = styled(MuiAppBar, {
 
 const AdminHeader = () => {
   const app = useApp();
-  // const auth = useAuth();
   // const navigate = useNavigate();
 
   // const handlLogout = () => {
@@ -98,6 +98,7 @@ const AdminHeader = () => {
           </React.Suspense>
         </IconButton>
 
+        <Box flexGrow={1}></Box>
         <Box
           sx={{
             display: "flex",
@@ -130,6 +131,7 @@ const AdminHeader = () => {
               }}
             />
           </Fade> */}
+          <AdminNotification/>
           <div>
             <Dropdown
               icon={<Avatar alt="img_profile" sx={{ width: 32, height: 32 }} />}
@@ -139,10 +141,6 @@ const AdminHeader = () => {
                 disableRipple: true,
               }}
               menu={[
-                {
-                  text: "Profil",
-                },
-
                 {
                   text: "Logout",
                   // onClick: handlLogout

@@ -1,4 +1,5 @@
 import { EventSend } from "ezhooks";
+import * as utils from "ezhooks/lib/utils";
 
 export const categoryUrl = {
   category: `${process.env.NEXT_PUBLIC_BASE_URL}/api/category`,
@@ -29,10 +30,7 @@ export const postCategory = async (event?: EventSend) => {
     method: isNewRecord ? "post" : "put",
     signal: event?.ctr?.signal,
     next: { revalidate: 0 },
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(event!.data!()),
+    body: utils.toFormData(event!.data!()),
   });
 
   if (!res.ok) {

@@ -8,17 +8,21 @@ import Snackbar from "../base/Snackbar";
 import SnackbarProvider from "@/views/contexts/SnackbarContext";
 import AlertDialog from "../base/Dialog/AlertDialog";
 import AlertProvider from "@/views/contexts/AlertContext";
+import AuthProvider from "@/views/contexts/AuthContext";
+import { getAuth } from "@/lib/auth";
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const auth = await getAuth()
   return (
     <AppProvider>
       <AlertProvider>
         <SnackbarProvider>
-          <Box
+         <AuthProvider initialState={auth}>
+           <Box
             sx={{
               display: "flex",
               flex: 1,
@@ -51,6 +55,7 @@ export default function AdminLayout({
           </Box>
 
           <Snackbar />
+         </AuthProvider>
         </SnackbarProvider>
         <AlertDialog />
       </AlertProvider>

@@ -1,10 +1,10 @@
-import CategoryList from "@/views/pages/category/CategoryList";
+import ServiceTable from "@/views/pages/service/ServiceList";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Kategori",
+  title: "Layanan",
 };
 
 export default async function Page() {
-  return <CategoryList />;
+  return <ServiceTable />;
 }

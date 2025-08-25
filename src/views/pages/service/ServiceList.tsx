@@ -1,28 +1,26 @@
 "use client";
 import React from "react";
 import DataTablePage from "@/views/components/base/DataTable/DataTablePage";
-import Dropdown from "@/views/components/base/Dropdown/Dropdown";
+import Dropdown, {
+  DropdownProps,
+} from "@/views/components/base/Dropdown/Dropdown";
 import PageTemplate from "@/views/components/templates/PageTemplate";
-import useTable from "ezhooks/lib/useTable";
+import Link from "@mui/material/Link";
+import StatusChip from "@/views/components/base/Chip/StatusChip";
+import ServiceUpdate from "./ServiceUpdate";
+import ServiceCreate from "./ServiceCreate";
 import { getPagination } from "@/utils/table";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { useAlert } from "@/views/contexts/AlertContext";
-import { deleteAccountBusinessProfile } from "@/views/services/business-profile.service";
-import { statusActiveLabel } from "@/utils/string";
-import { useRouter } from "next/navigation";
-import Avatar from "@mui/material/Avatar";
-import Link from "@mui/material/Link";
-import { Metadata } from "next";
-import StatusChip from "@/views/components/base/Chip/StatusChip";
 import { deleteService, getService } from "@/views/services/service.service";
-import useDialog from "@/views/hooks/useDialog";
-import ServiceCreate from "./ServiceCreate";
-import useMultiDialog from "@/views/hooks/useMultiDialog";
-import ServiceUpdate from "./ServiceUpdate";
-import useSWRImmutable from "swr/immutable";
 import { categoryUrl } from "@/views/services/category.service";
+import { useAuth } from "@/views/contexts/AuthContext";
+import useTable from "ezhooks/lib/useTable";
+import useMultiDialog from "@/views/hooks/useMultiDialog";
+import useSWRImmutable from "swr/immutable";
 
 const ServiceTable = () => {
+  const auth = useAuth();
   const openSnackbar = useSnackbar();
   const alert = useAlert();
   const [id, setID] = React.useState(0);
@@ -106,7 +104,11 @@ const ServiceTable = () => {
   return (
     <PageTemplate
       title="Layanan"
-      onCreate={dialog.getDialog("create").openDialog}
+      onCreate={
+        ["user"].includes(auth.role)
+          ? dialog.getDialog("create").openDialog
+          : undefined
+      }
       onReload={table.reload}
     >
       <DataTablePage
@@ -198,14 +200,24 @@ const ServiceTable = () => {
           },
           {
             label: "",
-            value: (val, i) => (
-              <Dropdown
-                menu={[
-                  { text: "Ubah", onClick: onClickUpdate(val.id) },
-                  { text: "Hapus", onClick: onClickDelete(val.id) },
-                ]}
-              />
-            ),
+            value: (val, i) => {
+              let menu: DropdownProps["menu"] = [
+                {
+                  text: "Ubah",
+                  onClick: onClickUpdate(val.id),
+                },
+                {
+                  text: "Hapus",
+                  onClick: onClickDelete(val.id),
+                },
+              ];
+
+              if (auth.role && ["admin", "operator"].includes(auth.role)) {
+                delete menu[0];
+              }
+
+              return <Dropdown menu={menu} />;
+            },
             head: { padding: "checkbox", align: "center" },
             align: "center",
           },

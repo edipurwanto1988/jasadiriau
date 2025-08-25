@@ -4,20 +4,53 @@ import {
   UpdateValidationSchema,
 } from "@/schema/validation.schema";
 import dayjs from "dayjs";
-import { addUserNotification } from "./notification.service";
+import {
+  addAdminNotification,
+  addUserNotification,
+} from "./notification.service";
 
 export const createValidation = (payload: CreateValidationSchema) => {
   return prisma.$transaction(async (tx) => {
     if (payload.targetType === "profile") {
-      await tx.businessProfile.update({
+      const business = await tx.businessProfile.update({
         where: { id: payload.targetId },
         data: { status: "pending" },
       });
+
+      await addAdminNotification(
+        tx,
+        {
+          type: "business-profile",
+          id: business.id,
+        },
+        "admin.profilePending",
+        { businessName: business.businessName }
+      );
     } else if (payload.targetType === "service") {
-      await tx.service.update({
+      const service = await tx.service.update({
         where: { id: payload.targetId },
         data: { status: "pending" },
+        include: {
+          businessProfile: {
+            select: {
+              businessName: true,
+            },
+          },
+        },
       });
+
+      await addAdminNotification(
+        tx,
+        {
+          type: "service",
+          id: service.id,
+        },
+        "admin.servicePending",
+        {
+          businessName: service.businessProfile.businessName,
+          serviceName: service.name,
+        }
+      );
     }
     return tx.validation.create({ data: payload });
   });

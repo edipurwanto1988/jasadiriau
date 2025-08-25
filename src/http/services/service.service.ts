@@ -86,7 +86,6 @@ export const getServiceID = async (id: number) => {
   });
   Object.assign(model, { validations: validations });
   return model;
-  return model;
 };
 
 export const createService = (payload: CreateServiceSchema) => {

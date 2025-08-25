@@ -20,12 +20,17 @@ import { useRouter } from "next/navigation";
 import useDialog from "@/views/hooks/useDialog";
 import ServiceUpdate from "./ServiceUpdate";
 import ValidationItem from "../validation/ValidationItem";
+import { useAlert } from "@/views/contexts/AlertContext";
+import { useSnackbar } from "@/views/contexts/SnackbarContext";
+import { postNewValidation, postValidation } from "@/views/services/validation.service";
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
-const ServiceDetail = ({ id, role }: { id: number; role?: RoleType }) => {
+const ServiceDetail = ({ id }: { id: number }) => {
   const router = useRouter();
   const dialog = useDialog();
+  const alert = useAlert();
+  const openSnackbar = useSnackbar();
   const [tab, setTab] = React.useState("description");
 
   const { mutate } = useSWRConfig();
@@ -44,6 +49,66 @@ const ServiceDetail = ({ id, role }: { id: number; role?: RoleType }) => {
   const reload = () => {
     mutate(`${serviceUrl.serviceAccount}/${id}`);
   };
+
+  const onValidation = React.useCallback(
+    (id: number, action: string) => () => {
+      alert.set({
+        open: true,
+        textfield: true,
+        title:
+          action === "approved"
+            ? "Setujui Permintaan Ini?"
+            : "Tolak Permintaan Ini?",
+        message:
+          action === "approved"
+            ? "Tindakan ini akan menyetujui permintaan dan tidak bisa dibatalkan."
+            : "Tindakan ini akan menolak permintaan dan mungkin tidak bisa dibatalkan.",
+        type: action === "approved" ? "success" : "warning",
+        confirm: {
+          onClick: (remark) => {
+            alert.set({ loading: true });
+            postValidation({
+              id,
+              action: action as ActionType,
+              note: remark,
+            }).then((resp) => {
+              reload();
+              openSnackbar(
+                action === "approved"
+                  ? "Permintaan berhasil disetujui."
+                  : "Permintaan berhasil ditolak."
+              );
+              alert.reset();
+            });
+          },
+        },
+      });
+    },
+    [data?.validations]
+  );
+
+  const onResend = React.useCallback(() => {
+    alert.set({
+      open: true,
+      title: "Pengajuan Ulang",
+      message:
+        "Anda akan melakukan pengajuan ulang, pastikan data sudah lengkap.",
+      type: "info",
+      confirm: {
+        onClick: () => {
+          alert.set({ loading: true });
+          postNewValidation({
+            targetId: +id,
+            targetType: "service",
+          }).then((resp) => {
+            reload();
+            openSnackbar("Pengajuan baru berhasil dibuat");
+            alert.reset();
+          });
+        },
+      },
+    });
+  }, [data?.validations]);
 
   return (
     <PageTemplate
@@ -179,7 +244,12 @@ const ServiceDetail = ({ id, role }: { id: number; role?: RoleType }) => {
             </Tabs>
 
             <Fade key={"description"} in={tab === "description"} unmountOnExit>
-              <Stack direction={"column"} justifyContent={"center"} py={2} spacing={2}>
+              <Stack
+                direction={"column"}
+                justifyContent={"center"}
+                py={2}
+                spacing={2}
+              >
                 <Stack direction={"column"} spacing={2}>
                   <Box>
                     <Typography
@@ -200,7 +270,7 @@ const ServiceDetail = ({ id, role }: { id: number; role?: RoleType }) => {
 
                   <Box>
                     <Typography variant="subtitle1">
-                      {data?.description ?? "Tidak ada deskripsi"}
+                      {data?.description || "Tidak ada deskripsi"}
                     </Typography>
                   </Box>
                 </Stack>
@@ -237,9 +307,10 @@ const ServiceDetail = ({ id, role }: { id: number; role?: RoleType }) => {
             <Fade key={"validation"} in={tab === "validation"} unmountOnExit>
               <div>
                 <ValidationItem
-                  role={role}
                   data={data?.validations ?? []}
                   loading={isLoading}
+                  onValidation={onValidation}
+                  onResend={onResend}
                 />
               </div>
             </Fade>

@@ -331,7 +331,6 @@ const BusinessDetail = ({ id, role }: { id: number; role?: RoleType }) => {
               <div>
                 <ValidationItem
                   loading={isLoading}
-                  role={role}
                   data={data?.validations ?? []}
                   onValidation={onValidation}
                   onResend={onResend}
