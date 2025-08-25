@@ -6,6 +6,8 @@ import {
 } from "@/schema/service.schema";
 import { Prisma, StatusType } from "@/generated/prisma";
 import { paginate } from "@/utils/format";
+import { addAdminNotification } from "./notification.service";
+import { slugify } from "@/utils/string";
 
 export const servicePaginate = async (qs: URLSearchParams, userId?: number) => {
   const where: Prisma.ServiceWhereInput = {
@@ -100,7 +102,14 @@ export const createService = (payload: CreateServiceSchema) => {
       data: {
         ...payload,
         status: "pending",
-        slug: `${padStart}-${payload.name.replaceAll(" ", "-").toLowerCase()}`,
+        slug: slugify(`${padStart} ${payload.name}`),
+      },
+      include: {
+        businessProfile: {
+          select: {
+            businessName: true,
+          },
+        },
       },
     });
 
@@ -110,6 +119,19 @@ export const createService = (payload: CreateServiceSchema) => {
         targetId: created.id,
       },
     });
+
+    await addAdminNotification(
+      tx,
+      {
+        type: "service",
+        id: created.id,
+      },
+      "admin.servicePending",
+      {
+        businessName: created.businessProfile.businessName,
+        serviceName: created.name,
+      }
+    );
 
     return created;
   });

@@ -170,3 +170,13 @@ type BusinessLocation = {
   districtName: string;
   address: string;
 };
+
+type INotification = {
+  id: number;
+  title: string;
+  message: string;
+  isRead: boolean;
+  url: string;
+  type: NotificationType;
+  createdAt: string; 
+};

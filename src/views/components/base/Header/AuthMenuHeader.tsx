@@ -4,46 +4,34 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
-import LoadComponent from "../LoadComponent/LoadComponent";
-import IconButton from "@mui/material/IconButton";
-import { Box } from "@mui/material";
 import { signout } from "@/actions/auth.action";
 import Dropdown from "../Dropdown/Dropdown";
-import useRequest from "ezhooks/lib/useRequest";
-import { getCurrent } from "@/views/services/user.service";
-
-const NotificationsOutlinedIcon = LoadComponent(
-  () => import("@mui/icons-material/NotificationsOutlined")
-);
+import { userUrl } from "@/views/services/user.service";
+import useSWR from "swr";
+import { notifUrl } from "@/views/services/notifcation.service";
+import HeaderNotification from "./HeaderNotification";
 
 type Props = {
   isLogin?: boolean;
 };
 
 const AuthMenuHeader = ({ isLogin }: Props) => {
-  const client = useRequest({
-    data: {
-      user: {
-        name: "",
-        imageUrl: undefined,
-      },
-    },
-  });
-  React.useEffect(() => {
-    if (!isLogin) return;
-    client.exec({
-      service: getCurrent,
-      onSuccess: (resp) => {
-        return {
-          user: resp.data,
-        };
-      },
-    });
+  const { data: dataUser } = useSWR<User>(
+    isLogin ? userUrl.current : null,
+    (url) =>
+      fetch(url)
+        .then((resp) => resp.json())
+        .then((resp) => resp.data)
+  );
 
-    return () => {
-      client.cancel();
-    };
-  }, [isLogin]);
+  const { data: dataNotif } = useSWR<INotification[]>(
+    isLogin ? notifUrl.index : null,
+    (url) =>
+      fetch(url)
+        .then((resp) => resp.json())
+        .then((resp) => resp.data),
+    { refreshInterval: 5000 }
+  );
 
   return (
     <Stack
@@ -60,24 +48,13 @@ const AuthMenuHeader = ({ isLogin }: Props) => {
     >
       {isLogin ? (
         <>
-          <Box
-            sx={{
-              borderRadius: "var(--mui-shape-borderRadius)",
-              backgroundColor: "var(--input-bg-color)",
-              minWidth: 40,
-              minHeight: 40,
-            }}
-          >
-            <IconButton>
-              <NotificationsOutlinedIcon />
-            </IconButton>
-          </Box>
+          <HeaderNotification data={dataNotif} />
 
           <Dropdown
             icon={
               <Avatar
-                src={client.data.user.imageUrl}
-                alt={client.data.user.name}
+                src={dataUser?.imageUrl ?? ""}
+                alt={dataUser?.name ?? ""}
                 slotProps={{
                   img: {
                     referrerPolicy: "no-referrer",

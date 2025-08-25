@@ -1,13 +1,13 @@
 import { EventSend } from "ezhooks";
 
-const url = {
+export const userUrl = {
   current: `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/current`,
 };
 
 export const getCurrent = async (
   event?: EventSend
 ): Promise<HttpResponse<User>> => {
-  const res = await fetch(url.current, {
+  const res = await fetch(userUrl.current, {
     signal: event?.ctr?.signal,
     next: { revalidate: 0 },
   });

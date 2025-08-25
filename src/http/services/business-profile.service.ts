@@ -9,6 +9,7 @@ import {
 import { Platform, Prisma, Role, StatusType } from "@/generated/prisma";
 import omit from "lodash/omit";
 import { paginate } from "@/utils/format";
+import { addAdminNotification } from "./notification.service";
 
 export const businessProfilePaginate = async (
   qs: URLSearchParams,
@@ -226,6 +227,16 @@ export const createAccountBusinessProfile = (
         targetId: profile.id,
       },
     });
+
+    await addAdminNotification(
+      tx,
+      {
+        type: "business-profile",
+        id: profile.id,
+      },
+      "admin.profilePending",
+      { businessName: profile.businessName }
+    );
     return profile;
   });
 };
