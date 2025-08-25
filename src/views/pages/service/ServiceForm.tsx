@@ -13,8 +13,6 @@ const TextField = LoadComponent(() => import("@mui/material/TextField"));
 type Props = {
   ref?: React.Ref<HTMLFormElement>;
   time: number;
-  businessRef?: React.RefObject<HTMLSelectElement | null>;
-  categoryRef?: React.RefObject<HTMLSelectElement | null>;
   businesses: { primary: string; value: any }[];
   categories: { primary: string; value: any }[];
   mutation: UseMutation<CreateServiceSchema>;

@@ -61,12 +61,6 @@ export const actionLabel = (value?: string | null) => {
     : "Menunggu Persetujuan";
 };
 
-export const uniqueImage = (ext = "") => {
-  return (
-    Date.now() + "" + Math.round(Math.random() * 1e9) + (ext ? "." + ext : "")
-  );
-};
-
 export const textLoading = (loading?: boolean, pending?: boolean) => {
   return loading ? "Mengambil data..." : pending ? "Memuat data..." : "";
 };

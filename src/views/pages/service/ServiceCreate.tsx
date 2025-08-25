@@ -32,7 +32,7 @@ const ServiceCreate = ({ dialog, callback }: Props) => {
   );
 
   const { data: dataBusiness } = useSWR<BusinessProfile[]>(
-    dialog.open ? businessUrl.account : null,
+    dialog.open ? businessUrl.business : null,
     (url) =>
       fetch(url)
         .then((resp) => resp.json())
@@ -122,6 +122,7 @@ const ServiceCreate = ({ dialog, callback }: Props) => {
       ]}
     >
       <ServiceForm
+        time={0}
         mutation={mutation}
         validation={validation}
         categories={categoryMemo}

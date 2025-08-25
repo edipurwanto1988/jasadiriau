@@ -17,7 +17,11 @@ export const createUserSchema = z.object({
 export type CreateUserSchema = z.infer<typeof createUserSchema>;
 
 export const updateUserSchema = createUserSchema.extend({
-  id: z.number().int().nonoptional(),
+  id: z.coerce.number().int().nonoptional(),
 });
 
 export type UpdateUserSchema = z.infer<typeof updateUserSchema>;
+
+export const updateRoleSchema = updateUserSchema.pick({ id: true, role: true });
+
+export type UpdateRoleSchema = z.infer<typeof updateRoleSchema>;

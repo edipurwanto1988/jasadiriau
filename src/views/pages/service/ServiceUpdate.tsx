@@ -43,7 +43,7 @@ const ServiceUpdate = ({ id, dialog, callback }: Props) => {
   );
 
   const { data: dataBusiness } = useSWR<BusinessProfile[]>(
-    dialog.open ? businessUrl.account : null,
+    dialog.open ? businessUrl.business : null,
     (url) =>
       fetch(url)
         .then((resp) => resp.json())
