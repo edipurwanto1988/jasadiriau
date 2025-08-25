@@ -36,7 +36,7 @@ const HeaderNotification = ({ data }: Props) => {
 
   const handleClickNotif = (val: INotification) => () => {
     router.push(val.url);
-    setAnchorEl(null)
+    setAnchorEl(null);
     fetch(notifUrl.index, {
       method: "put",
       headers: {
@@ -77,48 +77,54 @@ const HeaderNotification = ({ data }: Props) => {
           id={id}
           open={open}
           anchorEl={anchorEl}
-          sx={{ zIndex: 1201 }}
+          sx={{
+            zIndex: 1201,
+            width: 400,
+            overflow: "hidden auto",
+            maxHeight: "40%",
+            backgroundColor: (theme) => theme.palette.background.paper,
+            borderRadius:'8px',
+            boxShadow:(theme=> theme.shadows[1])
+          }}
         >
-          <Paper sx={{  width: 400 }}>
-            <List dense>
-              {!!data?.length ? (
-                data.map((val, i) => (
-                  <ListItemButton key={i} onClick={handleClickNotif(val)}>
-                    <ListItemText
-                      primary={val.title}
-                      secondary={
-                        <Stack component={"span"} direction={"column"}>
-                          <Typography variant="caption" component={"span"}>
-                            {val.message}
-                          </Typography>
-
-                          <Typography variant="caption" component={"span"}>
-                            {dateFormat(val.createdAt, { time: true })}
-                          </Typography>
-                        </Stack>
-                      }
-                      slotProps={{
-                        primary: {
-                          variant: "body2",
-                        },
-                      }}
-                    />
-                  </ListItemButton>
-                ))
-              ) : (
-                <ListItem>
+          <List dense>
+            {!!data?.length ? (
+              data.map((val, i) => (
+                <ListItemButton key={i} onClick={handleClickNotif(val)}>
                   <ListItemText
-                    primary="Tidak ada pemberitahuan baru."
+                    primary={val.title}
+                    secondary={
+                      <Stack component={"span"} direction={"column"}>
+                        <Typography variant="caption" component={"span"}>
+                          {val.message}
+                        </Typography>
+
+                        <Typography variant="caption" component={"span"}>
+                          {dateFormat(val.createdAt, { time: true })}
+                        </Typography>
+                      </Stack>
+                    }
                     slotProps={{
                       primary: {
-                        align: "center",
+                        variant: "body2",
                       },
                     }}
                   />
-                </ListItem>
-              )}
-            </List>
-          </Paper>
+                </ListItemButton>
+              ))
+            ) : (
+              <ListItem>
+                <ListItemText
+                  primary="Tidak ada pemberitahuan baru."
+                  slotProps={{
+                    primary: {
+                      align: "center",
+                    },
+                  }}
+                />
+              </ListItem>
+            )}
+          </List>
         </Popper>
       </Box>
     </ClickAwayListener>
