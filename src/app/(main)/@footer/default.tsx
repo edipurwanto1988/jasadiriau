@@ -1,3 +1,5 @@
-export default function Default() {
-  return null;
+import MainFooter from "@/views/components/base/Footer/MainFooter";
+
+export default async function Default() {
+  return <MainFooter />;
 }
