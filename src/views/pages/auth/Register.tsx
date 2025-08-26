@@ -38,45 +38,73 @@ const Register = () => {
   };
 
   React.useEffect(() => {
-    const initializeGoogle = () => {
-      if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id:
-            "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com",
-          callback: handleCredentialResponse,
-          auto_select: true,
-        });
+    if (typeof window === "undefined") return;
 
-        window.google.accounts.id.renderButton(
-          document.getElementById("google-signin")!,
-          {
-            theme: "filled_blue",
-            size: "large",
-            shape: "pill",
-            text: "signup_with",
-            locale: "id",
-          }
-        );
-      }
-    };
+    const reloaded = searchParams.get("reloaded");
 
-    // tunggu sampai script google siap
-    if (typeof window !== "undefined") {
-      if (window.google) {
-        initializeGoogle();
-      } else {
-        const check = setInterval(() => {
-          if (window.google) {
-            clearInterval(check);
-            initializeGoogle();
-          }
-        }, 200);
-      }
+    if (!reloaded) {
+        window.location.href = '/login?reloaded=true';
     }
-  }, []);
 
+    window.google?.accounts?.id?.initialize({
+      client_id:
+        "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com",
+      callback: handleCredentialResponse,
+      auto_select: true,
+    });
+
+    window.google?.accounts?.id?.renderButton(
+      document.getElementById("google-signin"),
+      {
+        theme: "filled_blue",
+        size: "large",
+        shape: "pill",
+        text: "signup_with",
+        locale: "id",
+      }
+    );
+  }, [searchParams.size, router]);
 
   return <div id="google-signin" />;
 };
 
 export default Register;
+
+
+  // React.useEffect(() => {
+  //   const initializeGoogle = () => {
+  //     if (window.google) {
+  //       window.google.accounts.id.initialize({
+  //         client_id:
+  //           "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com",
+  //         callback: handleCredentialResponse,
+  //         auto_select: true,
+  //       });
+
+  //       window.google.accounts.id.renderButton(
+  //         document.getElementById("google-signin")!,
+  //         {
+  //           theme: "filled_blue",
+  //           size: "large",
+  //           shape: "pill",
+  //           text: "signup_with",
+  //           locale: "id",
+  //         }
+  //       );
+  //     }
+  //   };
+
+  //   // tunggu sampai script google siap
+  //   if (typeof window !== "undefined") {
+  //     if (window.google) {
+  //       initializeGoogle();
+  //     } else {
+  //       const check = setInterval(() => {
+  //         if (window.google) {
+  //           clearInterval(check);
+  //           initializeGoogle();
+  //         }
+  //       }, 200);
+  //     }
+  //   }
+  // }, []);
