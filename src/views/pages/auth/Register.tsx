@@ -38,32 +38,43 @@ const Register = () => {
   };
 
   React.useEffect(() => {
-    if (typeof window === "undefined") return;
+    const initializeGoogle = () => {
+      if (window.google) {
+        window.google.accounts.id.initialize({
+          client_id:
+            "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com",
+          callback: handleCredentialResponse,
+          auto_select: true,
+        });
 
-    const reloaded = searchParams.get("reloaded");
-
-    if (!reloaded) {
-      window.location.href = "/login?reloaded=true";
-    }
-
-    window.google?.accounts?.id?.initialize({
-      client_id:
-        "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com",
-      callback: handleCredentialResponse,
-      auto_select: true,
-    });
-
-    window.google?.accounts?.id?.renderButton(
-      document.getElementById("google-signin"),
-      {
-        theme: "filled_blue",
-        size: "large",
-        shape: "pill",
-        text: "signup_with",
-        locale: "id",
+        window.google.accounts.id.renderButton(
+          document.getElementById("google-signin")!,
+          {
+            theme: "filled_blue",
+            size: "large",
+            shape: "pill",
+            text: "signup_with",
+            locale: "id",
+          }
+        );
       }
-    );
-  }, [searchParams.size, router]);
+    };
+
+    // tunggu sampai script google siap
+    if (typeof window !== "undefined") {
+      if (window.google) {
+        initializeGoogle();
+      } else {
+        const check = setInterval(() => {
+          if (window.google) {
+            clearInterval(check);
+            initializeGoogle();
+          }
+        }, 200);
+      }
+    }
+  }, []);
+
 
   return <div id="google-signin" />;
 };
