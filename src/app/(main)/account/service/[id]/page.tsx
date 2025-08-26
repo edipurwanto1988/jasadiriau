@@ -20,7 +20,6 @@ export async function generateMetadata(
 
 export default async function Page({ params }: Props) {
   const id = (await params).id;
-  const auth = await getAuth();
 
-  return <ServiceDetail id={id} role={auth?.role} />;
+  return <ServiceDetail id={id} />;
 }

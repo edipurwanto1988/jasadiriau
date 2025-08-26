@@ -27,8 +27,7 @@ export const POST = api(async (req) => {
   );
 
   const blob = payload.get("file") as Blob;
-  const ext = blob.type.split("/")[1] || "bin";
-  const fileName = `${uniqueImage(ext)}`;
+  const fileName = `${uniqueImage('webp')}`;
   const arrayBuffer = await blob.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
@@ -48,8 +47,8 @@ export const PUT = api(async (req) => {
   let url;
   const blob = payload.get("file") as Blob;
   if (blob) {
-    const ext = blob.type.split("/")[1] || "bin";
-    const fileName = `${uniqueImage(ext)}`;
+    // const ext = blob.type.split("/")[1] || "bin";
+    const fileName = `${uniqueImage('webp')}`;
     const arrayBuffer = await blob.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     fs.writeFileSync(path.join(uploadDir, fileName), buffer);

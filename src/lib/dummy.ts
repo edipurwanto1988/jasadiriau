@@ -163,7 +163,7 @@ export const dummyBusinessProfile: CreateBusinessProfileSchema = {
       provinceId: 0,
       regencyId: 0,
       districtId: 0,
-      addres: "",
+      address: "",
     },
   ],
 };

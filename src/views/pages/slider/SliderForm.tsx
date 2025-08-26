@@ -61,7 +61,6 @@ const SliderForm = ({ dialog, mutation, validation, onSubmit }: Props) => {
         },
       }}
     >
-
       <InputField
         label="Judul"
         placeholder="Masukkan judul"
@@ -133,7 +132,7 @@ const SliderForm = ({ dialog, mutation, validation, onSubmit }: Props) => {
               src={
                 mutation.has("file")
                   ? URL.createObjectURL(mutation.value("file"))
-                  : ""
+                  : `/images/placeholder.webp`
               }
               alt={mutation
                 .value<string>("title", "")

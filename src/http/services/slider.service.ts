@@ -3,6 +3,7 @@ import { NotFoundException } from "@/utils/exception";
 import { CreateSliderSchema, UpdateSliderSchema } from "@/schema/slider.schema";
 import { fillNextNumber } from "@/utils/input";
 import { StatusType } from "@/generated/prisma";
+import { revalidateTag } from "next/cache";
 
 export const sliderAll = async () => {
   return prisma.slider.findMany({
@@ -36,6 +37,7 @@ export const createSlider = async ({
     },
   });
 
+  revalidateTag("slider");
   return created;
 };
 
@@ -69,10 +71,13 @@ export const updateSlider = async ({
       },
     });
 
+    revalidateTag("slider");
+
     return updated;
   });
 };
 
-export const deleteSlider = (id: number) => {
-  return prisma.slider.delete({ where: { id } });
+export const deleteSlider = async (id: number) => {
+  await prisma.slider.delete({ where: { id } });
+  revalidateTag("slider");
 };
