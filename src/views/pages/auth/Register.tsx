@@ -29,7 +29,7 @@ const Register = () => {
             openSnackbar("Login kamu berhasil", { severity: "success" });
             const timer = setTimeout(() => {
               router.push("/");
-              router.refresh()
+              router.refresh();
               clearTimeout(timer);
             }, 500);
           }
@@ -39,8 +39,6 @@ const Register = () => {
   };
 
   React.useEffect(() => {
-    if (typeof window === "undefined" && !(window as any).google) return;
-
     window.google?.accounts?.id?.initialize({
       client_id:
         "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com",
@@ -58,8 +56,7 @@ const Register = () => {
         locale: "id",
       }
     );
-    setLoading(false);
-  }, [loading]);
+  }, []);
 
   return (
     <>

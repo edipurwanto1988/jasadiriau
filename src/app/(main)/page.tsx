@@ -5,7 +5,6 @@ import ExcellentServiceSection from "@/views/pages/home/ExcellentServiceSection"
 import MainTemplate from "@/views/components/templates/MainTemplate";
 import { getSetting } from "@/actions/setting.action";
 import { Metadata } from "next";
-import { getSlider } from "@/actions/slider.action";
 
 export async function generateMetadata(): Promise<Metadata> {
   const setting = await getSetting();
