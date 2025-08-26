@@ -1,7 +1,6 @@
 import AlertDialog from "@/views/components/base/Dialog/AlertDialog";
 import Snackbar from "@/views/components/base/Snackbar";
 import AlertProvider from "@/views/contexts/AlertContext";
-import AuthProvider from "@/views/contexts/AuthContext";
 import SnackbarProvider from "@/views/contexts/SnackbarContext";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -39,7 +38,6 @@ export default async function RootLayout({
           >
             <Toolbar />
             {children}
-
             <Snackbar />
             <AlertDialog />
           </Box>

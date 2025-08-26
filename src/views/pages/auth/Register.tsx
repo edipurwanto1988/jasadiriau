@@ -1,10 +1,8 @@
 "use client";
 import React from "react";
-import Typography from "@mui/material/Typography";
 import useMutation from "ezhooks/lib/useMutation";
 import { postRegister } from "@/views/services/auth.service";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
-import Fade from "@mui/material/Fade";
 import { useRouter } from "next/navigation";
 
 const Register = () => {
@@ -58,14 +56,7 @@ const Register = () => {
     );
   }, []);
 
-  return (
-    <>
-      <Fade in={loading} unmountOnExit>
-        <Typography variant="caption">Loading goole login...</Typography>
-      </Fade>
-      <div id="google-signin" />
-    </>
-  );
+  return <div id="google-signin" />;
 };
 
 export default Register;

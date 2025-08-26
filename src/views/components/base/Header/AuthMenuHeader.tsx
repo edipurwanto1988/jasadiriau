@@ -86,10 +86,10 @@ const AuthMenuHeader = () => {
           <div>
             <Button
               variant="contained"
-              LinkComponent={"a"}
-              href="login"
-              // color="inherit"
               disableElevation
+              onClick={() => {
+                window.location.href = "/login";
+              }}
             >
               Masuk
             </Button>
