@@ -1,12 +1,15 @@
 "use client";
 import React from "react";
+import Typography from "@mui/material/Typography";
 import useMutation from "ezhooks/lib/useMutation";
 import { postRegister } from "@/views/services/auth.service";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
-import { useRouter, useSearchParams } from "next/navigation";
+import Fade from "@mui/material/Fade";
+import { useRouter } from "next/navigation";
+import Script from "next/script";
 
 const Register = () => {
-  const searchParams = useSearchParams();
+  const buttonRef = React.useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [loading, setLoading] = React.useState(true);
   const openSnackbar = useSnackbar();
@@ -37,74 +40,57 @@ const Register = () => {
     }
   };
 
-  React.useEffect(() => {
-    if (typeof window === "undefined") return;
+  // React.useEffect(() => {
+  //   window.google?.accounts?.id?.initialize({
+  //     client_id:
+  //       "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com",
+  //     callback: handleCredentialResponse,
+  //     auto_select: true,
+  //   });
 
-    const reloaded = searchParams.get("reloaded");
+  //   window.google?.accounts?.id?.renderButton(
+  //     document.getElementById("google-signin"),
+  //     {
+  //       theme: "filled_blue",
+  //       size: "large",
+  //       shape: "pill",
+  //       text: "signup_with",
+  //       locale: "id",
+  //     }
+  //   );
+  // }, []);
 
-    if (!reloaded) {
-        window.location.href = '/login?reloaded=true';
-    }
+  return (
+    // <div id="google-signin" />
 
-    window.google?.accounts?.id?.initialize({
-      client_id:
-        "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com",
-      callback: handleCredentialResponse,
-      auto_select: true,
-    });
+    <div>
+      <div ref={buttonRef}></div>
 
-    window.google?.accounts?.id?.renderButton(
-      document.getElementById("google-signin"),
-      {
-        theme: "filled_blue",
-        size: "large",
-        shape: "pill",
-        text: "signup_with",
-        locale: "id",
-      }
-    );
-  }, [searchParams.size, router]);
+      <Script
+        src="https://accounts.google.com/gsi/client"
+        async
+        defer
+        onLoad={() => {
+          if (!window.google || !buttonRef.current) return;
 
-  return <div id="google-signin" />;
+          window.google.accounts.id.initialize({
+            client_id:
+              "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com",
+            callback: handleCredentialResponse,
+            auto_select: false,
+          });
+
+          window.google.accounts.id.renderButton(buttonRef.current, {
+            theme: "filled_blue",
+            size: "large",
+            shape: "pill",
+            text: "signup_with",
+            locale: "id",
+          });
+        }}
+      />
+    </div>
+  );
 };
 
 export default Register;
-
-
-  // React.useEffect(() => {
-  //   const initializeGoogle = () => {
-  //     if (window.google) {
-  //       window.google.accounts.id.initialize({
-  //         client_id:
-  //           "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com",
-  //         callback: handleCredentialResponse,
-  //         auto_select: true,
-  //       });
-
-  //       window.google.accounts.id.renderButton(
-  //         document.getElementById("google-signin")!,
-  //         {
-  //           theme: "filled_blue",
-  //           size: "large",
-  //           shape: "pill",
-  //           text: "signup_with",
-  //           locale: "id",
-  //         }
-  //       );
-  //     }
-  //   };
-
-  //   // tunggu sampai script google siap
-  //   if (typeof window !== "undefined") {
-  //     if (window.google) {
-  //       initializeGoogle();
-  //     } else {
-  //       const check = setInterval(() => {
-  //         if (window.google) {
-  //           clearInterval(check);
-  //           initializeGoogle();
-  //         }
-  //       }, 200);
-  //     }
-  //   }
-  // }, []);
