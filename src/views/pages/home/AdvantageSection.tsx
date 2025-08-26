@@ -1,13 +1,12 @@
-import InputLargeSearch from "@/views/components/base/Input/InputLargeSearch";
+import { getAdvantage } from "@/actions/advantage.action";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Image from "next/image";
 
-const AdvantageSection = () => {
+const AdvantageSection = async () => {
+  const data = await getAdvantage();
   return (
     <Stack
       sx={{
@@ -57,7 +56,7 @@ const AdvantageSection = () => {
         }}
         style={{ ["--gap" as any]: "16px" }}
       >
-        {[...Array(3)].map((_, i) => (
+        {data.map((value, i) => (
           <Paper
             key={i}
             variant="outlined"
@@ -67,7 +66,7 @@ const AdvantageSection = () => {
               boxSizing: "border-box",
               padding: "16px",
               borderRadius: "var(--mui-shape-borderRadius)",
-              borderColor:"#cedbe8",
+              borderColor: "#cedbe8",
               display: "flex",
               flexDirection: "column",
               gap: 0.5,
@@ -83,15 +82,24 @@ const AdvantageSection = () => {
             }}
           >
             <Box>
-              <Typography lineHeight={1.25} fontWeight={700} alignSelf={"stretch"}>
-                Penyedia Jasa Terverfikasi
+              <Typography
+                lineHeight={1.25}
+                fontWeight={700}
+                alignSelf={"stretch"}
+              >
+                {value.title}
               </Typography>
             </Box>
 
             <Box>
-              <Typography lineHeight={1.5} fontWeight={400} variant="subtitle2" color="#4A739C" alignSelf={"stretch"}>
-                Kami memastikan semua penyedia jasa telah melalui proses
-                verifikasi ketat untuk menjamin kualitas dan keamanan.
+              <Typography
+                lineHeight={1.5}
+                fontWeight={400}
+                variant="subtitle2"
+                color="#4A739C"
+                alignSelf={"stretch"}
+              >
+                {value.description}
               </Typography>
             </Box>
           </Paper>

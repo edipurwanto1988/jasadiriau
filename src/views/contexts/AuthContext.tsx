@@ -17,17 +17,13 @@ const AuthContext = React.createContext({
 });
 
 const AuthProvider = (props: Props) => {
-  const [auth, setAuth] = React.useState({
-    isAuth: false,
-    userId: 0,
-    role: "user" as RoleType,
-    ...props.initialState,
-  });
-
   return (
     <AuthContext.Provider
       value={{
-        ...auth,
+        isAuth: false,
+        userId: 0,
+        role: "user" as RoleType,
+        ...props.initialState,
       }}
     >
       {props.children}

@@ -12,7 +12,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
 import { dateFormat } from "@/utils/format";
-import { useAuth } from "@/views/contexts/AuthContext";
 
 const HistoryIcon = LoadComponent(() => import("@mui/icons-material/History"));
 
@@ -24,7 +23,6 @@ type Props = {
 };
 
 const ValidationItem = ({ data, loading, onValidation, onResend }: Props) => {
-  const auth = useAuth()
   return (
     <Stack direction={"column"} py={2} spacing={2}>
       <Stack direction={"row"} alignItems={"center"} spacing={1}>
@@ -95,7 +93,6 @@ const ValidationItem = ({ data, loading, onValidation, onResend }: Props) => {
                 </Stack>
 
                 <RoleComponent
-                  role={auth.role}
                   permission={["admin", "operator"]}
                   then={
                     value.action === null ? (

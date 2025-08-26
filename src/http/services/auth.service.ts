@@ -2,6 +2,7 @@ import { Role } from "@/generated/prisma";
 import prisma from "@/lib/db";
 import { createSession } from "@/lib/session";
 import { decodeJwtResponse } from "@/utils/string";
+import { revalidatePath } from "next/cache";
 
 export const authRegister = async (credential: string) => {
   const data = decodeJwtResponse(credential);
@@ -20,5 +21,6 @@ export const authRegister = async (credential: string) => {
   });
 
   await createSession({ ...user, picture: data.picture });
+  revalidatePath("/");
   return user;
 };

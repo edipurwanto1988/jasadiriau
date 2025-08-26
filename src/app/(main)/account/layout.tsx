@@ -1,4 +1,3 @@
-import { getAuth } from "@/lib/auth";
 import AlertDialog from "@/views/components/base/Dialog/AlertDialog";
 import Snackbar from "@/views/components/base/Snackbar";
 import AlertProvider from "@/views/contexts/AlertContext";
@@ -14,40 +13,37 @@ export default async function RootLayout({
   sidebar: React.ReactNode;
   children: React.ReactNode;
 }>) {
-  const auth = await getAuth()
   return (
     <AlertProvider>
       <SnackbarProvider>
-        <AuthProvider initialState={auth}>
+        <Box
+          id="main"
+          component={"main"}
+          sx={{
+            display: "flex",
+            flex: 1,
+            height: "100vh",
+            margin: 0,
+            padding: 0,
+          }}
+        >
+          {sidebar}
           <Box
-            id="main"
-            component={"main"}
             sx={{
-              display: "flex",
-              flex: 1,
+              flexGrow: 1,
+              backgroundColor: "#F5F5F5",
               height: "100vh",
-              margin: 0,
-              padding: 0,
+              minHeight: "100vh",
+              overflow: "hidden",
             }}
           >
-            {sidebar}
-            <Box
-              sx={{
-                flexGrow: 1,
-                backgroundColor: "#F5F5F5",
-                height: "100vh",
-                minHeight: "100vh",
-                overflow: "hidden",
-              }}
-            >
-              <Toolbar />
-              {children}
+            <Toolbar />
+            {children}
 
-              <Snackbar />
-              <AlertDialog />
-            </Box>
+            <Snackbar />
+            <AlertDialog />
           </Box>
-        </AuthProvider>
+        </Box>
       </SnackbarProvider>
     </AlertProvider>
   );

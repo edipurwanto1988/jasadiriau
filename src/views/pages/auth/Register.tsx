@@ -3,11 +3,12 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import useMutation from "ezhooks/lib/useMutation";
 import { postRegister } from "@/views/services/auth.service";
-import { redirect } from "next/navigation";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import Fade from "@mui/material/Fade";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
+  const router = useRouter();
   const [loading, setLoading] = React.useState(true);
   const openSnackbar = useSnackbar();
   const mutation = useMutation({
@@ -27,7 +28,8 @@ const Register = () => {
           if (resp.isLogin) {
             openSnackbar("Login kamu berhasil", { severity: "success" });
             const timer = setTimeout(() => {
-              redirect("/");
+              router.push("/");
+              router.refresh()
               clearTimeout(timer);
             }, 500);
           }

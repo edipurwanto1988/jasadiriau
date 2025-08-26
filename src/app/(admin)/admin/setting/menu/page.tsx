@@ -1,4 +1,4 @@
-import MenuForm from "@/views/pages/menu/MenuForm";
+import MenuSetting from "@/views/pages/menu/MenuSetting";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  return <MenuForm />;
+  return <MenuSetting />;
 }

@@ -9,17 +9,16 @@ import Toolbar from "@mui/material/Toolbar";
 import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
 import AuthMenuHeader from "./AuthMenuHeader";
 import { Divider } from "@mui/material";
+import HomeMenu from "../Menu/HomeMenu";
+import { getHeader } from "@/actions/menu.action";
+import { getSetting } from "@/actions/setting.action";
 
 const SearchIcon = LoadComponent(() => import("@mui/icons-material/Search"));
 
-type Props = {
-  isLogin?: boolean;
-  role?: "user" | "operator" | "admin";
-};
+const MainHeader = async () => {
+  const [setting, menus] = await Promise.all([getSetting(), getHeader()]);
 
-const MainHeader = ({ isLogin, role }: Props) => {
   return (
-    <header>
       <AppBar
         elevation={0}
         color="inherit"
@@ -55,7 +54,7 @@ const MainHeader = ({ isLogin, role }: Props) => {
                   color="text.primary"
                   variant="subtitle1"
                 >
-                  Jasa di Riau
+                  {setting?.siteName ?? "JasadiRiau.com"}
                 </Link>
               </Box>
 
@@ -72,53 +71,20 @@ const MainHeader = ({ isLogin, role }: Props) => {
                   xl: "flex",
                 }}
               >
-                {isLogin ? (
-                  <Box>
+                <HomeMenu />
+
+                {menus.map((v) => (
+                  <Box key={v.id}>
                     <Link
                       variant="subtitle2"
-                      href={
-                        role === "user" ? "/account/business-profile" : "/admin"
-                      }
+                      href={v.url}
                       underline="none"
                       color="text.primary"
                     >
-                      Beranda
+                      {v.name}
                     </Link>
                   </Box>
-                ) : null}
-
-                <Box>
-                  <Link
-                    variant="subtitle2"
-                    href="category"
-                    underline="none"
-                    color="text.primary"
-                  >
-                    Kategori
-                  </Link>
-                </Box>
-
-                <Box>
-                  <Link
-                    variant="subtitle2"
-                    href=""
-                    underline="none"
-                    color="text.primary"
-                  >
-                    Penyedia Jasa
-                  </Link>
-                </Box>
-
-                <Box>
-                  <Link
-                    variant="subtitle2"
-                    href=""
-                    underline="none"
-                    color="text.primary"
-                  >
-                    Tentang Kami
-                  </Link>
-                </Box>
+                ))}
               </Stack>
             </Stack>
 
@@ -156,12 +122,11 @@ const MainHeader = ({ isLogin, role }: Props) => {
                 />
               </Box>
 
-              <AuthMenuHeader isLogin={isLogin} />
+              <AuthMenuHeader />
             </Stack>
           </Stack>
         </Toolbar>
       </AppBar>
-    </header>
   );
 };
 

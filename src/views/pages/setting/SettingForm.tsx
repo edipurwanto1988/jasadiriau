@@ -13,15 +13,30 @@ import ListItemText from "@mui/material/ListItemText";
 import InputField from "@/views/components/base/Input/InputField";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
-import { getSetting, postSetting } from "@/views/services/setting.service";
+import {
+  getSetting,
+  postSetting,
+  settingUrl,
+} from "@/views/services/setting.service";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import SnacbarLoading from "@/views/components/base/Skeleton/SnacbarLoading";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import useSWRImmutable from "swr/immutable";
+import { useSWRConfig } from "swr";
 
 const SettingForm = () => {
   const openSnackbar = useSnackbar();
+
+  const { mutate } = useSWRConfig();
+  const { data, isLoading } = useSWRImmutable<Setting>(
+    settingUrl.setting,
+    (url) =>
+      fetch(url)
+        .then((resp) => resp.json())
+        .then((resp) => resp.data)
+  );
 
   const [isPending, startTransition] = React.useTransition();
 
@@ -41,7 +56,7 @@ const SettingForm = () => {
       mutation.send({
         service: postSetting,
         onSuccess: () => {
-          mutation.reset();
+          mutate(settingUrl.setting)
           openSnackbar("Pengaturan berhasil diperbaharui");
         },
         onError: (e) => {
@@ -59,27 +74,21 @@ const SettingForm = () => {
     mutation.setData({ [e.target.name]: e.target.value });
   };
 
-  const fecthData = () => {
-    mutation.send({
-      loading: true,
-      service: getSetting,
-      onSuccess: (resp) => {
-        startTransition(() => {
-          mutation.setData(resp.data);
-        });
-      },
-    });
-  };
-
   React.useEffect(() => {
-    fecthData();
-    return () => {
-      mutation.cancel();
-    };
-  }, []);
+    if (!data) return;
+
+    startTransition(() => {
+      mutation.setData(data ?? dummySetting);
+    });
+
+    return () => {};
+  }, [data, isLoading]);
 
   return (
-    <SettingTemplate title="Pengaturan" onReload={fecthData}>
+    <SettingTemplate
+      title="Pengaturan"
+      onReload={() => mutate(settingUrl.setting)}
+    >
       <Stack spacing={4} sx={{ p: 2, overflow: "hidden auto" }}>
         {settingFormGroups.map((group, g) => (
           <Stack direction={"column"} key={`group-${g}`} spacing={2}>
@@ -140,7 +149,7 @@ const SettingForm = () => {
                       placeholder={field.placeholder}
                       fullWidth
                       {...field.props}
-                      value={mutation.value(field.key)}
+                      value={mutation.value(field.key, "")}
                       onChange={onChange}
                       error={validation.error(field.key)}
                       helperText={validation.message(field.key)}
@@ -157,7 +166,7 @@ const SettingForm = () => {
         <div>
           <Button
             variant="contained"
-            loading={mutation.loading || mutation.processing}
+            loading={isLoading || mutation.processing}
             onClick={onSubmit}
             disableElevation
           >
@@ -166,7 +175,7 @@ const SettingForm = () => {
         </div>
         <Toolbar />
       </Stack>
-      <SnacbarLoading loading={mutation.loading} pending={isPending} />
+      <SnacbarLoading loading={isLoading} pending={isPending} />
     </SettingTemplate>
   );
 };

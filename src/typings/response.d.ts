@@ -181,3 +181,15 @@ type INotification = {
   type: NotificationType;
   createdAt: string;
 };
+
+type IMenu = {
+  id: number;
+  name?: string;
+  url?: string;
+  icon?: string;
+  position: string;
+  sortOrder: number;
+  status: "active" | "inactive";
+  parentId?: string;
+  children: IMenu[];
+};

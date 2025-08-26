@@ -10,14 +10,12 @@ import { userUrl } from "@/views/services/user.service";
 import useSWR from "swr";
 import { notifUrl } from "@/views/services/notifcation.service";
 import HeaderNotification from "./HeaderNotification";
+import { useAuth } from "@/views/contexts/AuthContext";
 
-type Props = {
-  isLogin?: boolean;
-};
-
-const AuthMenuHeader = ({ isLogin }: Props) => {
+const AuthMenuHeader = () => {
+  const auth = useAuth();
   const { data: dataUser } = useSWR<User>(
-    isLogin ? userUrl.current : null,
+    auth.isAuth ? userUrl.current : null,
     (url) =>
       fetch(url)
         .then((resp) => resp.json())
@@ -25,7 +23,7 @@ const AuthMenuHeader = ({ isLogin }: Props) => {
   );
 
   const { data: dataNotif } = useSWR<INotification[]>(
-    isLogin ? notifUrl.index : null,
+    auth.isAuth ? notifUrl.index : null,
     (url) =>
       fetch(url)
         .then((resp) => resp.json())
@@ -46,7 +44,7 @@ const AuthMenuHeader = ({ isLogin }: Props) => {
         },
       }}
     >
-      {isLogin ? (
+      {auth.isAuth ? (
         <>
           <HeaderNotification data={dataNotif} />
 

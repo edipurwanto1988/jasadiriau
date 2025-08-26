@@ -6,6 +6,7 @@ import { FormState, SigninFormSchema } from "@/schema/signin.schema";
 import { parseZodError } from "@/utils/format";
 import { redirect } from "next/navigation";
 import { Role } from "@/generated/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function signin(state: FormState, formData: FormData) {
   const validatedFields = SigninFormSchema.safeParse({
@@ -48,5 +49,6 @@ export async function signin(state: FormState, formData: FormData) {
 
 export async function signout() {
   await deleteSession();
+  revalidatePath('/')
   redirect("/");
 }

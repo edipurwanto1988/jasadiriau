@@ -5,6 +5,7 @@ import {
   UpdateAdvantageSchema,
 } from "@/schema/advantage.schema";
 import { StatusType } from "@/generated/prisma";
+import { revalidateTag } from "next/cache";
 
 export const advantagePaginate = async (qs: Record<string, any>) => {
   const count = await prisma.advantages.count();
@@ -23,19 +24,29 @@ export const getAdvantageID = async (id: number) => {
   return model;
 };
 
-export const createAdvantage = (payload: CreateAdvantageSchema) => {
-  return prisma.advantages.create({
+export const createAdvantage = async (payload: CreateAdvantageSchema) => {
+  const created = await prisma.advantages.create({
     data: { ...payload, status: payload.status as StatusType },
   });
+
+  revalidateTag("advantage");
+  return created;
 };
 
-export const updateAdvantage = ({ id, ...payload }: UpdateAdvantageSchema) => {
-  return prisma.advantages.update({
+export const updateAdvantage = async ({
+  id,
+  ...payload
+}: UpdateAdvantageSchema) => {
+  const updated = await prisma.advantages.update({
     where: { id: +id! },
     data: { ...payload, status: payload.status as StatusType },
   });
+
+  revalidateTag("advantage");
+  return updated;
 };
 
-export const deleteAdvantage = (id: number) => {
-  return prisma.advantages.delete({ where: { id } });
+export const deleteAdvantage = async (id: number) => {
+  await prisma.advantages.delete({ where: { id } });
+  revalidateTag("advantage");
 };

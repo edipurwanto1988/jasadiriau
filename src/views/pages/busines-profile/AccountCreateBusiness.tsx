@@ -11,10 +11,7 @@ import { formatPhoneNumber } from "@/utils/input";
 import { dummySocials } from "@/lib/dummy";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { parseFormData, parseResponseError } from "@/utils/format";
-import {
-  businessUrl,
-  postAccountBusinessProfile,
-} from "@/views/services/business-profile.service";
+import { postAccountBusinessProfile } from "@/views/services/business-profile.service";
 import { useRouter } from "next/navigation";
 import {
   createAccountBusinessProfileSchema,

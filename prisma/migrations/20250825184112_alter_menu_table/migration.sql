@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "menus" ALTER COLUMN "name" DROP NOT NULL,
+ALTER COLUMN "url" DROP NOT NULL;

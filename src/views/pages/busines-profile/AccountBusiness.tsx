@@ -100,7 +100,6 @@ const AccountBusiness = () => {
     >
       <Stack direction={"column"}>
         <RoleComponent
-          role={auth.role}
           permission={["admin", "operator"]}
           then={
             <Stack

@@ -114,8 +114,8 @@ model Category {
 
 model Menu {
   id        Int        @id @default(autoincrement())
-  name      String
-  url       String     @map("url")
+  name      String?
+  url       String?     @map("url")
   icon      String?    @db.VarChar()
   position  Position   @default(header) @map("position")
   sortOrder Int?       @default(0) @map("sort_order") @db.SmallInt()
