@@ -3,9 +3,10 @@ import React from "react";
 import useMutation from "ezhooks/lib/useMutation";
 import { postRegister } from "@/views/services/auth.service";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Register = () => {
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setLoading] = React.useState(true);
   const openSnackbar = useSnackbar();
@@ -37,6 +38,14 @@ const Register = () => {
   };
 
   React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const reloaded = searchParams.get("reloaded");
+
+    if (!reloaded) {
+      window.location.href = "/login?reloaded=true";
+    }
+
     window.google?.accounts?.id?.initialize({
       client_id:
         "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com",
@@ -54,7 +63,7 @@ const Register = () => {
         locale: "id",
       }
     );
-  }, []);
+  }, [searchParams.size, router]);
 
   return <div id="google-signin" />;
 };

@@ -11,9 +11,11 @@ import useSWR from "swr";
 import { notifUrl } from "@/views/services/notifcation.service";
 import HeaderNotification from "./HeaderNotification";
 import { useAuth } from "@/views/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 const AuthMenuHeader = () => {
   const auth = useAuth();
+  const router = useRouter()
   const { data: dataUser } = useSWR<User>(
     auth.isAuth ? userUrl.current : null,
     (url) =>
@@ -88,7 +90,7 @@ const AuthMenuHeader = () => {
               variant="contained"
               disableElevation
               onClick={() => {
-                window.location.href = "/login";
+                router.push('/login')
               }}
             >
               Masuk
