@@ -7,7 +7,7 @@ import { createImage } from "@/http/services/image.service";
 import { uniqueImage } from "@/utils/format";
 import api from "@/utils/api";
 
-const uploadDir = path.join(process.cwd(), "public", "images");
+const uploadDir = path.join(process.cwd(), process.env.NEXT_PUBLIC_IMAGE_PATH ?? "uploads/images");
 fs.mkdirSync(uploadDir, { recursive: true });
 
 export const POST = api(async (req) => {
