@@ -42,4 +42,9 @@ next-env.d.ts
 
 /src/generated/prisma
 /public/images
-/uploads/images
+
+# Abaikan semua file di dalam uploads/images
+/uploads/images/*
+
+# Tapi tetap ikutkan foldernya (biar tidak hilang)
+!/uploads/images/.gitkeep
