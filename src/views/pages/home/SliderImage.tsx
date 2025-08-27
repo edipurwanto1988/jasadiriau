@@ -44,7 +44,7 @@ const SliderImage = ({ images }: Props) => {
           }}
         >
           <Image
-            src={v.imageUrl}
+            src={`${process.env.NEXT_PUBLIC_BASE_URL}${v.imageUrl}`}
             alt={v.title}
             fill
             priority={i === 0} // LCP
