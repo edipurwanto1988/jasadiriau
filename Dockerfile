@@ -25,6 +25,8 @@ COPY . .
 # Jalankan prisma generate sebelum build Next.js
 RUN npx prisma generate
 
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
 # Build Next.js
 RUN \
     if [ -f yarn.lock ]; then yarn run build; \
