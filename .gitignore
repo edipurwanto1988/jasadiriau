@@ -49,3 +49,4 @@ next-env.d.ts
 # Tapi tetap ikutkan foldernya (biar tidak hilang)
 !/uploads/images/.gitkeep
 *.tar
+deploy_docker.sh

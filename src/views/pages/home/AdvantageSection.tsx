@@ -23,7 +23,7 @@ const AdvantageSection = async () => {
       </Box>
 
       <ListItemText
-        primary="Keunggulan ServiceFinder"
+        primary="Keunggulan JasaDiRiau.com"
         secondary="Kami berkomitmen untuk memberikan pengalaman terbaik bagi pengguna dalam mencari dan menggunakan jasa."
         slotProps={{
           primary: {
