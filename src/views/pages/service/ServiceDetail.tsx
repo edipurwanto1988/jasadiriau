@@ -175,10 +175,13 @@ const ServiceDetail = ({ id }: { id: number }) => {
                   <Skeleton width={150} />
                 ) : (
                   <Typography
+                    component={"a"}
+                    href={`/account/business-profile/${data?.profileId}`}
                     variant="subtitle2"
                     sx={{
                       color: "var(--blue-color)",
                       fontWeight: 400,
+                      textDecoration:"none"
                     }}
                   >
                     {data?.bussinessName}

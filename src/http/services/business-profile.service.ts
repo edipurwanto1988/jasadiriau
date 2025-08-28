@@ -7,6 +7,7 @@ import {
 import { Platform, Prisma, StatusType } from "@/generated/prisma";
 import { paginate } from "@/utils/format";
 import { addAdminNotification } from "./notification.service";
+import { slugify } from "@/utils/string";
 
 export const businessProfilePaginate = async (
   qs: URLSearchParams,
@@ -121,9 +122,22 @@ export const createAccountBusinessProfile = (
   }: CreateAccountBusinessProfileSchema
 ) => {
   return prisma.$transaction(async (tx) => {
+    let number = 1;
+    const last = await tx.businessProfile.findFirst({
+      where: { slug: { not: null } },
+      orderBy: { slug: "desc" },
+    });
+
+    if (last && last.slug) {
+      const [currNum] = last.slug.split("-");
+      number = Number(currNum) + 1;
+    }
+
+    const padStart = String(number).padStart(4, "0");
     const data: Prisma.BusinessProfileUncheckedCreateInput = {
       ...payload,
       userId,
+      slug: slugify(`${padStart} ${payload.businessName}`),
       status: StatusType.pending,
       BusinessContact: {
         createMany: {
@@ -176,8 +190,22 @@ export const updateAccountBusinessProfile = ({
   ...payload
 }: UpdateAccountBusinessProfileSchema) => {
   return prisma.$transaction(async (tx) => {
+    const current = await tx.businessProfile.findFirstOrThrow({
+      where: { id },
+      select: { slug: true },
+    });
+
+    let slug = current.slug;
+    if (current.slug) {
+      const number = current.slug.split("-").at(0);
+      if (number) {
+        slug = slugify(`${number} ${payload.businessName}`);
+      }
+    }
+
     const data: Prisma.BusinessProfileUpdateInput = {
       ...payload,
+      slug,
     };
 
     for (const { id, ...contact } of businessContact) {

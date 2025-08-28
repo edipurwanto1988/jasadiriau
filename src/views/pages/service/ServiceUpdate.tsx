@@ -126,7 +126,7 @@ const ServiceUpdate = ({ id, dialog, callback }: Props) => {
   React.useEffect(() => {
     if (!data) return;
     setTime(new Date().getTime());
-  }, [data, dataBusiness, dataCategory]);
+  }, [data, dataBusiness, dataCategory, mutation.data(), dialog.open]);
 
   return (
     <Dialog

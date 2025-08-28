@@ -8,26 +8,28 @@ type Props = {
 
 const MainTemplate = (props: Props) => {
   return (
-    <Stack
-      flex={"1 1 0%"}
-      direction={"row"}
-      justifyContent={"center"}
-      px={"10rem"}
-      py={"1.25rem"}
-      boxSizing={"border-box"}
-      minHeight={"100%"}
-    >
+    <main>
       <Stack
-        direction={"column"}
-        maxWidth={"960px"}
-        width={"960px"}
-        gap={"12px"}
+        flex={"1 1 0%"}
+        direction={"row"}
+        justifyContent={"center"}
+        px={"10rem"}
+        py={"1.25rem"}
+        boxSizing={"border-box"}
+        minHeight={"100%"}
       >
-        <Toolbar />
+        <Stack
+          direction={"column"}
+          maxWidth={"960px"}
+          width={"960px"}
+          gap={"12px"}
+        >
+          <Toolbar />
 
-        {props.children}
+          {props.children}
+        </Stack>
       </Stack>
-    </Stack>
+    </main>
   );
 };
 

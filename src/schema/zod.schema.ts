@@ -17,8 +17,6 @@ z.config({
       }
     }
 
-    console.log(iss);
-
     return message;
   },
 });

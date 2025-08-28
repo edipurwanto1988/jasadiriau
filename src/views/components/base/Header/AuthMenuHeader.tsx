@@ -30,7 +30,7 @@ const AuthMenuHeader = () => {
       fetch(url)
         .then((resp) => resp.json())
         .then((resp) => resp.data),
-    { refreshInterval: 5000 }
+    { refreshInterval: 10000 }
   );
 
   return (

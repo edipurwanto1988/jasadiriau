@@ -8,7 +8,6 @@ export default async function Page({ params }: { params: Promise<{ id }> }) {
   const resp = await req.json();
   const current = resp.data;
 
-  console.log(current, '--current')
   return (
     <Template>
       <AccountCreateBusiness id={+id} current={current} />

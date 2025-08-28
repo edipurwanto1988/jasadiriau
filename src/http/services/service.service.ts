@@ -95,11 +95,16 @@ export const getServiceID = async (id: number) => {
 export const createService = (payload: CreateServiceSchema) => {
   return prisma.$transaction(async (tx) => {
     let number = 1;
-    const last = await tx.service.findFirst({ orderBy: { id: "desc" } });
+    const last = await tx.service.findFirst({
+      where: { slug: { not: null } },
+      orderBy: { slug: "desc" },
+    });
+
     if (last && last.slug) {
       const [currNum] = last.slug.split("-");
       number = Number(currNum) + 1;
     }
+
     const padStart = String(number).padStart(4, "0");
     const created = await tx.service.create({
       data: {
@@ -140,13 +145,32 @@ export const createService = (payload: CreateServiceSchema) => {
   });
 };
 
-export const updateService = ({ id, ...payload }: UpdateServiceSchema) => {
-  return prisma.service.update({
+export const updateService = async ({
+  id,
+  ...payload
+}: UpdateServiceSchema) => {
+  const current = await prisma.service.findFirstOrThrow({
+    where: { id },
+    select: { slug: true },
+  });
+
+  let slug = current.slug;
+  if (current.slug) {
+    const number = current.slug.split("-").at(0);
+    if (number) {
+      slug = slugify(`${number} ${payload.name}`);
+    }
+  }
+  
+  const updated = await prisma.service.update({
     where: { id: +id! },
     data: {
       ...payload,
+      slug,
     },
   });
+
+  return updated;
 };
 
 export const deleteService = (id: number) => {

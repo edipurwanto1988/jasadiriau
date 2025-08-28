@@ -229,13 +229,41 @@ const AccountCreateBusiness = ({
             </Stack>
 
             <Stack direction={"column"} spacing={2}>
-              <ListItemText
-                primary="Lokasi Bisnis"
-                secondary="Tambahkan lokasi bisnis anda."
-              />
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+              >
+                <ListItemText
+                  primary="Lokasi Bisnis"
+                  secondary="Tambahkan lokasi bisnis anda."
+                />
+                <Box>
+                  <Button
+                    variant="outlined"
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      mutation.add(
+                        "businessLocation",
+                        {
+                          provinceId: 0,
+                          regencyId: 0,
+                          district: 0,
+                          address: "",
+                        },
+                        "end"
+                      );
+                    }}
+                  >
+                    Tambah Lokasi
+                  </Button>
+                </Box>
+              </Stack>
 
               <Stack direction={"column"} spacing={3}>
-                {mutation.value("businessLocation", []).map((val, i) => (
+                {mutation.value("businessLocation", []).map((_, i) => (
                   <Stack
                     component={Paper}
                     direction={"column"}
