@@ -19,6 +19,10 @@ export default class ServiceResource extends Resource {
         this.imageUrl ?? "/images/placeholder.webp"
       }`,
       validations: ValidationResource.collection(this.validations),
+      images: (this.images ?? []).map((v) => ({
+        id: v.id,
+        imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${v.imageUrl}`,
+      })),
     };
   }
 }

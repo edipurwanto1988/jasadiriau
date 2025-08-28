@@ -22,7 +22,12 @@ import ServiceUpdate from "./ServiceUpdate";
 import ValidationItem from "../validation/ValidationItem";
 import { useAlert } from "@/views/contexts/AlertContext";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
-import { postNewValidation, postValidation } from "@/views/services/validation.service";
+import {
+  postNewValidation,
+  postValidation,
+} from "@/views/services/validation.service";
+import ServiceGalleryForm from "./ServiceGalleryForm";
+import ServiceGallery from "./ServiceGallery";
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
@@ -269,7 +274,10 @@ const ServiceDetail = ({ id }: { id: number }) => {
                   </Fade>
 
                   <Box>
-                    <Typography variant="subtitle1">
+                    <Typography
+                      variant="subtitle1"
+                      sx={{ whiteSpace: "pre-line", wordBreak: "break-word" }}
+                    >
                       {data?.description || "Tidak ada deskripsi"}
                     </Typography>
                   </Box>
@@ -295,12 +303,22 @@ const ServiceDetail = ({ id }: { id: number }) => {
                     </Fade>
 
                     <Box>
-                      <Typography variant="subtitle1">
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ whiteSpace: "pre-line", wordBreak: "break-word" }}
+                      >
                         {data?.terms ?? "Tidak ada deskripsi"}
                       </Typography>
                     </Box>
                   </Stack>
                 </Stack>
+              </Stack>
+            </Fade>
+
+            <Fade key={"gallery"} in={tab === "gallery"} unmountOnExit>
+              <Stack direction={"column"} spacing={1}>
+                <ServiceGalleryForm id={id} />
+                <ServiceGallery loading={isLoading} url={data?.images ?? []} />
               </Stack>
             </Fade>
 

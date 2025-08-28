@@ -198,7 +198,6 @@ const BusinessDetail = ({ id, role }: { id: number; role?: RoleType }) => {
               <Tab value="overview" label="Umum" />
               <Tab value="location" label="Lokasi" />
               <Tab value="service" label="Layanan" />
-              <Tab value="review" label="Reviews" />
               <Tab
                 value="validation"
                 label={
@@ -251,7 +250,10 @@ const BusinessDetail = ({ id, role }: { id: number; role?: RoleType }) => {
                   </Fade>
 
                   <Box>
-                    <Typography variant="subtitle1">
+                    <Typography
+                      variant="subtitle1"
+                      sx={{ whiteSpace: "pre-line", wordBreak: "break-word" }}
+                    >
                       {data?.description || "Tidak ada deskripsi."}
                     </Typography>
                   </Box>

@@ -85,6 +85,10 @@ export const getServiceID = async (id: number) => {
     orderBy: { createdAt: "desc" },
   });
   Object.assign(model, { validations: validations });
+  const images = await prisma.image.findMany({
+    where: { entityId: model.id, entityType: "gallery_service" },
+  });
+  Object.assign(model, { images: images });
   return model;
 };
 

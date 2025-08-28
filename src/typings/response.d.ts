@@ -120,6 +120,7 @@ type Service = {
   categoryName?: string;
   imageUrl?: string;
   validations?: Validation[];
+  images?: { id: number; imageUrl: string }[];
 };
 
 type Image = {

@@ -47,6 +47,7 @@ enum TargetType {
   profile
   service
   article
+  gallery_service
 }
 
 enum Action {

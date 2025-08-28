@@ -1,6 +1,9 @@
 import prisma from "@/lib/db";
 import { TargetType } from "@/generated/prisma";
-import { CreateImageSchema } from "@/schema/image.schema";
+import {
+  CreateImageSchema,
+  CreateMultiImageSchema,
+} from "@/schema/image.schema";
 
 export const createImage = async ({
   url,
@@ -28,4 +31,21 @@ export const createImage = async ({
 
     return created;
   });
+};
+
+export const createMultImage = async ({
+  url,
+  ...payload
+}: Omit<CreateMultiImageSchema, "files"> & { url: string[] }) => {
+  return prisma.image.createMany({
+    data: url.map((value) => ({
+      imageUrl: value,
+      entityType: payload.entityType as TargetType,
+      entityId: payload.entityId,
+    })),
+  });
+};
+
+export const deleteImage = (id: number) => {
+  return prisma.image.delete({ where: { id } });
 };

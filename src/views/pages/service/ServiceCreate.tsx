@@ -32,7 +32,7 @@ const ServiceCreate = ({ dialog, callback }: Props) => {
   );
 
   const { data: dataBusiness } = useSWR<BusinessProfile[]>(
-    dialog.open ? businessUrl.business : null,
+    dialog.open ? `${businessUrl.business}?status=active` : null,
     (url) =>
       fetch(url)
         .then((resp) => resp.json())
