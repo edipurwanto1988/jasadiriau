@@ -12,9 +12,9 @@ type Props = {
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-export async function generateMetadata(
-  { searchParams }: Props,
-): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: Props): Promise<Metadata> {
   const { q } = await searchParams;
   const setting = await getSetting();
 
@@ -48,11 +48,10 @@ export default async function Page({ searchParams }: Props) {
         flex={"1 1 0%"}
         direction={"row"}
         justifyContent={"center"}
-       
         boxSizing={"border-box"}
         minHeight={"100%"}
         sx={{
-           px: {
+          px: {
             xs: 1,
             sm: 1,
             md: "10rem",
@@ -68,16 +67,20 @@ export default async function Page({ searchParams }: Props) {
           },
         }}
       >
-        <Stack
-          direction={"column"}
-          gap={"12px"}
-          flex={1}
-           minHeight={"100%"}
-        >
+        <Stack direction={"column"} gap={"12px"} flex={1} minHeight={"100%"}>
           <Toolbar />
 
-          <Stack direction={"column"} spacing={3}  minHeight={"100%"}>
-            <Breadcrumbs/>
+          <Stack direction={"column"} spacing={3} minHeight={"100%"}>
+            <Breadcrumbs
+              boxProps={{
+                sx: {
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                },
+              }}
+            />
             <Typography
               variant="h1"
               sx={{ fontSize: { xs: 20 }, fontWeight: 600 }}

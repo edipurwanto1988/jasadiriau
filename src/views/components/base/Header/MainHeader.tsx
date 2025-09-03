@@ -56,7 +56,7 @@ const MainHeader = async () => {
                   fontSize: 18,
                 }}
               >
-                {setting?.siteName ?? "JasadiRiau.com"}
+                {setting?.siteName ?? "JasaDiRiau"}
               </Link>
             </Box>
 

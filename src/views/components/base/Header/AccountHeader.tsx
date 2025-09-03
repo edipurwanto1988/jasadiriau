@@ -2,7 +2,6 @@ import React from "react";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,6 +10,7 @@ import AuthMenuHeader from "./AuthMenuHeader";
 import { Divider } from "@mui/material";
 import HomeMenu from "../Menu/HomeMenu";
 import { getSetting } from "@/actions/setting.action";
+import { Link } from "react-transition-progress/next";
 
 const SearchIcon = LoadComponent(() => import("@mui/icons-material/Search"));
 
@@ -45,14 +45,14 @@ const AccountHeader = async () => {
           >
             <Box>
               <Link
-                fontWeight={900}
-                fontSize={18}
                 href="/"
-                underline="none"
-                color="text.primary"
-                variant="subtitle1"
+                style={{
+                  lineHeight: 1.57,
+                  fontWeight: 900,
+                  fontSize: 18,
+                }}
               >
-                {setting?.siteName ?? 'JasadiRiau.com'}
+                {setting?.siteName ?? "JasaDiRiau"}
               </Link>
             </Box>
 

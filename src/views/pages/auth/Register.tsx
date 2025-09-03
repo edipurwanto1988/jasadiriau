@@ -1,17 +1,14 @@
 "use client";
 import React from "react";
-import Typography from "@mui/material/Typography";
 import useMutation from "ezhooks/lib/useMutation";
 import { postRegister } from "@/views/services/auth.service";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
-import Fade from "@mui/material/Fade";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 
 const Register = () => {
   const buttonRef = React.useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const [loading, setLoading] = React.useState(true);
   const openSnackbar = useSnackbar();
   const mutation = useMutation({
     defaultValue: {
@@ -61,8 +58,6 @@ const Register = () => {
   // }, []);
 
   return (
-    // <div id="google-signin" />
-
     <div>
       <div ref={buttonRef}></div>
 
@@ -74,8 +69,7 @@ const Register = () => {
           if (!window.google || !buttonRef.current) return;
 
           window.google.accounts.id.initialize({
-            client_id:
-              "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com",
+            client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
             callback: handleCredentialResponse,
             auto_select: false,
           });

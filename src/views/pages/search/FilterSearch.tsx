@@ -188,12 +188,13 @@ const FilterSearch = ({ url, setUrl, onSearch }: Props) => {
           onChange={onChange("location")}
           value={
             locationMap.find(
-              (f) => f.value === url.searchParams.get("location33ree")
+              (f) => f.value === url.searchParams.get("location")
             ) ?? null
           }
           isOptionEqualToValue={(option: any, value: any) => {
             return option.value === value.value;
           }}
+          getOptionLabel={(opt: any) => opt.label ?? ""}
           renderInput={(params) => (
             <TextField
               {...params}

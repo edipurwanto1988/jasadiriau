@@ -8,7 +8,7 @@ import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import TooltipAccountSidebarMenu from "../Tooltip/TooltipAccountSidebarMenu";
 import Toolbar from "@mui/material/Toolbar";
-import { useMediaQuery } from "@mui/material";
+import  useMediaQuery from "@mui/material/useMediaQuery";
 
 export type SiderBarMenu = Array<{
   path?: string;

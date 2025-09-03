@@ -28,6 +28,8 @@ import InputSelectUncontrolled from "@/views/components/base/Input/InputSelectUn
 import Paper from "@mui/material/Paper";
 import Toolbar from "@mui/material/Toolbar";
 import SnacbarLoading from "@/views/components/base/Skeleton/SnacbarLoading";
+import Fade from "@mui/material/Fade";
+import  useMediaQuery from "@mui/material/useMediaQuery";
 
 const TextField = LoadComponent(() => import("@mui/material/TextField"));
 const LanguageOutlinedIcon = LoadComponent(
@@ -41,6 +43,7 @@ const AccountCreateBusiness = ({
   id?: number;
   current?: UpdateAccountBusinessProfileSchema;
 }) => {
+  const isMobile = useMediaQuery(theme => theme.breakpoints.between('xs','sm'))
   const router = useRouter();
   const openSnackbar = useSnackbar();
   const [province, setProvince] = React.useState<number | null>(null);
@@ -143,7 +146,13 @@ const AccountCreateBusiness = ({
     >
       <Box sx={{ overflow: "hidden auto" }}>
         <Stack
-          direction={"row"}
+          direction={{
+            xs: "column",
+            sm: "column",
+            md: "column",
+            lg: "row",
+            xl: "row",
+          }}
           component={"form"}
           noValidate
           overflow={"hidden"}
@@ -403,18 +412,22 @@ const AccountCreateBusiness = ({
               </Stack>
             </Stack>
 
-            <Box>
-              <Button
-                loading={mutation.processing}
-                disabled={mutation.processing}
-                variant="contained"
-                disableElevation
-                type="submit"
-              >
-                {id ? "Simpan Perubahan" : "Tambah Bisnis"}
-              </Button>
-            </Box>
-            <Toolbar />
+            <Fade in={!isMobile} unmountOnExit>
+              <div>
+                <Box key={1}>
+                  <Button
+                    loading={mutation.processing}
+                    disabled={mutation.processing}
+                    variant="contained"
+                    disableElevation
+                    type="submit"
+                  >
+                    {id ? "Simpan Perubahan" : "Tambah Bisnis"}
+                  </Button>
+                </Box>
+                <Toolbar key={2} />
+              </div>
+            </Fade>
           </Stack>
 
           <Stack direction={"column"} spacing={3} flexBasis={"40%"}>
@@ -504,6 +517,23 @@ const AccountCreateBusiness = ({
               </Stack>
             </Stack>
           </Stack>
+
+              <Fade in={isMobile} unmountOnExit>
+              <div>
+                <Box key={1}>
+                  <Button
+                    loading={mutation.processing}
+                    disabled={mutation.processing}
+                    variant="contained"
+                    disableElevation
+                    type="submit"
+                  >
+                    {id ? "Simpan Perubahan" : "Tambah Bisnis"}
+                  </Button>
+                </Box>
+                <Toolbar key={2} />
+              </div>
+            </Fade>
         </Stack>
       </Box>
       <SnacbarLoading loading={isLoading} />

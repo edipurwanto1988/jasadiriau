@@ -12,10 +12,12 @@ import { notifUrl } from "@/views/services/notifcation.service";
 import HeaderNotification from "./HeaderNotification";
 import { useAuth } from "@/views/contexts/AuthContext";
 import { useRouter } from "next/navigation";
+import { useProgress } from "react-transition-progress";
 
 const AuthMenuHeader = () => {
+  const startProgress = useProgress();
   const auth = useAuth();
-  const router = useRouter()
+  const router = useRouter();
   const { data: dataUser } = useSWR<User>(
     auth.isAuth ? userUrl.current : null,
     (url) =>
@@ -66,7 +68,10 @@ const AuthMenuHeader = () => {
               {
                 text: "Logout",
                 onClick: () => {
-                  signout();
+                  React.startTransition(() => {
+                    startProgress();
+                    signout();
+                  });
                 },
               },
             ]}
@@ -90,7 +95,10 @@ const AuthMenuHeader = () => {
               variant="contained"
               disableElevation
               onClick={() => {
-                router.push('/login')
+                React.startTransition(() => {
+                  startProgress();
+                  router.push("/login", { scroll: false });
+                });
               }}
             >
               Masuk

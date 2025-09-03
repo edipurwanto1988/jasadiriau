@@ -56,7 +56,7 @@ const MainFooter = async () => {
           </Stack>
           <Stack direction={"row"} justifyContent={"center"} spacing={2}>
             {setting?.facebookUrl ? (
-              <Link target="_blank" href={setting.facebookUrl} prefetch={false}>
+              <Link target="_blank" prefetch={false} href={setting.facebookUrl}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/facebook.svg`}
                   alt={"facebook"}
@@ -68,7 +68,7 @@ const MainFooter = async () => {
             ) : null}
 
             {setting?.instagramUrl ? (
-              <Link target="_blank" href={setting.instagramUrl}>
+              <Link target="_blank" prefetch={false} href={setting.instagramUrl}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/instagram.svg`}
                   alt={"instagram"}
@@ -80,7 +80,7 @@ const MainFooter = async () => {
             ) : null}
 
             {setting?.twitterUrl ? (
-              <Link target="_blank" href={setting.twitterUrl}>
+              <Link target="_blank" prefetch={false} href={setting.twitterUrl}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/twitter.svg`}
                   alt={"twitter"}
@@ -92,7 +92,7 @@ const MainFooter = async () => {
             ) : null}
 
             {setting?.youtubeUrl ? (
-              <Link target="_blank" href={setting.youtubeUrl}>
+              <Link target="_blank" prefetch={false} href={setting.youtubeUrl}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/youtube.svg`}
                   alt={"youtube"}
@@ -104,7 +104,7 @@ const MainFooter = async () => {
             ) : null}
 
             {setting?.linkedinUrl ? (
-              <Link target="_blank" href={setting.linkedinUrl}>
+              <Link target="_blank" prefetch={false} href={setting.linkedinUrl}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/linkedin.svg`}
                   alt={"linkedin"}
@@ -116,7 +116,7 @@ const MainFooter = async () => {
             ) : null}
 
             {setting?.whatsappUrl ? (
-              <Link target="_blank" href={setting.whatsappUrl}>
+              <Link target="_blank" prefetch={false} href={setting.whatsappUrl}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/whatsapp.svg`}
                   alt={"whatsapp"}
@@ -134,7 +134,8 @@ const MainFooter = async () => {
               lineHeight="24px"
               align="center"
             >
-              © {new Date().getFullYear()} ServiceFinder. All rights reserved.
+              © {new Date().getFullYear()} {setting?.siteName ?? "JasaDiRiau"}.
+              All rights reserved.
             </Typography>
           </Box>
         </Stack>
