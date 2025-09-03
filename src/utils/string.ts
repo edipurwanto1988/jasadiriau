@@ -91,3 +91,8 @@ export const slugify = (text: string): string => {
     .replace(/\s+/g, "-") // spasi jadi -
     .replace(/-+/g, "-"); // multiple - jadi 1
 };
+
+export const typeSearch = (type?: "profile" | "service") => {
+  if(!type) return ''
+  return type === "profile" ? "Penyedia Jasa" : "Jasa";
+};

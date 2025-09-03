@@ -1,5 +1,9 @@
-import AccountSidebarMenu from "@/views/components/base/Sidebar/AccountSidebarMenu";
+import dynamic from "next/dynamic";
 
-export default async function Default() {
-  return <AccountSidebarMenu/>
+const AccountSidebarMenu = dynamic(
+  () => import("@/views/components/base/Sidebar/AccountSidebarMenu")
+);
+
+export default function Default() {
+  return <AccountSidebarMenu />;
 }

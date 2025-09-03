@@ -194,3 +194,23 @@ type IMenu = {
   parentId?: string;
   children: IMenu[];
 };
+
+type SearchList = {
+  id: number;
+  name: string;
+  slug?: string;
+  type: "profile" | "service";
+  price?:number;
+  contacts: Array<{ whatsapp: string }>;
+  locations: Array<{
+    regencyName: string;
+    regencySlug: string;
+    districtName: string;
+    districtSlug: string;
+    provinceName: string;
+    provinceSlug: string;
+  }>;
+  profileName?: string;
+  categoryName?: string;
+  categorySlug?: string;
+};

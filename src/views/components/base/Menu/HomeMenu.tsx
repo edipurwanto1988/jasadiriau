@@ -2,9 +2,9 @@
 
 import { useAuth } from "@/views/contexts/AuthContext";
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
+import { Link } from "react-transition-progress/next";
 
-const HomeMenu =  () => {
+const HomeMenu = () => {
   const auth = useAuth();
   if (!auth.isAuth) {
     return null;
@@ -12,10 +12,7 @@ const HomeMenu =  () => {
   return (
     <Box>
       <Link
-        variant="subtitle2"
         href={auth.role === "user" ? "/account/business-profile" : "/admin"}
-        underline="none"
-        color="text.primary"
       >
         Beranda
       </Link>

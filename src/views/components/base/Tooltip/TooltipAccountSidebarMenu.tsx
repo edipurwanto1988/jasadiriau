@@ -7,17 +7,11 @@ import SvgIcon, { SvgIconTypeMap } from "@mui/material/SvgIcon";
 import Tooltip from "@mui/material/Tooltip";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { useApp } from "@/views/contexts/AppContext";
-import { styled } from "@mui/material/styles";
 import { usePathname, useRouter } from "next/navigation";
 import { SiderBarMenu } from "../Sidebar/SidebarMenu";
 import Loading from "@/views/components/base/Skeleton/Spinner";
 import ListItemText from "@mui/material/ListItemText";
-
-const ListItemButton = styled(MUIListItemButton)(({}) => ({
-  "&.Mui-selected": {
-    backgroundColor: "rgba(255,255,255, 0.1)",
-  },
-}));
+import { useProgress } from "react-transition-progress";
 
 type Props = {
   path?: string;
@@ -32,13 +26,15 @@ type Props = {
 };
 
 const TooltipAccountSidebarMenu = (props: Props) => {
+  const startProgress = useProgress();
+  const router = useRouter();
   const {
     trigger: { open },
     onClickOpen,
     addKey,
     clearKey,
   } = useApp();
-  const router = useRouter();
+
   const pathname = usePathname();
 
   const paths = React.useMemo<string[]>(
@@ -54,7 +50,7 @@ const TooltipAccountSidebarMenu = (props: Props) => {
       placement="right"
     >
       <div>
-        <ListItemButton
+        <MUIListItemButton
           selected={paths.includes(props.pathKey)}
           sx={{
             "&.Mui-selected": {
@@ -64,15 +60,18 @@ const TooltipAccountSidebarMenu = (props: Props) => {
           }}
           onClick={(e) => {
             e.preventDefault();
-            if (props.path) {
-              clearKey();
-              router.push(props.path, { scroll: false });
-            } else {
-              addKey(props.pathKey);
-              if (!open) {
-                onClickOpen();
+            React.startTransition(() => {
+              startProgress();
+              if (props.path) {
+                clearKey();
+                router.push(props.path, { scroll: false });
+              } else {
+                addKey(props.pathKey);
+                if (!open) {
+                  onClickOpen();
+                }
               }
-            }
+            });
           }}
         >
           {props.icon ? (
@@ -110,7 +109,7 @@ const TooltipAccountSidebarMenu = (props: Props) => {
               transition: "all .35s ease",
             }}
           />
-        </ListItemButton>
+        </MUIListItemButton>
       </div>
     </Tooltip>
   );

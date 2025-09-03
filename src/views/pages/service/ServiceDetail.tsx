@@ -123,7 +123,7 @@ const ServiceDetail = ({ id }: { id: number }) => {
       onBack={router.back}
     >
       <Box sx={{ width: "100%", minHeight: "100%", overflow: "hidden auto" }}>
-        <Stack direction={"column"} spacing={4} sx={{ px: 3, py: 2 }}>
+        <Stack direction={"column"} spacing={2} sx={{ px: 3, py: 2 }}>
           <Stack direction={"row"} spacing={2}>
             <Stack direction={"column"} alignItems={"center"} spacing={1}>
               <Box
@@ -214,6 +214,8 @@ const ServiceDetail = ({ id }: { id: number }) => {
             <Tabs
               value={tab}
               onChange={handleChange}
+              scrollButtons={true}
+              allowScrollButtonsMobile
               sx={{
                 borderBottom: "1px solid #e8e8e8",
                 "& .MuiButtonBase-root": {

@@ -14,6 +14,7 @@ const SliderImage = ({ images }: Props) => {
       infinite
       autoPlay
       renderArrowsWhenDisabled
+      removeArrowOnDeviceType={['mobile']}
       responsive={{
         desktop: {
           breakpoint: { max: 3000, min: 1024 },

@@ -2,6 +2,7 @@ import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
 import { SvgIconTypeMap } from "@mui/material/SvgIcon";
 import Button, { ButtonProps } from "@mui/material/Button";
 import { DefaultComponentProps } from "@mui/material/OverridableComponent";
+import IconButton from "@mui/material/IconButton";
 
 const RestartAltOutlinedIcon = LoadComponent(
   () => import("@mui/icons-material/RestartAltOutlined")
@@ -27,6 +28,7 @@ const DeleteOutlineOutlinedIcon = LoadComponent(
 );
 
 type Props = Omit<ButtonProps, "startIcon" | "endIcon"> & {
+  typeButton?: "icon" | "button";
   position: "start" | "end";
   iconProps?: DefaultComponentProps<SvgIconTypeMap<{}, "svg">>;
   icon:
@@ -38,7 +40,13 @@ type Props = Omit<ButtonProps, "startIcon" | "endIcon"> & {
     | "DeleteOutlineOutlinedIcon";
 };
 
-const ButtonWithIcon = ({ icon, position, iconProps, ...props }: Props) => {
+const ButtonWithIcon = ({
+  typeButton,
+  icon,
+  position,
+  iconProps,
+  ...props
+}: Props) => {
   const renderIcon = () => {
     if (icon === "RestartAltOutlinedIcon") {
       return <RestartAltOutlinedIcon fontSize="inherit" {...iconProps} />;
@@ -54,6 +62,14 @@ const ButtonWithIcon = ({ icon, position, iconProps, ...props }: Props) => {
       return <DeleteOutlineOutlinedIcon fontSize="inherit" />;
     }
   };
+
+  if (typeButton === "icon") {
+    return (
+      <IconButton color="primary" onClick={props.onClick} size="small">
+        {renderIcon()}
+      </IconButton>
+    );
+  }
 
   return (
     <Button

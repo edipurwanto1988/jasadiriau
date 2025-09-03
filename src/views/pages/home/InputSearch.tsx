@@ -9,6 +9,9 @@ const InputSearch = () => {
   return (
     <Paper
       elevation={10}
+      component={"form"}
+      action={"/search"}
+      noValidate
       sx={(theme) => ({
         position: "absolute",
         bottom: 56,
@@ -18,16 +21,21 @@ const InputSearch = () => {
         py: 1,
         [theme.breakpoints.between("xs", "md")]: {
           bottom: 24,
-          left: 0,
-          width: "100%",
+          left: "50%",
+          right: "auto",
+          transform: "translateX(-50%)",
+          width: "90%",
         },
       })}
     >
       <Stack direction={"row"} alignItems={"center"}>
         <InputLargeSearch
+          name="q"
+          defaultValue={""}
           sx={{
             backgroundColor: "transparent",
             "& .MuiOutlinedInput-root": {
+              pl: 0,
               backgroundColor: "#FFF",
             },
           }}

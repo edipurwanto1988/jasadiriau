@@ -8,6 +8,7 @@ import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import TooltipAccountSidebarMenu from "../Tooltip/TooltipAccountSidebarMenu";
 import Toolbar from "@mui/material/Toolbar";
+import { useMediaQuery } from "@mui/material";
 
 export type SiderBarMenu = Array<{
   path?: string;
@@ -47,6 +48,12 @@ const menu: SiderBarMenu = [
 const drawerWidth = 240;
 
 const AccountSidebarMenu = () => {
+  const isMobile = useMediaQuery((theme) =>
+    theme.breakpoints.between("xs", "sm")
+  );
+  if (isMobile) {
+    return null;
+  }
   return (
     <Drawer
       variant={"permanent"}

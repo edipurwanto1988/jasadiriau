@@ -30,11 +30,13 @@ import { businessUrl } from "@/views/services/business-profile.service";
 import { useRouter } from "next/navigation";
 import ServiceListCard from "../service/ServiceListCard";
 import BusinessLocationlItem from "./BusinessLocationlItem";
+import { useProgress } from "react-transition-progress";
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
 const BusinessDetail = ({ id, role }: { id: number; role?: RoleType }) => {
   const router = useRouter();
+  const startProgress = useProgress();
   const alert = useAlert();
   const openSnackbar = useSnackbar();
   const [tab, setTab] = React.useState("overview");
@@ -121,7 +123,10 @@ const BusinessDetail = ({ id, role }: { id: number; role?: RoleType }) => {
       title={data?.businessName}
       onReload={reload}
       onUpdate={() => {
-        router.push(`${id}/update`);
+        React.startTransition(() => {
+          startProgress();
+          router.push(`${id}/update`);
+        });
       }}
       onBack={router.back}
     >

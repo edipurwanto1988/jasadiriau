@@ -51,9 +51,22 @@ const ServiceListCard = ({ loading, data }: Props) => {
             key={value.id}
             sx={{
               p: 1.5,
-              flexBasis: "calc(25% - 8px)", // 4 kolom
-              maxWidth: "calc(25% - 8px)",
+              flexBasis: {
+                xs: "calc(100% - 8px)",
+                sm: "calc(100% - 8px)",
+                md: "calc(25% - 8px)",
+                lg: "calc(25% - 8px)",
+                xl: "calc(25% - 8px)",
+              },
+              maxWidth: {
+                xs: "calc(100% - 8px)",
+                sm: "calc(100% - 8px)",
+                md: "calc(25% - 8px)",
+                lg: "calc(25% - 8px)",
+                xl: "calc(25% - 8px)",
+              },
               boxSizing: "border-box",
+              overflow: "hidden",
             }}
           >
             <Stack direction={"column"} spacing={0.5}>

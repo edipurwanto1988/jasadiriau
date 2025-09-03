@@ -5,7 +5,6 @@ import Dropdown, {
   DropdownProps,
 } from "@/views/components/base/Dropdown/Dropdown";
 import PageTemplate from "@/views/components/templates/PageTemplate";
-import Link from "@mui/material/Link";
 import StatusChip from "@/views/components/base/Chip/StatusChip";
 import ServiceUpdate from "./ServiceUpdate";
 import ServiceCreate from "./ServiceCreate";
@@ -18,6 +17,7 @@ import { useAuth } from "@/views/contexts/AuthContext";
 import useTable from "ezhooks/lib/useTable";
 import useMultiDialog from "@/views/hooks/useMultiDialog";
 import useSWRImmutable from "swr/immutable";
+import { Link } from "react-transition-progress/next";
 
 const ServiceTable = () => {
   const auth = useAuth();
@@ -116,12 +116,7 @@ const ServiceTable = () => {
         loading={table.loading}
         tableProps={{ size: "small" }}
         column={[
-          {
-            label: "No",
-            value: (_, i) => table.pagination.from + (i ?? 0),
-            head: { padding: "checkbox", align: "center" },
-            align: "center",
-          },
+         
           // {
           //   label: "Foto",
           //   value: (value) => (
@@ -136,9 +131,9 @@ const ServiceTable = () => {
           //   align: "center",
           // },
           {
-            label: "Layanan",
+            label: "Nama",
             value: (value) => (
-              <Link href={`service/${value.id}`} underline="none">
+              <Link href={`service/${value.id}`} prefetch={false}>
                 {value.name}
               </Link>
             ),
@@ -147,13 +142,18 @@ const ServiceTable = () => {
               value: table.query("name", ""),
               onChange: (e) => table.setQuery({ name: e.target.value }),
             },
+              sx: (theme) => ({
+                [theme.breakpoints.between("xs", "sm")]: {
+                  whiteSpace: "nowrap",
+                },
+              }),
           },
           {
             label: "Profil Bisnis",
             value: (value) => (
               <Link
                 href={`business-profile/${value.profileId}`}
-                underline="none"
+                prefetch={false}
               >
                 {value.bussinessName ?? ""}
               </Link>
@@ -163,6 +163,11 @@ const ServiceTable = () => {
               value: table.query("profile", ""),
               onChange: (e) => table.setQuery({ profile: e.target.value }),
             },
+              sx: (theme) => ({
+                [theme.breakpoints.between("xs", "sm")]: {
+                  whiteSpace: "nowrap",
+                },
+              }),
           },
           {
             label: "Kategori",
@@ -176,6 +181,11 @@ const ServiceTable = () => {
                   ctg: e.target.value === "00" ? "" : +e.target.value,
                 }),
             },
+              sx: (theme) => ({
+                [theme.breakpoints.between("xs", "sm")]: {
+                  whiteSpace: "nowrap",
+                },
+              }),
           },
 
           {

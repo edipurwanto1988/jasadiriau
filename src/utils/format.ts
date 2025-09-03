@@ -37,7 +37,8 @@ export const uniqueNumber = (number?: number) => {
   );
 };
 
-export const rupiah = (value: number) => {
+export const rupiah = (value?: number) => {
+  if(value === null || value === undefined) return ''
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
@@ -135,3 +136,27 @@ export const paginate = (search: URLSearchParams) => {
 
   return { skip: 0, take: 25 };
 };
+
+export const formatIndoPhone = (input: string) => {
+  // Hapus semua karakter non-digit
+  let digits = input.replace(/\D/g, "");
+
+  // Kalau mulai dengan "0", ganti ke "62"
+  if (digits.startsWith("0")) {
+    digits = "62" + digits.slice(1);
+  }
+
+  // Kalau mulai dengan "620", rapikan jadi "62"
+  if (digits.startsWith("620")) {
+    digits = "62" + digits.slice(3);
+  }
+
+  // Tambahkan "+" di depan
+  digits = "+" + digits;
+
+  // Format menjadi +62 812-3456-7890
+  return digits.replace(
+    /^(\+62)(\d{3})(\d{3,4})(\d{3,4})$/,
+    (_, code, p1, p2, p3) => `${code} ${p1} ${p2} ${p3}`
+  );
+}

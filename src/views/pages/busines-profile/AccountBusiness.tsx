@@ -16,7 +16,6 @@ import {
 } from "@/views/services/business-profile.service";
 import { useRouter } from "next/navigation";
 import Avatar from "@mui/material/Avatar";
-import Link from "@mui/material/Link";
 import StatusChip from "@/views/components/base/Chip/StatusChip";
 import useSWR from "swr";
 import Stack from "@mui/material/Stack";
@@ -24,9 +23,12 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import RoleComponent from "@/views/components/base/Role/RoleComponent";
 import { useAuth } from "@/views/contexts/AuthContext";
+import { useProgress } from "react-transition-progress";
+import { Link } from "react-transition-progress/next";
 
 const AccountBusiness = () => {
   const auth = useAuth();
+  const startProgress = useProgress();
   const router = useRouter();
   const openSnackbar = useSnackbar();
   const alert = useAlert();
@@ -83,7 +85,10 @@ const AccountBusiness = () => {
 
   const onClickUpdate = React.useCallback(
     (id: number) => () => {
-      router.push(`business-profile/${id}/update`);
+      React.startTransition(() => {
+        startProgress();
+        router.push(`business-profile/${id}/update`, { scroll: false });
+      });
     },
     [table.data]
   );
@@ -93,7 +98,12 @@ const AccountBusiness = () => {
       title="Profil Bisnis"
       onCreate={
         ["user"].includes(auth.role)
-          ? () => router.push("business-profile/create")
+          ? () => {
+              React.startTransition(() => {
+                startProgress();
+                router.push("business-profile/create", { scroll: false });
+              });
+            }
           : undefined
       }
       onReload={table.reload}
@@ -138,12 +148,7 @@ const AccountBusiness = () => {
           loading={table.loading}
           tableProps={{ size: "small" }}
           column={[
-            {
-              label: "No",
-              value: (_, i) => table.pagination.from + (i ?? 0),
-              head: { padding: "checkbox", align: "center" },
-              align: "center",
-            },
+
             {
               label: "Foto",
               value: (value) => (
@@ -160,10 +165,15 @@ const AccountBusiness = () => {
             {
               label: "Nama Bisnis",
               value: (value) => (
-                <Link href={`business-profile/${value.id}`} underline="none">
+                <Link href={`business-profile/${value.id}`} prefetch={false}>
                   {value.businessName}
                 </Link>
               ),
+              sx: (theme) => ({
+                [theme.breakpoints.between("xs", "sm")]: {
+                  whiteSpace: "nowrap",
+                },
+              }),
               filter: {
                 type: "text",
                 value: table.query("name", ""),

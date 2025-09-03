@@ -6,6 +6,7 @@ import { PlusJakartaSans } from "@/lib/plus-jakarta-sans.font";
 import "./globals.css";
 import AuthProvider from "@/views/contexts/AuthContext";
 import { getAuth } from "@/lib/auth";
+import { ProgressBar, ProgressBarProvider } from "react-transition-progress";
 
 export const metadata: Metadata = {
   title: "Jasa di Riau",
@@ -25,15 +26,20 @@ export default async function RootLayout({
   return (
     <html lang="en" className={PlusJakartaSans.variable}>
       <body className="main-body">
-        <AppRouterCacheProvider options={{ key: "css", enableCssLayer: true }}>
-          <ThemeProvider theme={theme}>
-            <AuthProvider initialState={auth}>
-              {header}
-              {children}
-              {footer}
-            </AuthProvider>
-          </ThemeProvider>
-        </AppRouterCacheProvider>
+        <ProgressBarProvider>
+          <AppRouterCacheProvider
+            options={{ key: "css", enableCssLayer: true }}
+          >
+            <ThemeProvider theme={theme}>
+              <AuthProvider initialState={auth}>
+                <ProgressBar className="my-progressbar" />
+                {header}
+                {children}
+                {footer}
+              </AuthProvider>
+            </ThemeProvider>
+          </AppRouterCacheProvider>
+        </ProgressBarProvider>
       </body>
     </html>
   );

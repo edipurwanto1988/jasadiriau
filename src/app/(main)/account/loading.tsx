@@ -1,5 +1,5 @@
 import TablePageLoading from "@/views/components/base/Skeleton/TablePageLoading";
 
-export default function Loading() {
+export default async function Loading() {
   return <TablePageLoading />;
 }

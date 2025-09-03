@@ -1,14 +1,20 @@
 "use client";
 import React from "react";
 import { default as MuiLink } from "@mui/material/Link";
-import { default as MUIBreadcrumbs } from "@mui/material/Breadcrumbs";
+import { BreadcrumbsProps, default as MUIBreadcrumbs } from "@mui/material/Breadcrumbs";
 import { snackCaseToWord } from "@/utils/string";
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import Link from "next/link";
 import Typography from "@mui/material/Typography";
 import { usePathname } from "next/navigation";
 
-const Breadcrumbs = () => {
+type Props = {
+  breadProps?:BreadcrumbsProps,
+  boxProps?:BoxProps
+}
+
+
+const Breadcrumbs = (props:Props) => {
   const pathname = usePathname();
   const render = (links: string) => {
     const paths = links.split("/");
@@ -58,8 +64,10 @@ const Breadcrumbs = () => {
         justifyContent: "flex-end",
         alignItems: "center",
       }}
+
+      {...props.boxProps}
     >
-      <MUIBreadcrumbs separator={"›"} maxItems={4} aria-label="breadcrumb">
+      <MUIBreadcrumbs separator={"›"} maxItems={4} aria-label="breadcrumb" {...props?.breadProps}>
         {render(pathname)}
       </MUIBreadcrumbs>
     </Box>

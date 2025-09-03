@@ -41,55 +41,77 @@ const ValidationItem = ({ data, loading, onValidation, onResend }: Props) => {
       <TransitionGroup component={Stack} direction={"column"} spacing={1}>
         {data.map((value, i) => (
           <Collapse key={i}>
-            <Paper variant="outlined" sx={{ p: 2 }}>
+            <Paper variant="outlined" sx={{ p: 2, overflow: "auto hidden" }}>
               <Stack direction={"column"} spacing={1}>
-                <Stack direction={"row"} alignItems={"center"}>
+                <Stack direction={"row"} justifyContent={'space-between'} alignItems={"center"} spacing={2}>
                   <Box flexBasis={"20%"}>
                     <ActionChip action={value.action} icon />
                   </Box>
 
-                  <ListItemText
-                    primary="Catatan"
-                    secondary={value.note || "Tidak ada catatan."}
-                    slotProps={{
-                      primary: {
-                        variant: "body2",
-                        fontWeight: 700,
-                      },
-                      secondary: {
-                        variant: "body2",
+                  <Box
+                    sx={{
+                      flexBasis: {
+                        xs: "unset",
+                        sm: "unset",
+                        md: "30%",
+                        lg: "30%",
+                        xl: "30%",
                       },
                     }}
-                    sx={{ flexBasis: "30%" }}
-                  />
+                  >
+                    <ListItemText
+                      primary="Catatan"
+                      secondary={value.note || "Tidak ada catatan."}
+                      slotProps={{
+                        primary: {
+                          variant: "body2",
+                          fontWeight: 700,
+                        },
+                        secondary: {
+                          variant: "body2",
+                          whiteSpace: "pre-line",
+                          sx:{
+                            wordBreak:"break-all"
+                          }
+                        },
+                      }}
+                    />
+                  </Box>
+                  <Box>
+                    <ListItemText
+                      primary="Validasi Tanggal"
+                      secondary={dateFormat(value.validatedAt, { time: true })}
+                      slotProps={{
+                        primary: {
+                          variant: "body2",
+                          fontWeight: 700,
+                          whiteSpace: "nowrap",
+                        },
+                        secondary: {
+                          variant: "body2",
+                          whiteSpace: "nowrap",
+                        },
+                      }}
+                    />
+                  </Box>
 
-                  <ListItemText
-                    primary="Validasi Tanggal"
-                    secondary={dateFormat(value.validatedAt, { time: true })}
-                    slotProps={{
-                      primary: {
-                        variant: "body2",
-                        fontWeight: 700,
-                      },
-                      secondary: {
-                        variant: "body2",
-                      },
-                    }}
-                  />
-
-                  <ListItemText
-                    primary="Dibuat Tanggal"
-                    secondary={dateFormat(value.createdAt, { time: true })}
-                    slotProps={{
-                      primary: {
-                        variant: "body2",
-                        fontWeight: 700,
-                      },
-                      secondary: {
-                        variant: "body2",
-                      },
-                    }}
-                  />
+                  <Box>
+                    <ListItemText
+                      primary="Dibuat Tanggal"
+                      secondary={dateFormat(value.createdAt, { time: true })}
+                      slotProps={{
+                        primary: {
+                          variant: "body2",
+                          fontWeight: 700,
+                          whiteSpace: "nowrap",
+                        },
+                        secondary: {
+                          variant: "body2",
+                          whiteSpace: "nowrap",
+                        },
+                      }}
+                    />
+                  </Box>
                 </Stack>
 
                 <RoleComponent

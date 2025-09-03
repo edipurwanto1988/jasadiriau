@@ -1,4 +1,3 @@
-import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
@@ -6,29 +5,50 @@ import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import { getSetting } from "@/actions/setting.action";
 import { getFooter } from "@/actions/menu.action";
+import { Link } from "react-transition-progress/next";
 
 const MainFooter = async () => {
   const [setting, menus] = await Promise.all([getSetting(), getFooter()]);
   return (
     <footer>
-      <Box sx={{ px: 20, pb:1 }}>
+      <Box
+        sx={{
+          px: {
+            xs: 0,
+            sm: 0,
+            md: 10,
+            lg: 20,
+            xl: 20,
+          },
+          pb: 1,
+        }}
+      >
         <Toolbar />
         <Stack spacing={4}>
           <Stack
-            direction={"row"}
+            direction={{
+              xs: "column",
+              sm: "column",
+              md: "row",
+              lg: "row",
+              xl: "row",
+            }}
             justifyContent={"space-around"}
             alignItems={"center"}
+            spacing={{
+              xs: 2,
+              sm: 2,
+              md: 0,
+              lg: 0,
+              xl: 0,
+            }}
           >
             {menus.map((v) => (
               <Link
                 key={v.id}
-                href={v.url}
-                align="center"
-                fontWeight={400}
+                href={v.url ?? ""}
+                style={{ textAlign: "center" }}
                 color="#4A739C"
-                lineHeight="24px"
-                fontFamily={"var(--font-plus-jakarta-sans)"}
-                underline="none"
               >
                 {v.name}
               </Link>
@@ -36,7 +56,7 @@ const MainFooter = async () => {
           </Stack>
           <Stack direction={"row"} justifyContent={"center"} spacing={2}>
             {setting?.facebookUrl ? (
-              <Link target="_blank" href={setting.facebookUrl} underline="none">
+              <Link target="_blank" href={setting.facebookUrl} prefetch={false}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/facebook.svg`}
                   alt={"facebook"}
@@ -48,11 +68,7 @@ const MainFooter = async () => {
             ) : null}
 
             {setting?.instagramUrl ? (
-              <Link
-                target="_blank"
-                href={setting.instagramUrl}
-                underline="none"
-              >
+              <Link target="_blank" href={setting.instagramUrl}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/instagram.svg`}
                   alt={"instagram"}
@@ -64,7 +80,7 @@ const MainFooter = async () => {
             ) : null}
 
             {setting?.twitterUrl ? (
-              <Link target="_blank" href={setting.twitterUrl} underline="none">
+              <Link target="_blank" href={setting.twitterUrl}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/twitter.svg`}
                   alt={"twitter"}
@@ -76,7 +92,7 @@ const MainFooter = async () => {
             ) : null}
 
             {setting?.youtubeUrl ? (
-              <Link target="_blank" href={setting.youtubeUrl} underline="none">
+              <Link target="_blank" href={setting.youtubeUrl}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/youtube.svg`}
                   alt={"youtube"}
@@ -88,7 +104,7 @@ const MainFooter = async () => {
             ) : null}
 
             {setting?.linkedinUrl ? (
-              <Link target="_blank" href={setting.linkedinUrl} underline="none">
+              <Link target="_blank" href={setting.linkedinUrl}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/linkedin.svg`}
                   alt={"linkedin"}
@@ -100,11 +116,7 @@ const MainFooter = async () => {
             ) : null}
 
             {setting?.whatsappUrl ? (
-              <Link
-                target="_blank"
-                href={setting.whatsappUrl}
-                underline="none"
-              >
+              <Link target="_blank" href={setting.whatsappUrl}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/whatsapp.svg`}
                   alt={"whatsapp"}

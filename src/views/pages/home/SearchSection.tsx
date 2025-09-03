@@ -1,8 +1,9 @@
 import Box from "@mui/material/Box";
-import "react-multi-carousel/lib/styles.css";
 import InputSearch from "./InputSearch";
-import SliderImage from "./SliderImage";
 import { getSlider } from "@/actions/slider.action";
+import dynamic from "next/dynamic";
+
+const Slider = dynamic(() => import("./SliderImage"));
 
 const SearchSection = async () => {
   const images = await getSlider();
@@ -19,12 +20,25 @@ const SearchSection = async () => {
           lg: 480,
           xl: 480,
         },
-        mx: 2,
-        borderRadius: "var(--mui-shape-borderRadius)",
+        mx: {
+          xs: 0,
+          sm: 0,
+          md: 2,
+          lg: 2,
+          xl: 2,
+        },
+        
+        borderRadius: {
+          xs: 0,
+          sm: 0,
+          md: "var(--mui-shape-borderRadius)",
+          lg: "var(--mui-shape-borderRadius)",
+          xl: "var(--mui-shape-borderRadius)",
+        },
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.015) 0%, rgba(0, 0, 0, 0.1) 100%)`,
       }}
     >
-      <SliderImage images={images} />
+      <Slider images={images} />
       <InputSearch />
     </Box>
   );

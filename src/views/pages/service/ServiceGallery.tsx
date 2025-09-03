@@ -16,6 +16,7 @@ import ImageView from "@/views/components/base/Image/ImageView";
 import { useAlert } from "@/views/contexts/AlertContext";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { imageUrl } from "@/views/services/image.service";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const DeleteIcon = LoadComponent(
   () => import("@mui/icons-material/DeleteOutline")
@@ -29,6 +30,9 @@ const temp = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
 const ServiceGallery = ({ url, loading }: Props) => {
   const alert = useAlert();
+  const isMobile = useMediaQuery((theme) =>
+    theme.breakpoints.between("xs", "sm")
+  );
   const openSnackbar = useSnackbar();
   const [image, setImage] = React.useState(temp);
   const [gallery, setGallery] = React.useState(url);
@@ -92,7 +96,7 @@ const ServiceGallery = ({ url, loading }: Props) => {
       {gallery.length ? (
         <ImageList
           sx={{ width: "100%", height: "auto" }}
-          cols={5}
+          cols={isMobile ? 2 : 5}
           rowHeight={164}
         >
           {gallery.map((item, i) => (

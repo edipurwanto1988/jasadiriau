@@ -32,7 +32,7 @@ const ActionChip = ({ action, icon }: Props) => {
           <PendingActionsIcon fontSize="small" />
         )}
         <Box flexGrow={1} minHeight={"24px"}>
-          <Typography fontWeight={500}>{actionLabel(action)}</Typography>
+          <Typography fontWeight={500} whiteSpace={"nowrap"}>{actionLabel(action)}</Typography>
         </Box>
       </Stack>
     );
