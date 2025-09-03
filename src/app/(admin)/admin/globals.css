@@ -9,3 +9,14 @@ body {
   margin: 0;
   background-color: #F4F4F4;
 }
+
+.my-progressbar {
+  position: fixed;          /* fixed */
+  top: 0;                   /* top-0 */
+  height: 0.25rem;          /* h-1 (1 * 0.25rem) */
+  width: 100%;              /* biar full width */
+  background-color: #0ea5e9;/* bg-sky-500 */
+  box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.2),
+              0 4px 6px -4px rgba(14, 165, 233, 0.2); /* shadow-lg shadow-sky-500/20 */
+  z-index: 1205;              /* supaya di atas konten lain */
+}
