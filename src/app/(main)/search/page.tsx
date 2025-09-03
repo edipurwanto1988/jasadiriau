@@ -1,11 +1,10 @@
 import { getSetting } from "@/actions/setting.action";
-import MainTemplate from "@/views/components/templates/MainTemplate";
-import FilterSearch from "@/views/pages/search/FilterSearch";
+import Breadcrumbs from "@/views/components/base/Breadcrumbs";
 import ListSearch from "@/views/pages/search/ListSearch";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Metadata, ResolvedMetadata } from "next";
+import { Metadata } from "next";
 
 type Props = {
   searchParams: Promise<Partial<Record<string, string>>>;
@@ -15,7 +14,6 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export async function generateMetadata(
   { searchParams }: Props,
-  parent: ResolvedMetadata
 ): Promise<Metadata> {
   const { q } = await searchParams;
   const setting = await getSetting();
@@ -79,6 +77,7 @@ export default async function Page({ searchParams }: Props) {
           <Toolbar />
 
           <Stack direction={"column"} spacing={3}  minHeight={"100%"}>
+            <Breadcrumbs/>
             <Typography
               variant="h1"
               sx={{ fontSize: { xs: 20 }, fontWeight: 600 }}
