@@ -4,9 +4,9 @@ import { default as MuiLink } from "@mui/material/Link";
 import { BreadcrumbsProps, default as MUIBreadcrumbs } from "@mui/material/Breadcrumbs";
 import { snackCaseToWord } from "@/utils/string";
 import Box, { BoxProps } from "@mui/material/Box";
-import Link from "next/link";
 import Typography from "@mui/material/Typography";
 import { usePathname } from "next/navigation";
+import { Link } from "react-transition-progress/next";
 
 type Props = {
   breadProps?:BreadcrumbsProps,
@@ -31,6 +31,7 @@ const Breadcrumbs = (props:Props) => {
             href={url}
             fontSize={"small"}
             underline="none"
+            prefetch={false}
           >
             Beranda
           </MuiLink>

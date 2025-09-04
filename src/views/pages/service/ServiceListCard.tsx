@@ -1,4 +1,3 @@
-import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
@@ -8,6 +7,9 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import StatusChip from "@/views/components/base/Chip/StatusChip";
 import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
+import { Link } from "react-transition-progress/next";
+import CategoryChip from "@/views/components/base/Chip/CategoryChip";
+import { rupiah } from "@/utils/format";
 
 const MiscellaneousServicesIcon = LoadComponent(
   () => import("@mui/icons-material/MiscellaneousServicesOutlined")
@@ -16,14 +18,17 @@ const MiscellaneousServicesIcon = LoadComponent(
 type Props = {
   data: Service[];
   loading?: boolean;
+  isGuest?: boolean;
 };
 
-const ServiceListCard = ({ loading, data }: Props) => {
+const ServiceListCard = ({ isGuest, loading, data }: Props) => {
   return (
-    <Stack direction={"column"} py={2} spacing={2}>
+    <Stack direction={"column"} py={2} spacing={3}>
       <Stack direction={"row"} alignItems={"center"} spacing={1}>
-        <MiscellaneousServicesIcon />
-        <Typography fontWeight={600}>Daftar Layanan</Typography>
+        {/* <MiscellaneousServicesIcon /> */}
+        <Typography fontWeight={700} fontSize={22}>
+          Daftar Layanan
+        </Typography>
       </Stack>
 
       <Fade in={loading} unmountOnExit>
@@ -43,7 +48,7 @@ const ServiceListCard = ({ loading, data }: Props) => {
 
       <Stack
         direction={"row"}
-        sx={{ width: "100%", flexWrap: "wrap", gap: "8px" }}
+        sx={{ width: "100%", flexWrap: "wrap", gap: "12px" }}
       >
         {data.map((value) => (
           <Paper
@@ -51,47 +56,67 @@ const ServiceListCard = ({ loading, data }: Props) => {
             key={value.id}
             sx={{
               p: 1.5,
+              display: "flex",
+              flexDirection: "column",
               flexBasis: {
-                xs: "calc(100% - 8px)",
-                sm: "calc(100% - 8px)",
-                md: "calc(25% - 8px)",
-                lg: "calc(25% - 8px)",
-                xl: "calc(25% - 8px)",
+                xs: "100%",
+                sm: "100%",
+                md: "calc(33% - 12px)",
+                lg: "calc(33% - 12px)",
+                xl: "calc(33% - 12px)",
               },
               maxWidth: {
-                xs: "calc(100% - 8px)",
-                sm: "calc(100% - 8px)",
-                md: "calc(25% - 8px)",
-                lg: "calc(25% - 8px)",
-                xl: "calc(25% - 8px)",
+                xs: "100%",
+                sm: "100%",
+                md: "calc(33% - 12px)",
+                lg: "calc(33% - 12px)",
+                xl: "calc(33% - 12px)",
               },
               boxSizing: "border-box",
               overflow: "hidden",
             }}
           >
-            <Stack direction={"column"} spacing={0.5}>
-              <ListItemText
-                primary={
-                  <Link href={`/account/service/${value.id}`} underline="none">
-                    {value.name}
-                  </Link>
-                }
-                secondary={value.categoryName}
-                slotProps={{
-                  primary: {
-                    variant: "subtitle2",
-                    letterSpacing: -0.5,
-                  },
-                  secondary: {
-                    variant: "subtitle2",
-                  },
-                }}
-              />
-              <Typography variant="subtitle2" color="var(--blue-color)">
-                {value.bussinessName}
-              </Typography>
+            <Box flexGrow={1} overflow={"hidden"}>
+              <Stack direction={"column"} spacing={1}>
+                <ListItemText
+                  primary={
+                    <Link
+                      href={`/service/${value.id}`}
+                      prefetch={false}
+                      scroll={false}
+                      style={{ color: "var(--blue-color)" }}
+                    >
+                      {value.name}
+                    </Link>
+                  }
+                  slotProps={{
+                    primary: {
+                      variant: "subtitle2",
+                      letterSpacing: -0.5,
+                    },
+                  }}
+                />
 
-              <StatusChip status={value.status} icon />
+                <CategoryChip label={value.categoryName} />
+
+                {isGuest ? null : (
+                  <Typography variant="subtitle2" color="var(--blue-color)">
+                    {value.bussinessName}
+                  </Typography>
+                )}
+
+                {isGuest ? null : <StatusChip status={value.status} icon />}
+              </Stack>
+            </Box>
+
+            <Stack direction={"row"} justifyContent={"flex-end"} spacing={0.5}>
+              {loading ? (
+                <Skeleton width={"50%"} />
+              ) : (
+                <Typography variant="subtitle1">
+                  {rupiah(value.price)}
+                </Typography>
+              )}
             </Stack>
           </Paper>
         ))}

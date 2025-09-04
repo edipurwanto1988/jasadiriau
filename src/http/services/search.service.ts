@@ -64,6 +64,7 @@ export const getSearch = (q: URLSearchParams) => {
   LEFT JOIN regencies reg ON reg.id = bl.regency_id
   LEFT JOIN districts dist ON dist.id = bl.district_id
   GROUP BY bp.id, bp.business_name, bp.slug, bp.description
+  HAVING bp.status = 'active'
 
   UNION ALL
 
@@ -130,6 +131,7 @@ export const getSearch = (q: URLSearchParams) => {
   LEFT JOIN regencies reg ON reg.id = bl.regency_id
   LEFT JOIN districts dist ON dist.id = bl.district_id
   GROUP BY s.id, s.name, bp.business_name, bp.slug, s.slug, s.description, c.id, c.name, c.slug
+  HAVING s.status = 'active'
 ), selected AS (
     SELECT 
        entity_id AS id,

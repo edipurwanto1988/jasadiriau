@@ -12,7 +12,6 @@ import Autocomplete from "@mui/material/Autocomplete";
 import React from "react";
 import useSWRImmutable from "swr/immutable";
 
-// const Autocomplete = LoadComponent(() => import("));
 const SearchIcon = LoadComponent(() => import("@mui/icons-material/Search"));
 type Props = {
   url: URL;

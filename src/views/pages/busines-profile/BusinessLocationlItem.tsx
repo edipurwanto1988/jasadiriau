@@ -16,10 +16,10 @@ const ShareLocationOutlinedIcon = LoadComponent(() => import('@mui/icons-materia
 
 const BusinessLocationlItem = ({ data, loading }: Props) => {
   return (
-    <Stack direction={"column"} spacing={2} py={2}>
+    <Stack direction={"column"} spacing={3} py={2}>
       <Stack direction={"row"} alignItems={"center"} spacing={1}>
-        <ShareLocationOutlinedIcon/>
-        <Typography fontWeight={600}>Lokasi</Typography>
+        {/* <ShareLocationOutlinedIcon/> */}
+        <Typography fontWeight={700} fontSize={22}>Alamat Cabang</Typography>
       </Stack>
 
       <Fade in={loading} unmountOnExit>

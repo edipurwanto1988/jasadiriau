@@ -27,6 +27,12 @@ const DeleteOutlineOutlinedIcon = LoadComponent(
   () => import("@mui/icons-material/DeleteOutlineOutlined")
 );
 
+const WAIcon = LoadComponent(() => import("@mui/icons-material/WhatsApp"));
+
+const ArrowBackOutlinedIcon = LoadComponent(
+  () => import("@mui/icons-material/ArrowBackOutlined")
+);
+
 type Props = Omit<ButtonProps, "startIcon" | "endIcon"> & {
   typeButton?: "icon" | "button";
   position: "start" | "end";
@@ -37,7 +43,9 @@ type Props = Omit<ButtonProps, "startIcon" | "endIcon"> & {
     | "CalendarMonthOutlinedIcon"
     | "EditNoteOutlinedIcon"
     | "ConfirmationNumberOutlinedIcon"
-    | "DeleteOutlineOutlinedIcon";
+    | "DeleteOutlineOutlinedIcon"
+    | "WAIcon"
+    | "ArrowBackOutlinedIcon";
 };
 
 const ButtonWithIcon = ({
@@ -60,6 +68,10 @@ const ButtonWithIcon = ({
       return <ConfirmationNumberOutlinedIcon {...iconProps} />;
     } else if (icon === "DeleteOutlineOutlinedIcon") {
       return <DeleteOutlineOutlinedIcon fontSize="inherit" />;
+    } else if (icon === "WAIcon") {
+      return <WAIcon {...iconProps} />;
+    } else if (icon === "ArrowBackOutlinedIcon") {
+      return <ArrowBackOutlinedIcon fontSize="inherit" />;
     }
   };
 

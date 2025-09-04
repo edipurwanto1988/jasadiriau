@@ -5,10 +5,12 @@ import { postRegister } from "@/views/services/auth.service";
 import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
+import { useProgress } from "react-transition-progress";
 
 const Register = () => {
   const buttonRef = React.useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const startProgress = useProgress();
   const openSnackbar = useSnackbar();
   const mutation = useMutation({
     defaultValue: {
@@ -26,11 +28,13 @@ const Register = () => {
         onSuccess: (resp) => {
           if (resp.isLogin) {
             openSnackbar("Login kamu berhasil", { severity: "success" });
-            const timer = setTimeout(() => {
-              router.push("/");
-              router.refresh();
-              clearTimeout(timer);
-            }, 500);
+            React.startTransition(() => {
+              startProgress();
+              const timer = setTimeout(() => {
+                router.push("/", { scroll: false });
+                clearTimeout(timer);
+              }, 500);
+            });
           }
         },
       });

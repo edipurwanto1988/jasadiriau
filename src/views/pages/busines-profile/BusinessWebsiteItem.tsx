@@ -10,7 +10,7 @@ const LanguageIcon = LoadComponent(
 );
 
 type Props = {
-  url?: string;
+  url?: string | null;
   loading?: boolean;
 };
 

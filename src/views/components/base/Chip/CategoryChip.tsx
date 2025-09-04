@@ -20,7 +20,7 @@ const CategoryChip = ({ label}: Props) => {
         },
         label: {
           sx: {
-            fontWeight: 500,
+            fontWeight: 600,
           },
         },
       }}
