@@ -34,7 +34,7 @@ const BusinessWebsiteItem = ({ url, loading }: Props) => {
       <Box>
         <Link
           variant="subtitle1"
-          href={url}
+          href={url ?? ""}
           underline="none"
           target="_blank"
           sx={{
