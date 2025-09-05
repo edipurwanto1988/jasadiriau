@@ -52,7 +52,14 @@ export const getBusinessBySlug = cache(async (slug: string) => {
 });
 
 export const getBusinessAllSlug = cache(async () => {
-  return prisma.businessProfile.findMany({ select: { slug: true } });
+  return prisma.businessProfile.findMany({
+    select: { slug: true },
+    where: {
+      slug: {
+        not: null,
+      },
+    },
+  });
 });
 
 export const getBusinessPaginate = async (

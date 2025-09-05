@@ -15,7 +15,7 @@ export const revalidate = 60;
 export async function generateStaticParams() {
   const data = await getBusinessAllSlug();
   return data.map((val) => ({
-    slug: val.slug,
+    slug: val.slug as string,
   }));
 }
 
