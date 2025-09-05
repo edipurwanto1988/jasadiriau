@@ -96,7 +96,7 @@ export const addAdminNotification = async <K extends NotificationKey>(
   const data: Prisma.NotificationCreateManyInput[] = admin.map((v) => {
     return {
       type: payload.type,
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/account/${payload.type}/${payload.id}`,
+      url: `/account/${payload.type}/${payload.id}`,
       isRead: false,
       userId: v.id,
       title: notif.title,
@@ -120,7 +120,7 @@ export const addUserNotification = async <K extends NotificationKey>(
   return tx.notification.create({
     data: {
       type: payload.type,
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/account/${payload.type}/${payload.id}`,
+      url: `/account/${payload.type}/${payload.id}`,
       isRead: false,
       userId: payload.userId,
       title: notif.title,
