@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useProgress } from "react-transition-progress";
 import { useAuth } from "@/views/contexts/AuthContext";
 import Divider from "@mui/material/Divider";
+import RoleComponent from "../Role/RoleComponent";
 
 const Close = React.lazy(() => import("@mui/icons-material/Close"));
 
@@ -110,31 +111,39 @@ const MainSidebarMenu = (props: Props) => {
                 <Typography variant="subtitle2">Beranda</Typography>
               </ListItemButton>
 
-              <ListItemButton
-                onClick={() => {
-                  React.startTransition(() => {
-                    startProgress();
-                    router.push("/account/business-profile", { scroll: false });
-                    props.onOpen();
-                  });
-                }}
-              >
-                <Typography variant="subtitle2">Profil Bisnis</Typography>
-              </ListItemButton>
+              <RoleComponent
+                permission={['user']}
+                then={
+                  <>
+                    <ListItemButton
+                      onClick={() => {
+                        React.startTransition(() => {
+                          startProgress();
+                          router.push("/account/business-profile", {
+                            scroll: false,
+                          });
+                          props.onOpen();
+                        });
+                      }}
+                    >
+                      <Typography variant="subtitle2">Profil Bisnis</Typography>
+                    </ListItemButton>
 
-              <ListItemButton
-                onClick={() => {
-                  React.startTransition(() => {
-                    startProgress();
-                    router.push("/account/service", { scroll: false });
-                    props.onOpen();
-                  });
-                }}
-              >
-                <Typography variant="subtitle2">Layanan</Typography>
-              </ListItemButton>
-
-              <Divider/>
+                    <ListItemButton
+                      onClick={() => {
+                        React.startTransition(() => {
+                          startProgress();
+                          router.push("/account/service", { scroll: false });
+                          props.onOpen();
+                        });
+                      }}
+                    >
+                      <Typography variant="subtitle2">Layanan</Typography>
+                    </ListItemButton>
+                  </>
+                }
+              />
+              <Divider />
             </>
           ) : null}
 

@@ -41,45 +41,62 @@ export default async function Page() {
   const categories = await getCategories();
   return (
     <MainTemplate>
-      <Stack spacing={2} px={2}>
-        <Breadcrumbs
-          boxProps={{
-            sx: {
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "center",
-            },
-          }}
-        />
-        <Typography
-          fontSize={32}
-          lineHeight={1.25}
-          fontWeight={700}
-          minWidth={"18rem"}
-        >
-          Kategori
-        </Typography>
-        <Typography
-          component={"p"}
-          variant="subtitle2"
-          color="var(--blue-color)"
-          fontWeight={400}
-          lineHeight={1.5}
-          minWidth={"18rem"}
-        >
-          Jelajahi beragam layanan yang ditawarkan oleh para profesional
-          terampil.
-        </Typography>
-      </Stack>
+      <Stack
+        spacing={2}
+        px={{
+          xs: 3,
+          sm: 3,
+          md: 0,
+          lg: 0,
+          xl: 0,
+        }}
+        py={{
+          xs: 2,
+          sm: 2,
+          md: 0,
+          lg: 0,
+          xl: 0,
+        }}
+      >
+        <Stack spacing={2}>
+          <Breadcrumbs
+            boxProps={{
+              sx: {
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "center",
+              },
+            }}
+          />
 
-      <Stack px={2} py={"12px"}>
+          <Typography
+            fontSize={32}
+            lineHeight={1.25}
+            fontWeight={700}
+            minWidth={"18rem"}
+          >
+            Kategori
+          </Typography>
+          <Typography
+            component={"p"}
+            variant="subtitle2"
+            color="var(--blue-color)"
+            fontWeight={400}
+            lineHeight={1.5}
+            minWidth={"18rem"}
+          >
+            Jelajahi beragam layanan yang ditawarkan oleh para profesional
+            terampil.
+          </Typography>
+        </Stack>
+
         <InputSearch name="q" formProps={{ action: "/search" }} button />
+
+        <CategoryPopulerSection />
+
+        <AllCategorySection data={categories} />
       </Stack>
-
-      <CategoryPopulerSection />
-
-      <AllCategorySection data={categories} />
     </MainTemplate>
   );
 }

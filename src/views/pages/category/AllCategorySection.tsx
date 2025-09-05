@@ -18,6 +18,7 @@ const AllCategorySection = ({ data }: Props) => {
       sx={{
         p: 2,
         width: "100%",
+        overflow: "auto hidden",
       }}
       spacing={4}
     >

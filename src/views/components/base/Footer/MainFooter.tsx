@@ -28,6 +28,7 @@ const MainFooter = async () => {
         <Divider />
         <Stack spacing={4} py={2}>
           <Stack
+            pt={2}
             direction={{
               xs: "column",
               sm: "column",
@@ -56,7 +57,7 @@ const MainFooter = async () => {
               </Link>
             ))}
           </Stack>
-          
+
           <Stack direction={"row"} justifyContent={"center"} spacing={2}>
             {setting?.facebookUrl ? (
               <Link target="_blank" prefetch={false} href={setting.facebookUrl}>

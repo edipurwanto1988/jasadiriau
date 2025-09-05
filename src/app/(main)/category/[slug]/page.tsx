@@ -70,16 +70,16 @@ export default async function Page({ params, searchParams }: Props) {
       <Stack
         direction={"column"}
         px={{
-          xs: 1,
-          sm: 1,
-          md: 1,
+          xs: 3,
+          sm: 3,
+          md: 0,
           lg: 0,
           xl: 0,
         }}
         py={{
-          xs: 1,
-          sm: 1,
-          md: 1,
+          xs: 2,
+          sm: 2,
+          md: 0,
           lg: 0,
           xl: 0,
         }}

@@ -8,7 +8,24 @@ import Box from "@mui/material/Box";
 export default function Loading() {
   return (
     <MainTemplate>
-      <Stack direction={"column"} spacing={3}>
+      <Stack
+        direction={"column"}
+        spacing={3}
+        px={{
+          xs: 3,
+          sm: 3,
+          md: 0,
+          lg: 0,
+          xl: 0,
+        }}
+        py={{
+          xs: 2,
+          sm: 2,
+          md: 0,
+          lg: 0,
+          xl: 0,
+        }}
+      >
         <Skeleton width={"10%"} />
         <Skeleton width={"20%"} />
         <Skeleton width={"40%"} />

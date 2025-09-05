@@ -48,8 +48,8 @@ export default async function Page({ searchParams }: Props) {
     <MainTemplate>
       <Stack
         px={{
-          xs: 2,
-          sm: 2,
+          xs: 3,
+          sm: 3,
           md: 0,
           lg: 0,
           xl: 0,
