@@ -6,12 +6,12 @@ import {
 } from "@/schema/advantage.schema";
 import { StatusType } from "@/generated/prisma";
 import { revalidateTag } from "next/cache";
+import { paginate } from "@/utils/format";
 
-export const advantagePaginate = async (qs: Record<string, any>) => {
+export const advantagePaginate = async (qs: URLSearchParams) => {
   const count = await prisma.advantages.count();
   const results = await prisma.advantages.findMany({
-    take: +(qs.take ?? 10),
-    skip: +(qs.skip ?? 0),
+    ...paginate(qs),
   });
   return { total: count, data: results };
 };

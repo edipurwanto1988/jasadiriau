@@ -96,3 +96,10 @@ export const typeSearch = (type?: "profile" | "service") => {
   if(!type) return ''
   return type === "profile" ? "Penyedia Jasa" : "Jasa";
 };
+
+export function slugToWords(slug: string): string {
+  if (!slug) return '';
+  return slug
+    .replace(/[-_]/g, ' ') // Ganti - atau _ dengan spasi
+    .replace(/\b\w/g, char => char.toUpperCase()); // Kapitalisasi tiap kata
+}

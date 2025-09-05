@@ -16,7 +16,6 @@ import MainTemplate from "@/views/components/templates/MainTemplate";
 import ServiceListCard from "../service/ServiceListCard";
 import BusinessLocationlItem from "./BusinessLocationlItem";
 import Breadcrumbs from "@/views/components/base/Breadcrumbs";
-import Button from "@mui/material/Button";
 import { useRouter } from "next/navigation";
 import ButtonWithIcon from "@/views/components/base/Button/ButtonWithIcon";
 
@@ -38,26 +37,46 @@ const GuestBusinessDetail = ({
   return (
     <MainTemplate>
       <Box sx={{ width: "100%", minHeight: "100%", overflow: "hidden auto" }}>
-        <Stack direction={"column"} spacing={2} sx={{ px: 3, py: 1 }}>
-          <Box>
-            <ButtonWithIcon
-              icon="ArrowBackOutlinedIcon"
-              position="start"
-              onClick={router.back}
-            >
-              Kembali
-            </ButtonWithIcon>
-          </Box>
-          <Breadcrumbs
-            boxProps={{
-              sx: {
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-              },
-            }}
-          />
+        <Stack
+          direction={"column"}
+          spacing={3}
+          px={{
+            xs: 2,
+            sm: 2,
+            md: 0,
+            lg: 0,
+            xl: 0,
+          }}
+          py={{
+            xs: 2,
+            sm: 2,
+            md: 0,
+            lg: 0,
+            xl: 0,
+          }}
+        >
+          <Stack direction={"column"} spacing={1}>
+            <Box>
+              <ButtonWithIcon
+                icon="ArrowBackOutlinedIcon"
+                position="start"
+                onClick={router.back}
+              >
+                Kembali
+              </ButtonWithIcon>
+            </Box>
+            <Breadcrumbs
+              boxProps={{
+                sx: {
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                },
+              }}
+            />
+          </Stack>
+
           <Stack
             direction={{
               xs: "column",
@@ -131,6 +150,7 @@ const GuestBusinessDetail = ({
                     size="large"
                     sx={{
                       backgroundColor: "var(--wa-color2)",
+                      whiteSpace: "nowrap",
                     }}
                     onClick={() => {
                       const phone = v.whatsappNumber;

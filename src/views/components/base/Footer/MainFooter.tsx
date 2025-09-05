@@ -6,6 +6,7 @@ import Image from "next/image";
 import { getSetting } from "@/actions/setting.action";
 import { getFooter } from "@/actions/menu.action";
 import { Link } from "react-transition-progress/next";
+import Divider from "@mui/material/Divider";
 
 const MainFooter = async () => {
   const [setting, menus] = await Promise.all([getSetting(), getFooter()]);
@@ -24,7 +25,8 @@ const MainFooter = async () => {
         }}
       >
         <Toolbar />
-        <Stack spacing={4}>
+        <Divider />
+        <Stack spacing={4} py={2}>
           <Stack
             direction={{
               xs: "column",
@@ -54,6 +56,7 @@ const MainFooter = async () => {
               </Link>
             ))}
           </Stack>
+          
           <Stack direction={"row"} justifyContent={"center"} spacing={2}>
             {setting?.facebookUrl ? (
               <Link target="_blank" prefetch={false} href={setting.facebookUrl}>
@@ -68,7 +71,11 @@ const MainFooter = async () => {
             ) : null}
 
             {setting?.instagramUrl ? (
-              <Link target="_blank" prefetch={false} href={setting.instagramUrl}>
+              <Link
+                target="_blank"
+                prefetch={false}
+                href={setting.instagramUrl}
+              >
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/icons/instagram.svg`}
                   alt={"instagram"}

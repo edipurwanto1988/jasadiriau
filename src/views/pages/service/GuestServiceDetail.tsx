@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { getServiceBySlug } from "@/actions/service.action";
 import { rupiah } from "@/utils/format";
 import ButtonWithIcon from "@/views/components/base/Button/ButtonWithIcon";
+import BackButton from "@/views/components/base/Button/BackButton";
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
@@ -40,26 +41,37 @@ const GuestServiceDetail = ({ data, siteName }: Props) => {
   return (
     <MainTemplate>
       <Box sx={{ width: "100%", minHeight: "100%", overflow: "hidden auto" }}>
-        <Stack direction={"column"} spacing={2} sx={{ px: 3, py: 2 }}>
-          <Box>
-            <ButtonWithIcon
-              icon="ArrowBackOutlinedIcon"
-              position="start"
-              onClick={router.back}
-            >
-              Kembali
-            </ButtonWithIcon>
-          </Box>
-          <Breadcrumbs
-            boxProps={{
-              sx: {
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-              },
-            }}
-          />
+        <Stack
+          px={{
+            xs: 2,
+            sm: 2,
+            md: 0,
+            lg: 0,
+            xl: 0,
+          }}
+          py={{
+            xs: 2,
+            sm: 2,
+            md: 0,
+            lg: 0,
+            xl: 0,
+          }}
+          spacing={4}
+        >
+          <Stack spacing={2}>
+            <BackButton />
+            <Breadcrumbs
+              boxProps={{
+                sx: {
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                },
+              }}
+            />
+          </Stack>
+
           <Stack
             direction={{
               xs: "column",
@@ -155,6 +167,7 @@ const GuestServiceDetail = ({ data, siteName }: Props) => {
                       size="large"
                       sx={{
                         backgroundColor: "var(--wa-color2)",
+                        whiteSpace: "nowrap",
                       }}
                       onClick={() => {
                         const phone = v.whatsappNumber;
@@ -310,9 +323,9 @@ const GuestServiceDetail = ({ data, siteName }: Props) => {
               </Stack>
             </Fade>
           </Box>
+          <Toolbar />
+          <Toolbar />
         </Stack>
-        <Toolbar />
-        <Toolbar />
       </Box>
     </MainTemplate>
   );

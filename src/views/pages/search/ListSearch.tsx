@@ -53,8 +53,12 @@ const ListSearch = () => {
   };
 
   return (
-    <Stack direction={"column"} spacing={3} minHeight={"100%"}>
-      <FilterSearch url={urlWithParam} setUrl={setUrlWithParam} onSearch={onSearch} />
+    <Stack direction={"column"} spacing={4} minHeight={"100%"}>
+      <FilterSearch
+        url={urlWithParam}
+        setUrl={setUrlWithParam}
+        onSearch={onSearch}
+      />
 
       <Fade
         in={!isLoading && !data?.data.length}
@@ -109,7 +113,6 @@ const ListSearch = () => {
           />
         </Stack>
       </Fade>
-      <Toolbar />
     </Stack>
   );
 };

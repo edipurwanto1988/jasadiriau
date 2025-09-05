@@ -1,6 +1,5 @@
 import Breadcrumbs from "@/views/components/base/Breadcrumbs";
 import InputSearch from "@/views/components/base/Input/InputSearch";
-import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
 
 import MainTemplate from "@/views/components/templates/MainTemplate";
 import Stack from "@mui/material/Stack";
@@ -8,17 +7,51 @@ import Typography from "@mui/material/Typography";
 import { Metadata } from "next";
 import CategoryPopulerSection from "@/views/pages/category/CategoryPopulerSection";
 import AllCategorySection from "@/views/pages/category/AllCategorySection";
+import { getCategories } from "@/actions/category.action";
+import { getSetting } from "@/actions/setting.action";
 
-export const metadata: Metadata = {
-  title: "Kategori",
-  description:
-    "Jelajahi beragam layanan yang ditawarkan oleh para profesional terampil.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const setting = await getSetting();
+  return {
+    title: `Kategori Jasa | ${setting?.siteName || "JasaDiRiau"} `,
+    description: `Jelajahi berbagai kategori jasa di ${
+      setting?.siteName || "JasaDiRiau"
+    }. Temukan penyedia terbaik sesuai kebutuhan Anda.`,
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/kategori`,
+    },
+    openGraph: {
+      title: `Kategori Jasa | ${setting?.siteName || "JasaDiRiau"} `,
+      description: `Jelajahi berbagai kategori jasa di ${
+        setting?.siteName || "JasaDiRiau"
+      }. Temukan penyedia terbaik sesuai kebutuhan Anda.`,
+      type: "website",
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/kategori`,
+    },
+    twitter: {
+      title: `Kategori Jasa | ${setting?.siteName || "JasaDiRiau"} `,
+      description: `Jelajahi berbagai kategori jasa di ${
+        setting?.siteName || "JasaDiRiau"
+      }. Temukan penyedia terbaik sesuai kebutuhan Anda.`,
+    },
+  };
+}
 
 export default async function Page() {
+  const categories = await getCategories();
   return (
     <MainTemplate>
-      <Stack spacing={"0.75rem"} px={2}>
+      <Stack spacing={2} px={2}>
+        <Breadcrumbs
+          boxProps={{
+            sx: {
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            },
+          }}
+        />
         <Typography
           fontSize={32}
           lineHeight={1.25}
@@ -41,14 +74,12 @@ export default async function Page() {
       </Stack>
 
       <Stack px={2} py={"12px"}>
-        <InputSearch />
+        <InputSearch name="q" formProps={{ action: "/search" }} button />
       </Stack>
 
       <CategoryPopulerSection />
 
-
-      <AllCategorySection/>
-
+      <AllCategorySection data={categories} />
     </MainTemplate>
   );
 }

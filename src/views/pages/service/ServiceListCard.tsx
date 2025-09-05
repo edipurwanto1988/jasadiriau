@@ -81,7 +81,9 @@ const ServiceListCard = ({ isGuest, loading, data }: Props) => {
                 <ListItemText
                   primary={
                     <Link
-                      href={`/service/${value.id}`}
+                      href={
+                        isGuest ? `/jasa/${value.slug}` : `/service/${value.id}`
+                      }
                       prefetch={false}
                       scroll={false}
                       style={{ color: "var(--blue-color)" }}

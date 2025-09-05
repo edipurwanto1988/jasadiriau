@@ -55,6 +55,7 @@ const MainHeader = async () => {
                   fontWeight: 900,
                   fontSize: 18,
                 }}
+                scroll={false}
               >
                 {setting?.siteName ?? "JasaDiRiau"}
               </Link>
@@ -77,7 +78,7 @@ const MainHeader = async () => {
 
               {menus.map((v) => (
                 <Box key={v.id}>
-                  <Link href={v.url}>{v.name}</Link>
+                  <Link href={v.url} prefetch={false} scroll={false}>{v.name}</Link>
                 </Box>
               ))}
             </Stack>

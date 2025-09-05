@@ -1,6 +1,7 @@
 "use server";
 import prisma from "@/lib/db";
 import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
 export const getCategories = unstable_cache(
   async () =>
@@ -12,4 +13,12 @@ export const getCategories = unstable_cache(
     }),
   ["category_p"],
   { tags: ["category"] }
+);
+
+export const getCategoryBySlug = cache(async (slug: string) =>
+  prisma.category.findFirstOrThrow({
+    where: {
+      slug,
+    },
+  })
 );

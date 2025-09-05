@@ -55,7 +55,6 @@ const MainTemplate = (props: Props) => {
           }}
         >
           <Toolbar />
-
           {props.children}
         </Stack>
       </Stack>

@@ -18,14 +18,6 @@ export async function generateMetadata({
   const { q } = await searchParams;
   const setting = await getSetting();
 
-  // const title = keyword
-  //   ? `Cari "${keyword}"${category}${location} | JasaMu`
-  //   : "Cari Jasa | JasaMu";
-
-  // const description = keyword
-  //   ? `Temukan penyedia jasa terbaik untuk "${keyword}"${category}${location}. Bandingkan layanan, harga, dan ulasan penyedia jasa.`
-  //   : "Cari penyedia jasa terbaik sesuai kebutuhan Anda di JasaMu.";
-
   return {
     title: q
       ? `Cari Jasa Berdasarkan Kata Kunci "${q}" | ${setting?.siteName}`

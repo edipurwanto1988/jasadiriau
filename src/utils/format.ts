@@ -128,7 +128,7 @@ export const parseFormData = (formData: FormData) => {
 };
 
 export const paginate = (search: URLSearchParams) => {
-  if (search.has("page") && search.has("perPage")) {
+  if (search.has("page")) {
     const skip = +(search.get("page") ?? 0) * +(search.get("perPage") ?? 25);
     const take = +(search.get("perPage") ?? 25);
     return { skip: +skip, take: +take };
