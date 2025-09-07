@@ -103,3 +103,92 @@ export function slugToWords(slug: string): string {
     .replace(/[-_]/g, ' ') // Ganti - atau _ dengan spasi
     .replace(/\b\w/g, char => char.toUpperCase()); // Kapitalisasi tiap kata
 }
+
+type ReadTimeOptions = {
+  wpm?: number;                 // kata per menit (default 200)
+  imageStart?: number;          // detik untuk gambar pertama (default 12)
+  imageDecay?: number;          // pengurangan detik gambar berikutnya (default 1s)
+  imageMin?: number;            // batas bawah detik per gambar (default 3)
+  codePenalty?: number;         // faktor bobot untuk kata di <pre><code> (default 1.5)
+};
+
+type ReadTimeResult = {
+  words: number;
+  images: number;
+  seconds: number;
+  minutes: number;              // dibulatkan ke atas
+  human: string;                // e.g. "3 menit baca"
+};
+
+export const estimateReadTimeFromHTML =(
+  html: string,
+  opts: ReadTimeOptions = {}
+): ReadTimeResult => {
+  const {
+    wpm = 200,
+    imageStart = 12,
+    imageDecay = 1,
+    imageMin = 3,
+    codePenalty = 1.5,
+  } = opts;
+
+  if (!html) {
+    return { words: 0, images: 0, seconds: 0, minutes: 0, human: "0 menit" };
+  }
+
+  // --- hitung gambar ---
+  const images = (html.match(/<img\b[^>]*>/gi) || []).length;
+  // model: 12s utk gambar 1, 11s utk gambar 2, dst minimum 3s
+  let imageSeconds = 0;
+  for (let i = 0; i < images; i++) {
+    const dec = Math.max(imageMin, imageStart - i * imageDecay);
+    imageSeconds += dec;
+  }
+
+  // --- hitung kata teks umum ---
+  const textOnly = html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<\/?[^>]+>/g, " ")      // strip tag
+    .replace(/&nbsp;|&#160;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const wordCount = textOnly ? textOnly.split(/\s+/).length : 0;
+
+  // --- bobot khusus untuk blok kode (biasanya lebih lambat dibaca) ---
+  // hitung kata di dalam <pre> atau <code> lalu beri penalty
+  const codeBlocks = (html.match(/<(pre|code)\b[\s\S]*?<\/\1>/gi) || []);
+  let codeWords = 0;
+  for (const block of codeBlocks) {
+    const blockText = block
+      .replace(/<\/?[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (blockText) codeWords += blockText.split(/\s+/).length;
+  }
+  const nonCodeWords = Math.max(0, wordCount - codeWords);
+  const effectiveWords = nonCodeWords + Math.round(codeWords * codePenalty);
+
+  // --- total detik ---
+  const readingSeconds = effectiveWords / (wpm / 60);
+  const totalSeconds = Math.round(readingSeconds + imageSeconds);
+
+  const minutes = Math.ceil(totalSeconds / 60);
+
+  const human =
+    minutes < 1
+      ? `${totalSeconds}s baca`
+      : `${minutes} menit baca`;
+
+  return {
+    words: wordCount,
+    images,
+    seconds: totalSeconds,
+    minutes,
+    human,
+  };
+}

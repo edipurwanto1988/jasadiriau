@@ -1,30 +1,25 @@
 "use client";
 import React from "react";
-
-import useMutation from "ezhooks/lib/useMutation";
-import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import SettingTemplate from "@/views/components/templates/SettingTemplate";
-import useZod from "@/views/hooks/useZod";
-import { parseResponseError } from "@/utils/format";
-import { inputSettingSchema } from "@/schema/setting.schema";
-import { dummySetting, imgUrl, settingFormGroups } from "@/lib/dummy";
 import Stack from "@mui/material/Stack";
 import ListItemText from "@mui/material/ListItemText";
 import InputField from "@/views/components/base/Input/InputField";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
-import {
-  getSetting,
-  postSetting,
-  settingUrl,
-} from "@/views/services/setting.service";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import SnacbarLoading from "@/views/components/base/Skeleton/SnacbarLoading";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import useSWRImmutable from "swr/immutable";
+import useMutation from "ezhooks/lib/useMutation";
+import useZod from "@/views/hooks/useZod";
+import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import { useSWRConfig } from "swr";
+import { postSetting, settingUrl } from "@/views/services/setting.service";
+import { parseResponseError } from "@/utils/format";
+import { inputSettingSchema } from "@/schema/setting.schema";
+import { dummySetting, imgUrl, settingFormGroups } from "@/lib/dummy";
 
 const SettingForm = () => {
   const openSnackbar = useSnackbar();
@@ -56,7 +51,7 @@ const SettingForm = () => {
       mutation.send({
         service: postSetting,
         onSuccess: () => {
-          mutate(settingUrl.setting)
+          mutate(settingUrl.setting);
           openSnackbar("Pengaturan berhasil diperbaharui");
         },
         onError: (e) => {
@@ -89,7 +84,7 @@ const SettingForm = () => {
       title="Pengaturan"
       onReload={() => mutate(settingUrl.setting)}
     >
-      <Stack spacing={4} sx={{ p: 2, overflow: "hidden auto" }}>
+      <Stack spacing={4} sx={{ p: 2, overflow: "auto" }}>
         {settingFormGroups.map((group, g) => (
           <Stack direction={"column"} key={`group-${g}`} spacing={2}>
             <ListItemText

@@ -20,7 +20,7 @@ const AppProvider = (props: { children: React.ReactNode }) => {
   );
 
   const [trigger, setTrigger] = React.useState({
-    open: false,
+    open: true,
     key: [] as string[],
   });
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

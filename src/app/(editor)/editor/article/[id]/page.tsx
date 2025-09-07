@@ -10,11 +10,13 @@ export const metadata: Metadata = {
   title: "Halaman",
 };
 
-const PageEditor = dynamic(() => import("@/views/pages/page/PageEditor"));
+const ArticleEditor = dynamic(() => import("@/views/pages/article/ArticleEditor"));
 
 export default async function Page({ params }: Props) {
   const { id } = await params;
-  return <Template>
-    <PageEditor pageID={id} />
-  </Template>;
+  return (
+    <Template>
+      <ArticleEditor articleID={id} />
+    </Template>
+  );
 }

@@ -2,7 +2,6 @@ import { renderToReactElement } from "@tiptap/static-renderer";
 import { extensions } from "@/views/components/tiptap-templates/simple/extensions";
 import { getPageAllSlug, getPageBySlug } from "@/actions/page.action";
 import { Metadata } from "next";
-import "../style.css";
 import "@/views/components/tiptap-node/blockquote-node/blockquote-node.scss";
 import "@/views/components/tiptap-node/code-block-node/code-block-node.scss";
 import "@/views/components/tiptap-node/horizontal-rule-node/horizontal-rule-node.scss";
@@ -14,6 +13,7 @@ import "@/views/components/tiptap-templates/simple/simple-editor.scss";
 import MainTemplate from "@/views/components/templates/MainTemplate";
 import Stack from "@mui/material/Stack";
 import Breadcrumbs from "@/views/components/base/Breadcrumbs";
+import '../style.scss';
 
 type Props = {
   params: Promise<{ slug: string }>;

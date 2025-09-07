@@ -200,7 +200,7 @@ type SearchList = {
   name: string;
   slug?: string;
   type: "profile" | "service";
-  price?:number;
+  price?: number;
   contacts: Array<{ whatsapp: string }>;
   locations: Array<{
     regencyName: string;
@@ -219,9 +219,25 @@ type Page = {
   id: number;
   slug: string;
   title: string;
-  content?: import('@tiptap/react').JSONContent;
+  content?: import("@tiptap/react").JSONContent;
   metaTitle: string;
   metaDescription?: string;
   metaKeywords?: string;
-status: "active" | "inactive" | "pending";
-}
+  status: "active" | "inactive" | "pending";
+};
+
+type Article = {
+  id: number;
+  slug: string;
+  title: string;
+  content?: import("@tiptap/react").JSONContent;
+  metaTitle: string;
+  metaDescription?: string;
+  metaKeywords?: string;
+  thumbnail?: string;
+  category?: {
+    name: string;
+    slug: string;
+  };
+  status: "active" | "inactive" | "pending";
+};

@@ -8,10 +8,11 @@ import Tooltip from "@mui/material/Tooltip";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { useApp } from "@/views/contexts/AppContext";
 import { styled } from "@mui/material/styles";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { SiderBarMenu } from "../Sidebar/SidebarMenu";
 import Loading from "@/views/components/base/Skeleton/Spinner";
 import ListItemText from "@mui/material/ListItemText";
+import { useProgress } from "react-transition-progress";
 
 const ListItemButton = styled(MUIListItemButton)(({}) => ({
   "&.Mui-selected": {
@@ -21,7 +22,7 @@ const ListItemButton = styled(MUIListItemButton)(({}) => ({
 
 type Props = {
   path?: string;
-  key: string;
+  keyPath: string;
   name: string;
   icon?: React.LazyExoticComponent<
     OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
@@ -32,22 +33,19 @@ type Props = {
 };
 
 const TooltipSidebarMenu = (props: Props) => {
-  const {
-    trigger: { open },
-    onClickOpen,
-    addKey,
-    clearKey,
-  } = useApp();
+  const { trigger } = useApp();
   const router = useRouter();
-
+  const pathname = usePathname();
+  const startProgress = useProgress();
+  
   const paths = React.useMemo<string[]>(
-    () => [], //location.pathname.split("/").filter((v) => !!v),
-    []
+    () => pathname.split("/").filter((v) => !!v),
+    [pathname]
   );
-
+  
   return (
     <Tooltip
-      disableHoverListener={open}
+      disableHoverListener={trigger.open}
       title={props.name}
       arrow
       placement="right"
@@ -55,29 +53,29 @@ const TooltipSidebarMenu = (props: Props) => {
       <div>
         <ListItemButton
           // sx={{ height: "36px" }}
-          selected={paths.includes(props.path || props.key)}
+          selected={paths.at(paths.length - 1) === props.keyPath}
           onClick={(e) => {
             e.preventDefault();
-            if (props.path) {
-              clearKey();
-              router.push(props.path, { scroll: false });
-            } else {
-              addKey(props.key);
-              if (!open) {
-                onClickOpen();
-              }
-            }
+            React.startTransition(() => {
+              startProgress();
+              router.push(props.path ?? "/", { scroll: false });
+            });
+          }}
+          sx={{
+            "&.Mui-selected": {
+              backgroundColor: "#ccc",
+            },
           }}
         >
           {props.icon ? (
             <ListItemIcon sx={{ minWidth: "36px" }}>
               <React.Suspense fallback={<Loading />}>
                 <SvgIcon
-                  fontSize={open ? "small" : "medium"}
+                  fontSize={trigger.open ? "small" : "medium"}
                   component={props.icon}
                   sx={{
                     // color: "white",
-                    ...(!open
+                    ...(!trigger.open
                       ? {
                           transform: "scale(1)",
                           transition: "all .5s",
@@ -100,7 +98,7 @@ const TooltipSidebarMenu = (props: Props) => {
               },
             }}
             sx={{
-              ...(open ? { opacity: 1 } : { opacity: 0 }),
+              ...(trigger.open ? { opacity: 1 } : { opacity: 0 }),
               transition: "all .35s ease",
             }}
           />

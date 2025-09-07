@@ -61,6 +61,7 @@ export const createPage = async ({
       metaTitle: payload.title,
       slug: slugify(`${padStart} ${payload.title}`),
       status: status as StatusType,
+      content
     },
   });
 };

@@ -1,12 +1,13 @@
 "use client";
-import { SimpleEditor } from "@/views/components/tiptap-templates/simple/simple-editor";
-import { createPageSchema, CreatePageSchema } from "@/schema/page.schema";
+
+import React from "react";
 import InputSelect from "@/views/components/base/Input/InputSelect";
 import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
 import EditorTemplate from "@/views/components/templates/EditorTemplate";
-import { useSnackbar } from "@/views/contexts/SnackbarContext";
 import useZod from "@/views/hooks/useZod";
-import { pageUrl, postPage } from "@/views/services/page.service";
+import useMutation from "ezhooks/lib/useMutation";
+import useSWRImmutable from "swr/immutable";
+import InputField from "@/views/components/base/Input/InputField";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -14,24 +15,33 @@ import Toolbar from "@mui/material/Toolbar";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import useMutation from "ezhooks/lib/useMutation";
+import Collapse from "@mui/material/Collapse";
+import Button from "@mui/material/Button";
+import Image from "next/image";
+import { categoryUrl } from "@/views/services/category.service";
+import { uniqueImage } from "@/utils/format";
 import { useRouter } from "next/navigation";
-import React from "react";
-import useSWRImmutable from "swr/immutable";
+import { articleUrl, postArticle } from "@/views/services/article.service";
+import { useSnackbar } from "@/views/contexts/SnackbarContext";
+import { SimpleEditor } from "@/views/components/tiptap-templates/simple/simple-editor";
+import {
+  createArticleSchema,
+  CreateArticleSchema,
+} from "@/schema/article.schema";
 
 type Props = {
-  pageID?: string;
+  articleID?: string;
 };
 
 const CloseOutlinedIcon = LoadComponent(
   () => import("@mui/icons-material/CloseOutlined")
 );
 
-const PageEditor = ({ pageID }: Props) => {
+const ArticleEditor = ({ articleID }: Props) => {
   const router = useRouter();
   const openSnackbar = useSnackbar();
   const [open, setOpen] = React.useState(false);
-  const mutation = useMutation<CreatePageSchema>({
+  const mutation = useMutation<CreateArticleSchema>({
     defaultValue: {
       title: "",
     },
@@ -39,26 +49,32 @@ const PageEditor = ({ pageID }: Props) => {
 
   const validation = useZod({
     data: mutation.data(),
-    schema: createPageSchema,
+    schema: createArticleSchema,
   });
 
-  const page = useSWRImmutable<Page>(
-    pageID ? `${pageUrl.index}/${pageID}` : null,
+  const article = useSWRImmutable<Article>(
+    articleID ? `${articleUrl.index}/${articleID}` : null,
     (url) =>
       fetch(url)
         .then((resp) => resp.json())
         .then((resp) => resp.data)
   );
 
+  const category = useSWRImmutable<Category[]>(categoryUrl.all, (url) =>
+    fetch(url)
+      .then((resp) => resp.json())
+      .then((resp) => resp.data)
+  );
+
   const onSubmit = () => {
     const validated = validation.validated();
     if (validated) {
       mutation.send({
-        service: postPage,
+        service: postArticle,
         onSuccess: () => {
-          openSnackbar("Halaman berhasil disimpan");
-          router.back()
-          mutation.reset()
+          openSnackbar("Artikel berhasil disimpan");
+          router.back();
+          mutation.reset();
         },
         onError: (resp) => {
           console.log(resp);
@@ -71,15 +87,38 @@ const PageEditor = ({ pageID }: Props) => {
     setOpen(false);
   };
 
-  React.useEffect(() => {
-    if (!pageID || !page.data) return;
-    mutation.setData({
-      ...page.data,
-      content: JSON.stringify(page.data.content),
-    });
-  }, [pageID, page.data]);
+  const setImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.length) {
+      const file = e.target.files[0];
+      const [_, ext] = file.type.split("/");
+      const filename = uniqueImage(ext);
+      const newFile = new File([file], filename, {
+        type: file.type,
+      });
 
-  console.log(validation.message());
+      mutation.setData({ file: newFile });
+    }
+
+    (e.target.value as any) = null;
+  };
+
+  const categoryMap = React.useMemo(() => {
+    if (!category.data) {
+      return [];
+    }
+
+    return category.data.map((v) => ({ primary: v.name, value: v.id }));
+  }, [category.data]);
+
+  React.useEffect(() => {
+    if (!articleID || !article.data) return;
+    mutation.setData({
+      ...article.data,
+      content: article.data.content
+        ? JSON.stringify(article.data.content)
+        : null,
+    });
+  }, [articleID, article.data]);
 
   React.useEffect(() => {
     if (!validation.error("title")) return;
@@ -95,17 +134,19 @@ const PageEditor = ({ pageID }: Props) => {
 
   return (
     <EditorTemplate
-      title="Halaman"
+      title="Artikel"
       onCreate={onSubmit}
-      onBack={router.back}
+      onBack={() => {
+        router.back();
+        mutation.reset();
+      }}
       onSetting={() => {
         setOpen(true);
       }}
     >
       <SimpleEditor
-        data={page.data?.content}
+        data={article.data?.content}
         watchContent={(val) => {
-          console.log(val);
           mutation.setData({ content: JSON.stringify(val) });
           if (val) {
             const head = val.content?.at(0);
@@ -143,7 +184,7 @@ const PageEditor = ({ pageID }: Props) => {
           }}
         >
           <Box flexGrow={1}>
-            <Typography fontWeight={600}>Halaman</Typography>
+            <Typography fontWeight={600}>Artikel</Typography>
           </Box>
 
           <Box>
@@ -163,7 +204,62 @@ const PageEditor = ({ pageID }: Props) => {
           py={2}
           spacing={3}
           className="default-form"
+          overflow={"hidden auto"}
         >
+          <InputField
+            label="Gambar"
+            type="file"
+            placeholder="Masukkan caption"
+            fullWidth
+            required
+            onChange={setImage}
+            error={validation.error("file")}
+            helperText={validation.message("file")}
+          />
+
+          <Box>
+            <Collapse in={mutation.has("file")} unmountOnExit>
+              <Stack direction={"column"} spacing={1}>
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "250px",
+                  }}
+                >
+                  <Image
+                    src={
+                      mutation.has("file")
+                        ? URL.createObjectURL(mutation.value("file"))
+                        : `/images/placeholder.webp`
+                    }
+                    alt={mutation
+                      .value<string>("title", "")
+                      .replaceAll(" ", "_")
+                      .toLowerCase()}
+                    fill={true}
+                    loading="lazy"
+                  />
+                </div>
+
+                <div>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      mutation.singleReset("file");
+                    }}
+                    variant="text"
+                    fullWidth
+                  >
+                    Hapus
+                  </Button>
+                </div>
+
+                <Toolbar />
+              </Stack>
+            </Collapse>
+          </Box>
+
           <TextField
             label="Meta Keywords"
             variant="standard"
@@ -181,6 +277,17 @@ const PageEditor = ({ pageID }: Props) => {
             value={mutation.value("metaDescription", "")}
             onChange={(e) =>
               mutation.setData({ metaDescription: e.target.value })
+            }
+          />
+
+          <InputSelect
+            label="Kategori"
+            items={categoryMap}
+            value={mutation.value("categoryId", "")}
+            onChange={(e) =>
+              mutation.setData({
+                categoryId: e.target.value === "00" ? "" : e.target.value,
+              })
             }
           />
 
@@ -204,4 +311,4 @@ const PageEditor = ({ pageID }: Props) => {
   );
 };
 
-export default PageEditor;
+export default ArticleEditor;

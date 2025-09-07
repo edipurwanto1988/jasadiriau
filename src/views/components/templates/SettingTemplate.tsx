@@ -8,6 +8,7 @@ import Breadcrumbs from "@/views/components/base/Breadcrumbs";
 import LinkTab from "@/views/components/base/Tab/LinkTab";
 import { usePathname, useRouter } from "next/navigation";
 import { useApp } from "@/views/contexts/AppContext";
+import { useProgress } from "react-transition-progress";
 
 type Props = {
   title?: string;
@@ -46,6 +47,7 @@ const MenuOutlinedIcon = LoadComponent(
 const SettingTemplate = (props: Props) => {
   const app = useApp();
   const pathname = usePathname();
+  const startProgress = useProgress()
   const router = useRouter();
 
   return (
@@ -87,7 +89,10 @@ const SettingTemplate = (props: Props) => {
       scrollButtons={"auto"}
       variant={app.isMobile ? "scrollable" : "fullWidth"}
       onChange={(_, value) => {
-        router.push(value);
+        React.startTransition(() => {
+          startProgress();
+          router.push(value);
+        })
       }}
       sx={(theme) => ({
         pt: 1,

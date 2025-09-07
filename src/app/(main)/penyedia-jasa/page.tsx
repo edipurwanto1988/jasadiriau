@@ -17,7 +17,7 @@ type Props = {
 export async function generateMetadata(): Promise<Metadata> {
   const setting = await getSetting();
   return {
-    title: `Penyedia Jasa Jasa | ${setting?.siteName || "JasaDiRiau"} `,
+    title: `Penyedia Jasa | ${setting?.siteName || "JasaDiRiau"} `,
     description: `Jelajahi berbagai penyedia jasa di ${
       setting?.siteName || "JasaDiRiau"
     }.`,
@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/penyedia-jasa`,
     },
     openGraph: {
-      title: `Penyedia Jasa Jasa | ${setting?.siteName || "JasaDiRiau"} `,
+      title: `Penyedia Jasa | ${setting?.siteName || "JasaDiRiau"} `,
       description: `Jelajahi berbagai penyedia jasa di ${
         setting?.siteName || "JasaDiRiau"
       }.`,
@@ -33,7 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/penyedia-jasa`,
     },
     twitter: {
-      title: `Penyedia Jasa Jasa | ${setting?.siteName || "JasaDiRiau"} `,
+      title: `Penyedia Jasa | ${setting?.siteName || "JasaDiRiau"} `,
       description: `Jelajahi berbagai penyedia jasa di ${
         setting?.siteName || "JasaDiRiau"
       }.`,

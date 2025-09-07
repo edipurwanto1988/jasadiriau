@@ -46,6 +46,14 @@ const SettingsOutlinedIcon = React.lazy(
   () => import("@mui/icons-material/SettingsOutlined")
 );
 
+const ArticleOutlinedIcon = React.lazy(
+  () => import("@mui/icons-material/ArticleOutlined")
+);
+
+const PagesOutlinedIcon = React.lazy(
+  () => import("@mui/icons-material/PagesOutlined")
+);
+
 const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
     backgroundColor: "#F4F4F4",
@@ -94,6 +102,18 @@ const menu: SiderBarMenu = [
     icon: PersonIcon,
   },
   {
+    path: "/admin/page",
+    key: "page",
+    name: "Halaman",
+    icon: PagesOutlinedIcon,
+  },
+  {
+    path: "/admin/article",
+    key: "article",
+    name: "Article",
+    icon: ArticleOutlinedIcon,
+  },
+  {
     path: "/admin/setting",
     key: "setting",
     name: "Setting",
@@ -101,21 +121,19 @@ const menu: SiderBarMenu = [
   },
 ];
 
-const SidebarMenu = (props: any) => {
+const SidebarMenu = () => {
   const { trigger, isMobile, onClickOpen } = useApp();
-  const { window } = props;
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
 
   return (
     <Drawer
       id="sidebar"
-      container={container}
       variant={isMobile ? "temporary" : "permanent"}
       color="primary"
       open={trigger.open}
-      ModalProps={{
-        keepMounted: isMobile, // Better open performance on mobile.
+      slotProps={{
+        root: {
+          keepMounted: isMobile, // Better open performance on mobile.
+        },
       }}
     >
       <Toolbar
@@ -155,7 +173,7 @@ const SidebarMenu = (props: any) => {
       <div>
         <List component={"div"} sx={{ px: 1 }}>
           {menu.map(({ key, ...val }, i) => (
-            <TooltipSidebarMenu key={key} {...val} />
+            <TooltipSidebarMenu key={key} keyPath={key} {...val} />
           ))}
         </List>
       </div>

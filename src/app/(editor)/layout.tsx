@@ -3,7 +3,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
 import { PlusJakartaSans } from "@/lib/plus-jakarta-sans.font";
 import theme from "@/views/admin.theme";
-import "./globals.css";
+import "./globals.scss";
 import { ProgressBar, ProgressBarProvider } from "react-transition-progress";
 import AlertProvider from "@/views/contexts/AlertContext";
 import SnackbarProvider from "@/views/contexts/SnackbarContext";

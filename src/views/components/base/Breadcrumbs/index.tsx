@@ -1,7 +1,10 @@
 "use client";
 import React from "react";
 import { default as MuiLink } from "@mui/material/Link";
-import { BreadcrumbsProps, default as MUIBreadcrumbs } from "@mui/material/Breadcrumbs";
+import {
+  BreadcrumbsProps,
+  default as MUIBreadcrumbs,
+} from "@mui/material/Breadcrumbs";
 import { snackCaseToWord } from "@/utils/string";
 import Box, { BoxProps } from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -9,12 +12,12 @@ import { usePathname } from "next/navigation";
 import { Link } from "react-transition-progress/next";
 
 type Props = {
-  breadProps?:BreadcrumbsProps,
-  boxProps?:BoxProps
-}
+  text?: string;
+  breadProps?: BreadcrumbsProps;
+  boxProps?: BoxProps;
+};
 
-
-const Breadcrumbs = (props:Props) => {
+const Breadcrumbs = ({ text, ...props }: Props) => {
   const pathname = usePathname();
   const render = (links: string) => {
     const paths = links.split("/");
@@ -37,7 +40,21 @@ const Breadcrumbs = (props:Props) => {
           </MuiLink>
         );
       } else if (i === lengthPath - 1) {
-        return <Typography fontSize={"small"}>{snackCaseToWord(v)}</Typography>;
+        return (
+          <Typography
+            fontSize={"small"}
+            sx={{
+              ...(text && {
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                width: "200px",
+              }),
+            }}
+          >
+            {snackCaseToWord(text ?? v)}
+          </Typography>
+        );
       }
 
       url += `/${v}`;
@@ -64,11 +81,16 @@ const Breadcrumbs = (props:Props) => {
         flexDirection: "row",
         justifyContent: "flex-end",
         alignItems: "center",
+        overflow: "hidden",
       }}
-
       {...props.boxProps}
     >
-      <MUIBreadcrumbs separator={"›"} maxItems={4} aria-label="breadcrumb" {...props?.breadProps}>
+      <MUIBreadcrumbs
+        separator={"›"}
+        maxItems={4}
+        aria-label="breadcrumb"
+        {...props?.breadProps}
+      >
         {render(pathname)}
       </MUIBreadcrumbs>
     </Box>

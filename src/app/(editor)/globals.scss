@@ -1,5 +1,5 @@
-@import '../../views/styles/_variables.scss';
-@import '../../views/styles/_keyframe-animations.scss';
+@use '../../views/styles/variables' as *;
+@use '../../views/styles/keyframe-animations' as *;
 
 
 body {

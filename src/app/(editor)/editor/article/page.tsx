@@ -3,15 +3,17 @@ import dynamic from "next/dynamic";
 import Template from "./template";
 
 export const metadata: Metadata = {
-  title: "Halaman",
+  title: "Artikel",
 };
 
-const PageEditor = dynamic(() => import("@/views/pages/page/PageEditor"));
+const ArticleEditor = dynamic(
+  () => import("@/views/pages/article/ArticleEditor")
+);
 
 export default function Page() {
   return (
     <Template>
-      <PageEditor />
+      <ArticleEditor />
     </Template>
   );
 }
