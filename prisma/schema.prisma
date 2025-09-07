@@ -116,7 +116,7 @@ model Category {
 model Menu {
   id        Int        @id @default(autoincrement())
   name      String?
-  url       String?     @map("url")
+  url       String?    @map("url")
   icon      String?    @db.VarChar()
   position  Position   @default(header) @map("position")
   sortOrder Int?       @default(0) @map("sort_order") @db.SmallInt()
@@ -354,4 +354,19 @@ model BusinessLocation {
   district        District        @relation(fields: [districtId], references: [id], onDelete: Cascade)
 
   @@map("business_locations")
+}
+
+model Page {
+  id              Int        @id @default(autoincrement())
+  title           String     @map("title")
+  slug            String?    @map("slug")
+  content         Json?      @map("content") @db.JsonB()
+  status          StatusType @map("status") @default(pending)
+  metaTitle       String?    @map("meta_title")
+  metaDescription String?    @map("meta_description") @db.Text()
+  metaKeywords    String?    @map("meta_keywords")
+  createdAt       DateTime?  @default(now()) @map("created_at")
+  updatedAt       DateTime?  @updatedAt @map("updated_at")
+
+  @@map("pages")
 }

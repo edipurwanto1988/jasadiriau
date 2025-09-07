@@ -214,3 +214,14 @@ type SearchList = {
   categoryName?: string;
   categorySlug?: string;
 };
+
+type Page = {
+  id: number;
+  slug: string;
+  title: string;
+  content?: import('@tiptap/react').JSONContent;
+  metaTitle: string;
+  metaDescription?: string;
+  metaKeywords?: string;
+status: "active" | "inactive" | "pending";
+}

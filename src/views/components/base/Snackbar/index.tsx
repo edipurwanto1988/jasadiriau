@@ -84,8 +84,14 @@ const Snackbar = () => {
         vertical: isMobile ? "bottom" : "top",
         horizontal: isMobile ? "center" : "right",
       }}
-      TransitionProps={{ onExited: handleExited }}
-      TransitionComponent={isMobile ? SlideUpTransition : SlideTransition}
+      // TransitionProps={{ onExited: handleExited }}
+      // TransitionComponent={isMobile ? SlideUpTransition : SlideTransition}
+      slotProps={{
+        transition: {
+          onExited:handleExited,
+          
+        }
+      }}
       open={open}
       {...props}
     >

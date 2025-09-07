@@ -1,0 +1,13 @@
+@import '../../views/styles/_variables.scss';
+@import '../../views/styles/_keyframe-animations.scss';
+
+
+body {
+    margin: 0;
+}
+
+.default-form *,
+.default-form *::before,
+.default-form *::after {
+  box-sizing: unset;
+}

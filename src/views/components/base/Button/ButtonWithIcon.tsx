@@ -33,6 +33,14 @@ const ArrowBackOutlinedIcon = LoadComponent(
   () => import("@mui/icons-material/ArrowBackOutlined")
 );
 
+const SaveOutlinedIcon = LoadComponent(
+  () => import("@mui/icons-material/SaveOutlined")
+);
+
+const SettingsOutlinedIcon = LoadComponent(
+  () => import("@mui/icons-material/SettingsOutlined")
+);
+
 type Props = Omit<ButtonProps, "startIcon" | "endIcon"> & {
   typeButton?: "icon" | "button";
   position: "start" | "end";
@@ -45,7 +53,9 @@ type Props = Omit<ButtonProps, "startIcon" | "endIcon"> & {
     | "ConfirmationNumberOutlinedIcon"
     | "DeleteOutlineOutlinedIcon"
     | "WAIcon"
-    | "ArrowBackOutlinedIcon";
+    | "ArrowBackOutlinedIcon"
+    | "SaveOutlinedIcon"
+    | "SettingsOutlinedIcon";
 };
 
 const ButtonWithIcon = ({
@@ -72,6 +82,10 @@ const ButtonWithIcon = ({
       return <WAIcon {...iconProps} />;
     } else if (icon === "ArrowBackOutlinedIcon") {
       return <ArrowBackOutlinedIcon fontSize="inherit" />;
+    } else if (icon === "SaveOutlinedIcon") {
+      return <SaveOutlinedIcon fontSize="inherit" />;
+    } else if (icon === "SettingsOutlinedIcon") {
+      return <SettingsOutlinedIcon fontSize="inherit" />;
     }
   };
 
