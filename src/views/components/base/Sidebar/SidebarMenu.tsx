@@ -110,13 +110,13 @@ const menu: SiderBarMenu = [
   {
     path: "/admin/article",
     key: "article",
-    name: "Article",
+    name: "Artikel",
     icon: ArticleOutlinedIcon,
   },
   {
     path: "/admin/setting",
     key: "setting",
-    name: "Setting",
+    name: "Pengaturan",
     icon: SettingsOutlinedIcon,
   },
 ];

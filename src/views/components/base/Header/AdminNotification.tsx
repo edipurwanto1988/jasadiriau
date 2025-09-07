@@ -62,14 +62,7 @@ const AdminNotification = () => {
         setAnchorEl(null);
       }}
     >
-      <Box
-        sx={{
-          borderRadius: "var(--mui-shape-borderRadius)",
-          backgroundColor: "var(--input-bg-color)",
-          minWidth: 40,
-          minHeight: 40,
-        }}
-      >
+      <Box>
         <IconButton onClick={handleClick} aria-describedby={id}>
           <Badge
             color="error"

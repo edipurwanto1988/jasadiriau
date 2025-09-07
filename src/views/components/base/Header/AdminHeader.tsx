@@ -1,18 +1,17 @@
 "use client";
 
 import React from "react";
-// import { useAuth } from "@contexts/AuthContext";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
-import { styled } from "@mui/material/styles";
 import Dropdown from "../Dropdown/Dropdown";
 import Avatar from "@mui/material/Avatar";
-import { useApp } from "@/views/contexts/AppContext";
 import AdminNotification from "./AdminNotification";
-// import { postLogout } from "@services/authService";
-// import { useNavigate } from "react-router";
+import { useApp } from "@/views/contexts/AppContext";
+import { styled } from "@mui/material/styles";
+import { useProgress } from "react-transition-progress";
+import { useRouter } from "next/navigation";
 
 const MenuIcon = React.lazy(() => import("@mui/icons-material/Menu"));
 
@@ -51,14 +50,15 @@ const AppBar = styled(MuiAppBar, {
 
 const AdminHeader = () => {
   const app = useApp();
-  // const navigate = useNavigate();
+  const startProgress = useProgress();
+  const router = useRouter();
 
-  // const handlLogout = () => {
-  //   postLogout({}).then(() => {
-  //     navigate("/login");
-  //     localStorage.removeItem("token");
-  //   });
-  // };
+  const handlLogout = () => {
+    React.startTransition(() => {
+      startProgress();
+      router.push("/login", { scroll: false });
+    });
+  };
 
   return (
     <AppBar
@@ -115,23 +115,7 @@ const AdminHeader = () => {
             alignItems: "center",
           }}
         >
-          {/* <Fade in={!app.isMobile} unmountOnExit>
-            <ListItemText
-              primary={auth.user?.name}
-              secondary={auth.user?.email}
-              slotProps={{
-                primary: {
-                  textAlign: "right",
-                  variant: "body2",
-                },
-                secondary: {
-                  textAlign: "right",
-                  variant: "caption",
-                },
-              }}
-            />
-          </Fade> */}
-          <AdminNotification/>
+          <AdminNotification />
           <div>
             <Dropdown
               icon={<Avatar alt="img_profile" sx={{ width: 32, height: 32 }} />}
@@ -143,7 +127,7 @@ const AdminHeader = () => {
               menu={[
                 {
                   text: "Logout",
-                  // onClick: handlLogout
+                  onClick: handlLogout,
                 },
               ]}
             />
