@@ -3,6 +3,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { cache, use } from "react";
 import { User } from "@/generated/prisma";
+import { v4 as uuid } from "uuid";
 
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -28,7 +29,7 @@ export async function createSession(user: User & { picture?: string }) {
     userId: user.id,
     email: user.email,
     name: user.name,
-    role: user.role ?? 'user',
+    role: user.role ?? "user",
     picture: user.picture,
     expiresAt,
   });
@@ -79,3 +80,19 @@ export const verifySession = cache(async () => {
     role: session.role as RoleType,
   };
 });
+
+export const getOrSetVisitorId = async () => {
+  const cookieStore = await cookies();
+  let visitorId = cookieStore.get("visitor_id")?.value;
+  if (!visitorId) {
+    visitorId = uuid();
+    cookieStore.set("visitor_id", visitorId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365, // 1 tahun
+    });
+  }
+  return visitorId;
+};

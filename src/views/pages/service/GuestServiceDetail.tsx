@@ -22,6 +22,10 @@ import { getServiceBySlug } from "@/actions/service.action";
 import { rupiah } from "@/utils/format";
 import ButtonWithIcon from "@/views/components/base/Button/ButtonWithIcon";
 import BackButton from "@/views/components/base/Button/BackButton";
+import {
+  postContact,
+  postServiceView,
+} from "@/views/services/interactive.service";
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
@@ -37,7 +41,10 @@ const GuestServiceDetail = ({ data, siteName }: Props) => {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
   };
-
+  React.useEffect(() => {
+    if (!data) return;
+    postServiceView({ source: "detail", serviceId: data.id });
+  }, [data]);
   return (
     <MainTemplate>
       <Box sx={{ width: "100%", minHeight: "100%", overflow: "hidden auto" }}>
@@ -176,9 +183,15 @@ const GuestServiceDetail = ({ data, siteName }: Props) => {
                             `Saya ingin menanyakan lebih lanjut mengenai detail layanan tersebut.\n` +
                             `Apakah bisa dibantu?`
                         );
-                        router.push(
-                          `${process.env.NEXT_PUBLIC_WA_LINK}?phone=${phone}&text=${text}`
-                        );
+
+                        postContact({
+                          source: "detail",
+                          phoneNumber: v.whatsappNumber,
+                          contactId: v.id,
+                        });
+                        // router.push(
+                        //   `${process.env.NEXT_PUBLIC_WA_LINK}?phone=${phone}&text=${text}`
+                        // );
                       }}
                     >
                       Chat Via Whatsapp

@@ -73,8 +73,8 @@ model User {
   isActive        Boolean?          @default(false) @map("is_active")
   googleTokenId   String?           @map("google_token_id")
   imageUrl        String?           @map("image_url")
-  createdAt       DateTime?         @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt       DateTime?         @updatedAt @map("updated_at")
+  createdAt       DateTime?         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?         @updatedAt @map("updated_at") @db.Timestamptz(6)
   BusinessProfile BusinessProfile[]
   Validation      Validation[]
   Notification    Notification[]
@@ -89,8 +89,8 @@ model Advantages {
   icon        String?    @map("icon")
   sortOrder   Int?       @map("sort_order")
   status      StatusType @default(inactive) @map("status")
-  updatedAt   DateTime?  @updatedAt @map("updated_at")
-  createdAt   DateTime?  @default(now()) @map("created_at")
+  updatedAt   DateTime?  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdAt   DateTime?  @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("advantages")
 }
@@ -102,8 +102,8 @@ model Category {
   seoConfigId Int?      @map("seo_config_id")
   parentId    Int?      @map("parent_id")
   imageUrl    String?   @map("image_url") @db.VarChar()
-  createdAt   DateTime? @default(now()) @map("created_at")
-  updatedAt   DateTime? @updatedAt @map("updated_at")
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   parent   Category?   @relation("CategoryToParent", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   children Category[]  @relation("CategoryToParent")
@@ -123,8 +123,8 @@ model Menu {
   sortOrder Int?       @default(0) @map("sort_order") @db.SmallInt()
   status    StatusType @default(inactive) @map("status")
   parentId  Int?       @map("parent_id")
-  createdAt DateTime?  @default(now()) @map("created_at")
-  updatedAt DateTime?  @updatedAt @map("updated_at")
+  createdAt DateTime?  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime?  @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   parent   Menu?  @relation("MenuToSub", fields: [parentId], references: [id])
   children Menu[] @relation("MenuToSub")
@@ -140,8 +140,8 @@ model Service {
   price       Decimal?   @default(0) @db.Decimal(15, 2)
   status      StatusType @default(pending) @map("status")
   terms       String?    @map("terms") @db.Text()
-  createdAt   DateTime?  @default(now()) @map("created_at")
-  updatedAt   DateTime?  @updatedAt @map("updated_at")
+  createdAt   DateTime?  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime?  @updatedAt @map("updated_at") @db.Timestamptz(6)
   categoryId  Int        @map("category_id")
   profileId   Int        @map("profile_id")
   seoConfigId Int?       @map("seo_config_id")
@@ -149,6 +149,7 @@ model Service {
   category        Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   seo             SeoConfigs?     @relation(fields: [seoConfigId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   businessProfile BusinessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  serviceViews    ServiceView[]
 
   @@map("services")
 }
@@ -161,8 +162,8 @@ model SeoConfigs {
   ogTitle       String?   @map("og_title")
   ogDescription String?   @map("og_description")
   ogImage       String?   @map("og_image")
-  createdAt     DateTime? @default(now()) @map("created_at")
-  updatedAt     DateTime? @updatedAt @map("updated_at")
+  createdAt     DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   Service  Service[]
   Category Category[]
@@ -178,8 +179,8 @@ model Slider {
   link      String?    @map("link")
   sortOrder Int?       @map("sort_order")
   status    StatusType @default(inactive) @map("status")
-  createdAt DateTime?  @default(now()) @map("created_at")
-  updatedAt DateTime?  @updatedAt @map("updated_at")
+  createdAt DateTime?  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime?  @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@map("sliders")
 }
@@ -203,8 +204,8 @@ model Setting {
   linkedinUrl            String?   @map("linkedin_url")
   youtubeUrl             String?   @map("youtube_url")
   whatsappUrl            String?   @map("whatsapp_url")
-  createdAt              DateTime? @default(now()) @map("created_at")
-  updatedAt              DateTime? @updatedAt @map("updated_at")
+  createdAt              DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt              DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@map("settings")
 }
@@ -217,13 +218,14 @@ model BusinessProfile {
   websiteUrl       String?            @map("website_url")
   slug             String?            @unique
   status           StatusType         @default(inactive) @map("status")
-  createdAt        DateTime?          @default(now()) @map("created_at")
-  updatedAt        DateTime?          @updatedAt @map("updated_at")
+  createdAt        DateTime?          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime?          @updatedAt @map("updated_at") @db.Timestamptz(6)
   User             User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
   BusinessSocial   BusinessSocial[]
   BusinessContact  BusinessContact[]
   Service          Service[]
   BusinessLocation BusinessLocation[]
+  BusinessViews    BusinessView[]
 
   @@map("business_profiles")
 }
@@ -234,8 +236,8 @@ model BusinessSocial {
   name      String?
   platform  Platform  @default(other) @map("platform")
   url       String?   @map("url")
-  createdAt DateTime? @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   businessProfile BusinessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
@@ -246,10 +248,11 @@ model BusinessContact {
   id             Int       @id @default(autoincrement())
   profileId      Int       @map("profile_id")
   whatsappNumber String    @map("whatsapp_number")
-  createdAt      DateTime? @default(now()) @map("created_at")
-  updatedAt      DateTime? @updatedAt @map("updated_at")
+  createdAt      DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   businessProfile BusinessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  contactClicks   ContactClick[]
 
   @@map("business_contacts")
 }
@@ -263,8 +266,8 @@ model Validation {
   action       Action?    @map("action")
   note         String?    @map("note") @db.Text()
   validatedAt  DateTime?  @map("validated_at") @db.Timestamptz()
-  createdAt    DateTime?  @default(now()) @map("created_at")
-  updatedAt    DateTime?  @updatedAt @map("updated_at")
+  createdAt    DateTime?  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime?  @updatedAt @map("updated_at") @db.Timestamptz(6)
   operator     User?      @relation(fields: [operatorId], references: [id], onDelete: SetNull)
 
   @@map("validations")
@@ -275,8 +278,8 @@ model Image {
   entityType TargetType @default(profile) @map("entity_type")
   entityId   Int        @map("entity_id")
   imageUrl   String     @map("image_url")
-  createdAt  DateTime?  @default(now()) @map("created_at")
-  updatedAt  DateTime?  @updatedAt @map("updated_at")
+  createdAt  DateTime?  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime?  @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@map("images")
 }
@@ -289,8 +292,8 @@ model Notification {
   isRead    Boolean   @default(false) @map("is_read")
   url       String?   @db.VarChar()
   type      String?   @db.VarChar()
-  createdAt DateTime? @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -301,8 +304,8 @@ model Province {
   id               Int                @id @default(autoincrement())
   name             String
   slug             String?            @unique
-  createdAt        DateTime?          @default(now()) @map("created_at")
-  updatedAt        DateTime?          @updatedAt @map("updated_at")
+  createdAt        DateTime?          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime?          @updatedAt @map("updated_at") @db.Timestamptz(6)
   regencies        Regency[]
   businessLocation BusinessLocation[]
 
@@ -314,8 +317,8 @@ model Regency {
   name       String
   slug       String?   @unique
   provinceId Int       @map("province_id")
-  createdAt  DateTime? @default(now()) @map("created_at")
-  updatedAt  DateTime? @updatedAt @map("updated_at")
+  createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   province         Province           @relation(fields: [provinceId], references: [id])
   districts        District[]
@@ -329,8 +332,8 @@ model District {
   name      String
   slug      String?   @unique
   regencyId Int       @map("regency_id")
-  createdAt DateTime? @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   regency   Regency            @relation(fields: [regencyId], references: [id])
   locations BusinessLocation[]
@@ -346,8 +349,8 @@ model BusinessLocation {
   regencyId  Int     @map("regency_id")
   districtId Int     @map("district_id")
 
-  createdAt DateTime? @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   businessProfile BusinessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
   province        Province        @relation(fields: [provinceId], references: [id], onDelete: Cascade)
@@ -366,8 +369,8 @@ model Page {
   metaTitle       String?    @map("meta_title")
   metaDescription String?    @map("meta_description") @db.Text()
   metaKeywords    String?    @map("meta_keywords")
-  createdAt       DateTime?  @default(now()) @map("created_at")
-  updatedAt       DateTime?  @updatedAt @map("updated_at")
+  createdAt       DateTime?  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?  @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@map("pages")
 }
@@ -382,11 +385,55 @@ model Article {
   metaTitle       String?    @map("meta_title")
   metaDescription String?    @map("meta_description") @db.Text()
   metaKeywords    String?    @map("meta_keywords")
-  createdAt       DateTime?  @default(now()) @map("created_at")
-  updatedAt       DateTime?  @updatedAt @map("updated_at")
+  createdAt       DateTime?  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?  @updatedAt @map("updated_at") @db.Timestamptz(6)
   categoryId      Int?       @map("category_id")
 
   category Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("articles")
+}
+
+model ServiceView {
+  id        Int       @id @default(autoincrement())
+  visitorId String?   @map("visitor_id") @db.Uuid()
+  serviceId Int       @map("service_id") @db.Integer()
+  source    String?   @db.VarChar()
+  userAgent String?   @map("user_agent") @db.Text()
+  ipAddress String?   @map("ip_address")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index(fields: [serviceId, createdAt],map: "service_id_created_at")
+  @@map("service_views")
+}
+
+model BusinessView {
+  id        Int       @id @default(autoincrement())
+  visitorId String?   @map("visitor_id") @db.Uuid()
+  profileId Int       @map("profile_id") @db.Integer()
+  source    String?   @db.VarChar()
+  userAgent String?   @map("user_agent") @db.Text()
+  ipAddress String?   @map("ip_address")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  businessProfile BusinessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("business_views")
+}
+
+model ContactClick {
+  id          Int       @id @default(autoincrement())
+  visitorId   String?   @map("visitor_id") @db.Uuid()
+  contactId   Int       @map("contact_id") @db.Integer()
+  phoneNumber String?   @map("phone_number") @db.VarChar()
+  source      String?   @db.VarChar()
+  userAgent   String?   @map("user_agent") @db.Text()
+  ipAddress   String?   @map("ip_address")
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  businessContact BusinessContact? @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@map("contact_clicks")
 }

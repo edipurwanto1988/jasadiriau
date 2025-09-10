@@ -8,6 +8,7 @@ import { Prisma, StatusType } from "@/generated/prisma";
 import { paginate } from "@/utils/format";
 import { addAdminNotification } from "./notification.service";
 import { slugify } from "@/utils/string";
+import dayjs from "dayjs";
 
 export const servicePaginate = async (qs: URLSearchParams, userId?: number) => {
   const where: Prisma.ServiceWhereInput = {
@@ -161,7 +162,7 @@ export const updateService = async ({
       slug = slugify(`${number} ${payload.name}`);
     }
   }
-  
+
   const updated = await prisma.service.update({
     where: { id: +id! },
     data: {
@@ -175,4 +176,113 @@ export const updateService = async ({
 
 export const deleteService = (id: number) => {
   return prisma.service.delete({ where: { id } });
+};
+
+export const getServicePopuler = async () => {
+  const sql = Prisma.sql`
+    SELECT 
+     s.id,  s.name, s.slug, s.price::INT
+    FROM services s
+    LEFT JOIN service_views sv ON sv.service_id = s.id
+    WHERE s.status = 'active'
+    GROUP BY s.id
+    ORDER BY 
+      count(sv.id)::INT DESC
+    LIMIT 10
+  `;
+
+  const results = await prisma.$queryRaw<any[]>(sql);
+
+  const images = await prisma.image.findMany({
+    where: {
+      entityType: "service",
+      entityId: {
+        in: results.map((v) => +v.id),
+      },
+    },
+    orderBy: {
+      id: "desc",
+    },
+    distinct: ["entityId"],
+  });
+
+  return results.map((v) => {
+    const image = images.find((f) => f.entityId === +v.id);
+    return {
+      id: v.id,
+      name: v.name,
+      slug: v.slug,
+      price: v.price,
+      imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${
+        image?.imageUrl ?? "/images/placeholder.webp"
+      }`,
+    };
+  });
+};
+
+export const getServiceInteractive = async (qs: URLSearchParams) => {
+  const page = parseInt(qs.get("page") || "1", 10);
+  const perPage = parseInt(qs.get("per_page") || "25", 10);
+  const offset = (page - 1) * perPage;
+  const date = dayjs();
+
+  const start_date = qs.get("start_date") ?? date.startOf("month");
+  const end_date = qs.get("end_date") ?? date.endOf("month");
+
+  const ids = qs.get("ids")
+    ? Prisma.sql`AND s.id IN (${Prisma.join(
+        qs.get("ids")!.split(",").map(Number)
+      )})`
+    : Prisma.empty;
+
+  const baseSql = Prisma.sql`
+  WITH
+  service_views AS (
+    SELECT 
+      s.id,
+      s.name,
+      MAX(DATE(sv.created_at)) AS date,
+      COUNT(sv.id)::INT AS total
+    FROM services s
+    LEFT JOIN service_views sv ON sv.service_id = s.id AND DATE(sv.created_at) BETWEEN ${Prisma.sql`DATE(${start_date})`} AND ${Prisma.sql`DATE(${end_date})`} 
+    WHERE s.status = 'active'
+    ${ids}
+    GROUP BY s.id, DATE(sv.created_at)
+  ),
+  service_format AS (
+    SELECT 
+      sv.id,
+      sv.name,
+      SUM(sv.total)::INT AS total,
+      json_agg(
+        jsonb_build_object(
+          'date', sv.date,
+          'total', sv.total
+        ) ORDER BY sv.date
+      ) AS views
+    FROM service_views sv
+    GROUP BY sv.id, sv.name
+  )
+  `;
+
+  const [[{ total }], data] = await prisma.$transaction<[any, any]>([
+    prisma.$queryRaw(Prisma.sql`
+        ${baseSql}
+        SELECT COUNT(*)::INT AS total FROM service_format;
+    `),
+    prisma.$queryRaw(Prisma.sql`
+       ${baseSql}
+        SELECT 
+          * 
+        FROM service_format
+        ORDER BY 
+          total ${Prisma.raw(`${qs.get("order") ?? "DESC"}`)}
+        LIMIT 
+          ${perPage} 
+        OFFSET 
+          ${offset}
+    `),
+  ]);
+
+  return { total, data };
 };

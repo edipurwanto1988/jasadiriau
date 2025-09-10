@@ -1,12 +1,25 @@
-import InputLargeSearch from "@/views/components/base/Input/InputLargeSearch";
+"use client";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useProgress } from "react-transition-progress";
+import { serviceUrl } from "@/views/services/service.service";
+
+import useSWR from "swr";
+import Skeleton from "@mui/material/Skeleton";
+import { rupiah } from "@/utils/format";
+import React from "react";
 
 const ExcellentServiceSection = () => {
+  const router = useRouter();
+  const startProgress = useProgress();
+
+  const { data, isLoading } = useSWR(serviceUrl.populer, (url) =>
+    fetch(url)
+      .then((resp) => resp.json())
+      .then((resp) => resp.data)
+  );
   return (
     <Stack
       sx={{
@@ -24,7 +37,7 @@ const ExcellentServiceSection = () => {
 
       <Stack
         direction={"row"}
-        spacing={2}
+        spacing={3}
         sx={{
           flex: 1,
           flexWrap: "nowrap",
@@ -33,38 +46,76 @@ const ExcellentServiceSection = () => {
           pb: 2,
         }}
       >
-        {[...Array(100)].map((_, i) => (
-          <Stack key={i} width={223} spacing={2}>
-            <Box
-              sx={{
-                overflow: "hidden",
-                borderRadius: "var(--mui-shape-borderRadius)",
-                position: "relative",
-                width: 223,
-                height: 223,
-                backgroundImage: `url('/images/placeholder.webp')`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                backgroundSize: "cover",
-                aspectRatio: "1/1",
-              }}
-            ></Box>
-            <Box>
-              <Typography>Jasa Pembersih AC</Typography>
-            </Box>
-            <Box>
-              <Typography
-                lineHeight={"21px"}
-                fontWeight={400}
-                variant="subtitle2"
-                color="#4A739C"
-                alignSelf={"stretch"}
+        {isLoading
+          ? [...Array(5)].map((_, i) => (
+              <Stack
+                key={i}
+                flexShrink={0}
+                width={160}
+                spacing={2}
+                sx={{ cursor: "pointer" }}
               >
-                Jasa perbaikan AC profesional dengan teknisi berpengalaman.
-              </Typography>
-            </Box>
-          </Stack>
-        ))}
+                <Skeleton variant="rounded" width={160} height={160} />
+                <Box>
+                  <Skeleton width={"100%"} />
+                </Box>
+                <Box>
+                  <Skeleton width={"100%"} />
+                </Box>
+              </Stack>
+            ))
+          : (data ?? []).map((value, i) => (
+              <Stack
+                key={i}
+                width={223}
+                spacing={2}
+                onClick={() => {
+                  React.startTransition(() => {
+                    startProgress();
+                    router.push(`/jasa/${value.slug}`);
+                  });
+                }}
+                sx={{ cursor: "pointer" }}
+              >
+                <Box
+                  sx={{
+                    overflow: "hidden",
+                    borderRadius: "var(--mui-shape-borderRadius)",
+                    position: "relative",
+                    width: 223,
+                    height: 223,
+                    backgroundImage: `url(${value.imageUrl})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                    aspectRatio: "1/1",
+                  }}
+                ></Box>
+                <Box>
+                  <Typography>Jasa Pembersih AC</Typography>
+                </Box>
+                <Box>
+                  <Typography
+                    lineHeight={"21px"}
+                    fontWeight={400}
+                    variant="subtitle2"
+                    color="#4A739C"
+                    alignSelf={"stretch"}
+                  >
+                    {value.name}
+                  </Typography>
+                </Box>
+
+                <Box>
+                  <Typography
+                    fontWeight={500}
+                    variant="subtitle2"
+                  >
+                    {rupiah(value.price)}
+                  </Typography>
+                </Box>
+              </Stack>
+            ))}
       </Stack>
     </Stack>
   );

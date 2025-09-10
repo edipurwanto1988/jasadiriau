@@ -8,6 +8,7 @@ import { Platform, Prisma, StatusType } from "@/generated/prisma";
 import { paginate } from "@/utils/format";
 import { addAdminNotification } from "./notification.service";
 import { slugify } from "@/utils/string";
+import dayjs from "dayjs";
 
 export const businessProfilePaginate = async (
   qs: URLSearchParams,
@@ -261,4 +262,71 @@ export const getMeta = async () => {
   return {
     totalPending,
   };
+};
+
+export const getBusinessInteractive = async (qs: URLSearchParams) => {
+  const page = parseInt(qs.get("page") || "1", 10);
+  const perPage = parseInt(qs.get("per_page") || "25", 10);
+  const offset = (page - 1) * perPage;
+  const date = dayjs();
+
+  const start_date = qs.get("start_date") ?? date.startOf("month");
+  const end_date = qs.get("end_date") ?? date.endOf("month");
+
+  const ids = qs.get("ids")
+    ? Prisma.sql`AND s.id IN (${Prisma.join(
+        qs.get("ids")!.split(",").map(Number)
+      )})`
+    : Prisma.empty;
+
+  const baseSql = Prisma.sql`
+  WITH
+  business_views AS (
+    SELECT 
+     bp.id,
+     bp.business_name AS name,
+      MAX(DATE(bv.created_at)) AS date,
+      COUNT(bv.id)::INT AS total
+    FROM business_profiles bp
+    LEFT JOIN business_views bv ON bv.profile_id =bp.id AND DATE(bv.created_at) BETWEEN ${Prisma.sql`DATE(${start_date})`} AND ${Prisma.sql`DATE(${end_date})`} 
+    WHERE bp.status = 'active'
+    ${ids}
+    GROUP BY bp.id, DATE(bv.created_at)
+  ),
+  business_format AS (
+    SELECT 
+      bv.id,
+      bv.name,
+      SUM(bv.total)::INT AS total,
+      json_agg(
+        jsonb_build_object(
+          'date', bv.date,
+          'total', bv.total
+        ) ORDER BY bv.date
+      ) AS views
+    FROM business_views bv
+    GROUP BY bv.id, bv.name
+  )
+  `;
+
+  const [[{ total }], data] = await prisma.$transaction<[any, any]>([
+    prisma.$queryRaw(Prisma.sql`
+        ${baseSql}
+        SELECT COUNT(*)::INT AS total FROM business_format;
+    `),
+    prisma.$queryRaw(Prisma.sql`
+       ${baseSql}
+        SELECT 
+          * 
+        FROM business_format
+        ORDER BY 
+          total ${Prisma.raw(`${qs.get("order") ?? "DESC"}`)}
+        LIMIT 
+          ${perPage} 
+        OFFSET 
+          ${offset}
+    `),
+  ]);
+
+  return { total, data };
 };

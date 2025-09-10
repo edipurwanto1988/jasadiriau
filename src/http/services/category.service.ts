@@ -1,4 +1,4 @@
-import { Prisma } from "@/generated/prisma";
+import { Category, Prisma } from "@/generated/prisma";
 import prisma from "@/lib/db";
 import {
   CreateCategorySchema,
@@ -94,4 +94,26 @@ export const deleteCategory = (id: number) => {
       },
     },
   });
+};
+
+export const getCategoryPopuler = async () => {
+  const sql = Prisma.sql`
+    SELECT 
+       c.name, c.slug, c.image_url 
+    FROM categories c
+    LEFT JOIN services s ON s.category_id = c.id
+    LEFT JOIN service_views sv ON sv.service_id = s.id
+    GROUP BY c.id
+    ORDER BY  count(sv.id)::INT DESC
+    LIMIT 10
+  `;
+
+  const results = await prisma.$queryRaw<any[]>(sql);
+  return results.map((v) => ({
+    name:v.name,
+    slug:v.slug,
+    imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${
+      v.image_url ?? "/images/placeholder.webp"
+    }`,
+  }));
 };

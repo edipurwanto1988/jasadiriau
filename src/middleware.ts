@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import authMiddleware from "./middlewares/auth.middleware";
+import visitorMiddleware from "./middlewares/visitor.middleware";
 
 export default async function middleware(req: NextRequest) {
+  await visitorMiddleware(req);
   const auth = await authMiddleware(req);
   if (auth) return auth;
-
   return NextResponse.next();
 }
 

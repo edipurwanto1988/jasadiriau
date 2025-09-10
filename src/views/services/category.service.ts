@@ -4,6 +4,7 @@ import * as utils from "ezhooks/lib/utils";
 export const categoryUrl = {
   category: `${process.env.NEXT_PUBLIC_BASE_URL}/api/category`,
   all: `${process.env.NEXT_PUBLIC_BASE_URL}/api/category/all`,
+  populer: `${process.env.NEXT_PUBLIC_BASE_URL}/api/category/populer`,
 };
 
 export const getCategory = async (

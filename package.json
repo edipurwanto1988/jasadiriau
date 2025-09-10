@@ -44,7 +44,7 @@
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
     "dnd-kit-sortable-tree": "^0.1.73",
-    "ezhooks": "^1.4.5",
+    "ezhooks": "^1.4.8",
     "framer-motion": "^12.23.12",
     "frexp": "^0.2.8",
     "jose": "^6.0.12",
@@ -63,6 +63,7 @@
     "react-transition-progress": "^0.0.4",
     "sharp": "^0.34.3",
     "swr": "^2.3.6",
+    "uuid": "^13.0.0",
     "zod": "^4.0.14"
   },
   "devDependencies": {

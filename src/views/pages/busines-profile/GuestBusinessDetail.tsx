@@ -18,6 +18,7 @@ import BusinessLocationlItem from "./BusinessLocationlItem";
 import Breadcrumbs from "@/views/components/base/Breadcrumbs";
 import { useRouter } from "next/navigation";
 import ButtonWithIcon from "@/views/components/base/Button/ButtonWithIcon";
+import { postBusinessView } from "@/views/services/interactive.service";
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
@@ -34,6 +35,11 @@ const GuestBusinessDetail = ({
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
   };
+
+  React.useEffect(() => {
+    if (!data) return;
+    postBusinessView({ source: "detail", profileId: data.id });
+  }, [data]);
   return (
     <MainTemplate>
       <Box sx={{ width: "100%", minHeight: "100%", overflow: "hidden auto" }}>

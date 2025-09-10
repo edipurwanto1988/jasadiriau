@@ -2,6 +2,7 @@ import { EventSend } from "ezhooks";
 
 export const serviceUrl = {
   serviceAccount: `${process.env.NEXT_PUBLIC_BASE_URL}/api/service`,
+  populer: `${process.env.NEXT_PUBLIC_BASE_URL}/api/service/populer`,
 };
 
 export const getService = async (
