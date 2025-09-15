@@ -8,6 +8,7 @@ import { getUser } from "@/views/services/user.service"
 import useTable from "ezhooks/lib/useTable";;
 import useDialog from "@/views/hooks/useDialog";
 import UserRoleForm from "./UserRoleForm";
+import PageTemplate from "@/views/components/templates/PageTemplate";
 
 const UserList = () => {
   const [id, setID] = React.useState(0);
