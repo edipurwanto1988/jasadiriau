@@ -23,7 +23,7 @@ next: { revalidate: 0 },
 };
 
 export const postAdvantage = async (event?: EventSend) => {
-  const isNewRecord = !!event!.data!().id;
+  const isNewRecord = !(event?.data && event.data().id);
   const res = await fetch(url.advantage, {
     method: isNewRecord ? "post" : "put",
    signal: event?.ctr?.signal,
