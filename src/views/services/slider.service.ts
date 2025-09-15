@@ -48,3 +48,17 @@ export const getSliderID = async (
   });
   return res.json();
 };
+
+export const patchStatusSlider = async (event?: EventSend) => {
+  const res = await fetch(`${url.slider}/${event?.params?.id}`, {
+    method: "PATCH",
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
+  });
+
+  if (!res.ok) {
+    throw res;
+  }
+
+  return res.json();
+};

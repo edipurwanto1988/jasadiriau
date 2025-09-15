@@ -1,6 +1,6 @@
 import api from "@/utils/api";
 import SliderResource from "@/http/resources/slider.resource";
-import { getSliderID, deleteSlider } from "@/http/services/slider.service";
+import { getSliderID, deleteSlider, updateStatusSlider } from "@/http/services/slider.service";
 import { NextResponse } from "next/server";
 
 export const GET = api(
@@ -16,5 +16,13 @@ export const DELETE = api(
     const { id } = await params;
     await deleteSlider(+id);
     return new NextResponse(null, { status: 204 });
+  }
+);
+
+export const PATCH = api(
+  async (_, { params }: { params: Promise<{ id: string }> }) => {
+    const { id } = await params;
+    const data = await updateStatusSlider(+id);
+    return NextResponse.json(new SliderResource(data, { wrap: true }));
   }
 );

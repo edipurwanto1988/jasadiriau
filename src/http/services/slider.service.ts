@@ -81,3 +81,13 @@ export const deleteSlider = async (id: number) => {
   await prisma.slider.delete({ where: { id } });
   revalidateTag("slider");
 };
+
+export const updateStatusSlider = async (id: number) => {
+  const slider = await prisma.slider.findFirstOrThrow({ where: { id } });
+  const updated = await prisma.slider.update({
+    where: { id: +id! },
+    data: { status: slider.status === "active" ? "inactive" : "active" },
+  });
+  revalidateTag("slider");
+  return updated;
+};

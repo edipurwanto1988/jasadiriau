@@ -14,6 +14,7 @@ import {
   deleteSlider,
   getSlider,
   getSliderID,
+  patchStatusSlider,
   postSlider,
 } from "@/views/services/slider.service";
 import { statusActiveLabel } from "@/utils/string";
@@ -21,6 +22,7 @@ import Avatar from "@mui/material/Avatar";
 import { imgUrl } from "@/lib/dummy";
 import SnacbarLoading from "@/views/components/base/Skeleton/SnacbarLoading";
 import SliderForm from "./SliderForm";
+import Switch from "@mui/material/Switch";
 
 const SliderList = () => {
   const openSnackbar = useSnackbar();
@@ -167,8 +169,31 @@ const SliderList = () => {
 
           {
             label: "Status",
-            value: (value) => statusActiveLabel(value.status),
-            head: { align: "center" },
+            value: (value) => (
+              <Switch
+                size="small"
+                checked={value.status === "active"}
+                color={value.status === "active" ? "success" : "default"}
+                onChange={(e, checked) => {
+                  mutation.send({
+                    params: { id: value.id },
+                    service: patchStatusSlider,
+                    onSuccess: () => {
+                      table.update((data) => data.id === value.id, {
+                        ...value,
+                        status: checked ? "active" : "inactive",
+                      });
+                    },
+                    onError: (e) => {
+                      openSnackbar("Status gagal diberbaharui.", {
+                        severity: "error",
+                      });
+                    },
+                  });
+                }}
+              />
+            ),
+            head: { align: "center", padding: "checkbox" },
             align: "center",
           },
           {

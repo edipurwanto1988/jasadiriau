@@ -50,3 +50,13 @@ export const deleteAdvantage = async (id: number) => {
   await prisma.advantages.delete({ where: { id } });
   revalidateTag("advantage");
 };
+
+export const updateStatusAdvantage = async (id: number) => {
+  const advantage = await prisma.advantages.findFirstOrThrow({ where: { id } });
+  const updated = await prisma.advantages.update({
+    where: { id: +id! },
+    data: { status: advantage.status === "active" ? "inactive" : "active" },
+  });
+  revalidateTag("advantage");
+  return updated;
+};

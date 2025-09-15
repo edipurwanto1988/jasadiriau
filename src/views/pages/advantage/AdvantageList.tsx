@@ -15,11 +15,13 @@ import {
   deleteAdvantage,
   getAdvantage,
   getAdvantageID,
+  patchStatusAdvantage,
   postAdvantage,
 } from "@/views/services/advantage.service";
 import { statusActiveLabel } from "@/utils/string";
 import SnacbarLoading from "@/views/components/base/Skeleton/SnacbarLoading";
 import AdvantageForm from "./AdvantageForm";
+import Switch from "@mui/material/Switch";
 
 const AdvantageList = () => {
   const openSnackbar = useSnackbar();
@@ -145,16 +147,37 @@ const AdvantageList = () => {
             label: "Deskripsi",
             value: (value) => value.description.substring(0, 50),
           },
-          {
-            label: "Ikon",
-            value: (value) => value.icon,
-            head: { align: "center" },
-            align: "center",
-          },
+          // {
+          //   label: "Ikon",
+          //   value: (value) => value.icon,
+          //   head: { align: "center" },
+          //   align: "center",
+          // },
           {
             label: "Status",
-            value: (value) => statusActiveLabel(value.status),
-            head: { align: "center" },
+            value: (value) => (
+              <Switch
+                size="small"
+                checked={value.status === "active"}
+                color={value.status === "active" ? "success" : "default"}
+                onChange={(e, checked) => {
+                  mutation.send({
+                    params: { id: value.id },
+                    service: patchStatusAdvantage,
+                    onSuccess: () => {
+                      table.update((data) => data.id === value.id, {
+                        ...value,
+                        status: checked ? "active" : "inactive",
+                      });
+                    },
+                    onError: (e) => {
+                      openSnackbar('Status gagal diberbaharui.', { severity: "error" });
+                    },
+                  });
+                }}
+              />
+            ),
+            head: { align: "center", padding: "checkbox" },
             align: "center",
           },
           {
@@ -184,6 +207,6 @@ const AdvantageList = () => {
       <SnacbarLoading loading={mutation.loading} pending={isPending} />
     </SettingTemplate>
   );
-}
+};
 
 export default AdvantageList;

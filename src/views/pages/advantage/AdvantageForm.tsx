@@ -51,13 +51,13 @@ const AdvantageForm = ({ dialog, mutation, validation, onSubmit }: Props) => {
         helperText={validation.message("title")}
       />
 
-      <InputField
+      {/* <InputField
         label="Ikon"
         placeholder="Masukkan ikon"
         fullWidth
         value={value("icon", "")}
         onChange={(e) => setData({ icon: e.target.value })}
-      />
+      /> */}
 
       <InputField
         label="Deskripsi"

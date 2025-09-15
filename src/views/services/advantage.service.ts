@@ -15,8 +15,8 @@ export const getAdvantage = async (
   }
 
   const res = await fetch(urlQuery, {
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
 
   return res.json();
@@ -26,15 +26,15 @@ export const postAdvantage = async (event?: EventSend) => {
   const isNewRecord = !(event?.data && event.data().id);
   const res = await fetch(url.advantage, {
     method: isNewRecord ? "post" : "put",
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
     headers: {
       "content-type": "application/json",
     },
     body: JSON.stringify({ ...event!.data!() }),
   });
 
-   if (!res.ok) {
+  if (!res.ok) {
     throw res;
   }
 
@@ -44,8 +44,8 @@ next: { revalidate: 0 },
 export const deleteAdvantage = (event?: EventSend) => {
   return fetch(`${url.advantage}/${event?.params?.id}`, {
     method: "delete",
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
 };
 
@@ -53,8 +53,22 @@ export const getAdvantageID = async (
   event?: EventSend
 ): Promise<HttpResponse<Advantage>> => {
   const res = await fetch(`${url.advantage}/${event?.params?.id}`, {
-   signal: event?.ctr?.signal,
-next: { revalidate: 0 },
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
   });
+  return res.json();
+};
+
+export const patchStatusAdvantage = async (event?: EventSend) => {
+  const res = await fetch(`${url.advantage}/${event?.params?.id}`, {
+    method: "PATCH",
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
+  });
+
+  if (!res.ok) {
+    throw res;
+  }
+
   return res.json();
 };
