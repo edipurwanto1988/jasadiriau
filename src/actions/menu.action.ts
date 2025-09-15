@@ -6,7 +6,7 @@ import { unstable_cache } from "next/cache";
 export const getHeader = unstable_cache(
   async () => {
     const menus = await prisma.menu.findMany({
-      where: { position: "header", status: "active" },
+      where: { position: "header", status: "active", url: { not: null } },
     });
     return buildTree(menus);
   },

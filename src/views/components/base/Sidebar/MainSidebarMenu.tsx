@@ -112,7 +112,7 @@ const MainSidebarMenu = (props: Props) => {
               </ListItemButton>
 
               <RoleComponent
-                permission={['user']}
+                permission={["user"]}
                 then={
                   <>
                     <ListItemButton
