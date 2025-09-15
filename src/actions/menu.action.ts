@@ -17,7 +17,7 @@ export const getHeader = unstable_cache(
 export const getFooter = unstable_cache(
   async () => {
     const menus = await prisma.menu.findMany({
-      where: { position: "footer", status: "active" },
+      where: { position: "footer", status: "active", url: { not: null } },
     });
     return buildTree(menus);
   },
