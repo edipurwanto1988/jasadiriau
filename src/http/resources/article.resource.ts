@@ -7,6 +7,7 @@ export default class ArticleResource extends Resource {
       slug: this.slug,
       title: this.title,
       content: JSON.parse(this.content),
+      categoryId: +this.categoryId,
       metaTitle: this.metaTitle,
       metaDescription: this.metaDescription,
       metaKeywords: this.metaKeywords,

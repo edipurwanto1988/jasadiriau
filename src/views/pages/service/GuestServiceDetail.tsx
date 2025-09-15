@@ -26,6 +26,7 @@ import {
   postContact,
   postServiceView,
 } from "@/views/services/interactive.service";
+import ServiceRelated from "./ServiceRelated";
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
@@ -41,10 +42,12 @@ const GuestServiceDetail = ({ data, siteName }: Props) => {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
   };
+
   React.useEffect(() => {
     if (!data) return;
     postServiceView({ source: "detail", serviceId: data.id });
   }, [data]);
+
   return (
     <MainTemplate>
       <Box sx={{ width: "100%", minHeight: "100%", overflow: "hidden auto" }}>
@@ -336,6 +339,8 @@ const GuestServiceDetail = ({ data, siteName }: Props) => {
               </Stack>
             </Fade>
           </Box>
+
+          <ServiceRelated slug={data.slug ?? ""} />
           <Toolbar />
           <Toolbar />
         </Stack>

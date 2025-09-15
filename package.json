@@ -44,7 +44,7 @@
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
     "dnd-kit-sortable-tree": "^0.1.73",
-    "ezhooks": "^1.4.8",
+    "ezhooks": "^1.5.4",
     "framer-motion": "^12.23.12",
     "frexp": "^0.2.8",
     "jose": "^6.0.12",

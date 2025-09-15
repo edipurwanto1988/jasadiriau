@@ -209,7 +209,4 @@ const DataTablePage = <T,>({
   );
 };
 
-export default React.memo(
-  DataTablePage,
-  (prev, next) => prev.loading === next.loading && isEqual(prev.data, next.data)
-) as typeof DataTablePage;
+export default DataTablePage

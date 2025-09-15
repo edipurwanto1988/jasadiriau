@@ -3,6 +3,8 @@ import { EventSend } from "ezhooks";
 export const serviceUrl = {
   serviceAccount: `${process.env.NEXT_PUBLIC_BASE_URL}/api/service`,
   populer: `${process.env.NEXT_PUBLIC_BASE_URL}/api/service/populer`,
+  related: `${process.env.NEXT_PUBLIC_BASE_URL}/api/service/related`,
+  interactive: `${process.env.NEXT_PUBLIC_BASE_URL}/api/service/interactive`,
 };
 
 export const getService = async (
@@ -57,5 +59,23 @@ export const getServiceID = async (
     signal: event?.ctr?.signal,
     next: { revalidate: 0 },
   });
+  return res.json();
+};
+
+export const getServiceInteractive = async (
+  event?: EventSend
+): Promise<HttpResponse<ServiceView[]>> => {
+  let urlQuery = serviceUrl.interactive;
+  const search = new URLSearchParams(event?.params);
+  if (search.size > 0) {
+    urlQuery += "?";
+    urlQuery += search.toString();
+  }
+
+  const res = await fetch(urlQuery, {
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
+  });
+
   return res.json();
 };

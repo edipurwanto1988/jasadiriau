@@ -3,12 +3,31 @@ import { EventSend } from "ezhooks";
 export const businessUrl = {
   business: `${process.env.NEXT_PUBLIC_BASE_URL}/api/business-profile`,
   meta: `${process.env.NEXT_PUBLIC_BASE_URL}/api/business-profile/meta`,
+  interactive: `${process.env.NEXT_PUBLIC_BASE_URL}/api/business-profile/interactive`,
 };
 
 export const getBusinessProfile = async (
   event?: EventSend
 ): Promise<HttpResponse<BusinessProfile[]>> => {
   let urlQuery = businessUrl.business;
+  const search = new URLSearchParams(event?.params);
+  if (search.size > 0) {
+    urlQuery += "?";
+    urlQuery += search.toString();
+  }
+
+  const res = await fetch(urlQuery, {
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
+  });
+
+  return res.json();
+};
+
+export const getBusinessInteractive = async (
+  event?: EventSend
+): Promise<HttpResponse<BusinessView[]>> => {
+  let urlQuery = businessUrl.interactive;
   const search = new URLSearchParams(event?.params);
   if (search.size > 0) {
     urlQuery += "?";

@@ -24,6 +24,7 @@ import {
 } from "@tiptap/static-renderer";
 import { extensions } from "@/views/components/tiptap-templates/simple/extensions";
 import { Metadata } from "next";
+import ArticleRelated from "@/views/pages/article/ArticleRelated";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -172,6 +173,8 @@ export default async function Page({ params }: Props) {
         shareUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/article/${slug}`}
         title={data.title}
       />
+
+      <ArticleRelated slug={data.slug ?? ""} />
     </MainTemplate>
   );
 }

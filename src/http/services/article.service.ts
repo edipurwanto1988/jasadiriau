@@ -122,3 +122,44 @@ export const updateArticle = async ({
 export const deleteArticle = (id: number) => {
   return prisma.article.delete({ where: { id } });
 };
+
+export const getArticleRelated = async (qs: URLSearchParams) => {
+  const sql = Prisma.sql`
+      SELECT 
+        s.id,
+        s.slug,
+        s.title,
+        s.thumbnail,
+        c.name AS category_name
+      FROM articles s 
+      LEFT JOIN categories c ON c.id = s.category_id
+      WHERE 1=1
+      ${
+        qs.get("slug")
+          ? Prisma.sql`AND s.slug != ${qs.get("slug")!}`
+          : Prisma.empty
+      }
+      ${
+        qs.get("category_Id")
+          ? Prisma.sql`AND c.id = ${+qs.get("category_Id")!}`
+          : Prisma.empty
+      }
+      ORDER BY RANDOM()
+      LIMIT 8
+    `;
+
+  const relateds = await prisma.$queryRaw<
+    {
+      id: number;
+      slug: string;
+      title: string;
+      category_name: string;
+      thumbnail?: string;
+    }[]
+  >(sql);
+
+  return relateds.map((v) => ({
+    ...v,
+    thumbnail: v.thumbnail ?? "/images/placeholder.webp",
+  }));
+};

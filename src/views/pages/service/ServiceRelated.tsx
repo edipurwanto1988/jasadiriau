@@ -11,11 +11,15 @@ import Skeleton from "@mui/material/Skeleton";
 import { rupiah } from "@/utils/format";
 import React from "react";
 
-const ExcellentServiceSection = () => {
+type Props = {
+  slug: string;
+};
+
+const ServiceRelated = ({ slug }: Props) => {
   const router = useRouter();
   const startProgress = useProgress();
 
-  const { data, isLoading } = useSWR(serviceUrl.populer, (url) =>
+  const { data, isLoading } = useSWR(`${serviceUrl.related}?slug=${slug}`, (url) =>
     fetch(url)
       .then((resp) => resp.json())
       .then((resp) => resp.data)
@@ -23,15 +27,15 @@ const ExcellentServiceSection = () => {
   return (
     <Stack
       sx={{
-        p: 2,
         width: "100%",
         overflow: "hidden",
       }}
-      spacing={2}
+      mt={4}
+      spacing={3}
     >
       <Box>
         <Typography fontWeight={500} fontSize={22} lineHeight={"28px"}>
-          Jasa Unggulan
+          Jasa Lainya
         </Typography>
       </Box>
 
@@ -67,7 +71,7 @@ const ExcellentServiceSection = () => {
           : (data ?? []).map((value, i) => (
               <Stack
                 key={i}
-                width={223}
+                width={160}
                 spacing={1}
                 onClick={() => {
                   React.startTransition(() => {
@@ -82,9 +86,9 @@ const ExcellentServiceSection = () => {
                     overflow: "hidden",
                     borderRadius: "var(--mui-shape-borderRadius)",
                     position: "relative",
-                    width: 223,
-                    height: 223,
-                    backgroundImage: `url(${value.imageUrl})`,
+                    width: 160,
+                    height: 160,
+                    backgroundImage: `url(${value.image_url})`,
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center",
                     backgroundSize: "cover",
@@ -92,7 +96,9 @@ const ExcellentServiceSection = () => {
                   }}
                 ></Box>
                 <Box>
-                  <Typography variant="subtitle2">{value.categoryName}</Typography>
+                  <Typography variant="subtitle2">
+                    {value.category_name}
+                  </Typography>
                 </Box>
                 <Box>
                   <Typography
@@ -107,10 +113,7 @@ const ExcellentServiceSection = () => {
                 </Box>
 
                 <Box>
-                  <Typography
-                    fontWeight={500}
-                    variant="subtitle2"
-                  >
+                  <Typography fontWeight={500} variant="subtitle2">
                     {rupiah(value.price)}
                   </Typography>
                 </Box>
@@ -121,4 +124,4 @@ const ExcellentServiceSection = () => {
   );
 };
 
-export default ExcellentServiceSection;
+export default ServiceRelated;

@@ -44,6 +44,9 @@ export const servicePaginate = async (qs: URLSearchParams, userId?: number) => {
     },
     where,
     ...paginate(qs),
+    orderBy: {
+      [qs.get("orderBy") ?? "id"]: qs.get("order") ?? "desc",
+    },
   });
 
   const images = await prisma.image.findMany({
@@ -181,13 +184,25 @@ export const deleteService = (id: number) => {
 export const getServicePopuler = async () => {
   const sql = Prisma.sql`
     SELECT 
-     s.id,  s.name, s.slug, s.price::INT
-    FROM services s
+      s.id,
+      MAX(s.name) AS name, 
+      MAX(s.slug) AS slug, 
+      MAX(s.price)::INT AS price,
+      MAX(s.category_name) AS category_name
+    FROM (
+      SELECT 
+        s.id,
+        s.name, 
+        s.slug, 
+        s.price::INT,
+        c.name AS category_name
+      FROM services s
+      LEFT JOIN categories c ON c.id = s.category_id
+      WHERE s.status = 'active'
+    ) AS s
     LEFT JOIN service_views sv ON sv.service_id = s.id
-    WHERE s.status = 'active'
     GROUP BY s.id
-    ORDER BY 
-      count(sv.id)::INT DESC
+    ORDER BY  count(sv.id)::INT DESC
     LIMIT 10
   `;
 
@@ -213,6 +228,7 @@ export const getServicePopuler = async () => {
       name: v.name,
       slug: v.slug,
       price: v.price,
+      categoryName: v.category_name,
       imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${
         image?.imageUrl ?? "/images/placeholder.webp"
       }`,
@@ -221,9 +237,9 @@ export const getServicePopuler = async () => {
 };
 
 export const getServiceInteractive = async (qs: URLSearchParams) => {
-  const page = parseInt(qs.get("page") || "1", 10);
+  const page = parseInt(qs.get("page") || "0", 10);
   const perPage = parseInt(qs.get("per_page") || "25", 10);
-  const offset = (page - 1) * perPage;
+  const offset = page * perPage;
   const date = dayjs();
 
   const start_date = qs.get("start_date") ?? date.startOf("month");
@@ -273,7 +289,8 @@ export const getServiceInteractive = async (qs: URLSearchParams) => {
     prisma.$queryRaw(Prisma.sql`
        ${baseSql}
         SELECT 
-          * 
+          * ,
+          (SELECT count(sv.id)::INT FROM public.service_views sv WHERE sv.service_id = service_format.id) AS all
         FROM service_format
         ORDER BY 
           total ${Prisma.raw(`${qs.get("order") ?? "DESC"}`)}
@@ -285,4 +302,64 @@ export const getServiceInteractive = async (qs: URLSearchParams) => {
   ]);
 
   return { total, data };
+};
+
+export const getServiceRelated = async (qs: URLSearchParams) => {
+  const sql = Prisma.sql`
+      SELECT 
+        s.id,
+        s.slug,
+        s.name,
+        s.price::INT AS price,
+        c.name AS category_name
+      FROM services s 
+      LEFT JOIN categories c ON c.id = s.category_id
+      LEFT JOIN business_profiles bp ON bp.id = s.profile_id
+      
+      WHERE 1=1
+      ${
+        qs.get("slug")
+          ? Prisma.sql`AND s.slug != ${qs.get("slug")!}`
+          : Prisma.empty
+      }
+      ${
+        qs.get("categoryId")
+          ? Prisma.sql`AND c.id = ${+qs.get("categoryId")!}`
+          : Prisma.empty
+      }
+      ORDER BY RANDOM()
+      LIMIT 8
+    `;
+
+  const relateds = await prisma.$queryRaw<
+    {
+      id: number;
+      slug: string;
+      name: string;
+      price: number;
+      category_name: string;
+      image_url?: string;
+    }[]
+  >(sql);
+
+  const images = await prisma.image.findMany({
+    where: {
+      entityId: {
+        in: relateds.map((v) => v.id),
+      },
+      entityType: "service",
+    },
+  });
+
+  const newResult = relateds.map((val) => {
+    const image = images.find((f) => f.entityId === val.id);
+    if (image) {
+      Object.assign(val, {
+        image_url: image.imageUrl ?? "/images/placeholder.webp",
+      });
+    }
+    return val;
+  });
+
+  return newResult;
 };

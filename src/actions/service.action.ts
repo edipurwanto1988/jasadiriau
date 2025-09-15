@@ -102,3 +102,4 @@ export const getServiceByCategory = async (qs: Record<string, string>) => {
 export const getServiceAllSlug = cache(async () => {
   return prisma.service.findMany({ select: { slug: true } });
 });
+

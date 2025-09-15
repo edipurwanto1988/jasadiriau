@@ -11,6 +11,8 @@ import TooltipSidebarMenu from "../Tooltip/TooltipSidebarMenu";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { useApp } from "@/views/contexts/AppContext";
 import { styled } from "@mui/material/styles";
+import { useRouter } from "next/navigation";
+import { useProgress } from "react-transition-progress";
 
 export type SiderBarMenu = Array<{
   path?: string;
@@ -122,6 +124,8 @@ const menu: SiderBarMenu = [
 ];
 
 const SidebarMenu = () => {
+  const router = useRouter();
+  const startProgress = useProgress();
   const { trigger, isMobile, onClickOpen } = useApp();
 
   return (
@@ -130,11 +134,11 @@ const SidebarMenu = () => {
       variant={isMobile ? "temporary" : "permanent"}
       color="primary"
       open={trigger.open}
-      slotProps={{
-        root: {
-          keepMounted: isMobile, // Better open performance on mobile.
-        },
-      }}
+      // slotProps={{
+      //   root: {
+      //     keepMounted: isMobile, // Better open performance on mobile.
+      //   },
+      // }}
     >
       <Toolbar
         sx={{
@@ -151,7 +155,17 @@ const SidebarMenu = () => {
           },
         }}
       >
-        <Typography sx={{ flexGrow: 1 }} align="center" fontWeight={500}>
+        <Typography
+          sx={{ flexGrow: 1, cursor: "pointer" }}
+          align="center"
+          fontWeight={500}
+          onClick={() => {
+            React.startTransition(() => {
+              startProgress();
+              router.push("/");
+            });
+          }}
+        >
           {trigger.open ? "Jasa Di Riau" : "JR"}
         </Typography>
         <IconButton

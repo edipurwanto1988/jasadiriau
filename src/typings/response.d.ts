@@ -241,3 +241,19 @@ type Article = {
   };
   status: "active" | "inactive" | "pending";
 };
+
+type BusinessView = {
+  id: number;
+  name: string;
+  total: number;
+  all: number;
+  views: { date: string; total: number }[];
+};
+
+type ServiceView = {
+  id: number;
+  name: string;
+  total: number;
+  all: number;
+  views: { date: string; total: number }[];
+};

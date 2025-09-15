@@ -3,9 +3,10 @@ import * as utils from "ezhooks/lib/utils";
 
 export const articleUrl = {
   index: `${process.env.NEXT_PUBLIC_BASE_URL}/api/article`,
+  related: `${process.env.NEXT_PUBLIC_BASE_URL}/api/article/related`,
 };
 
-export const getArticles= async (
+export const getArticles = async (
   event?: EventSend
 ): Promise<HttpResponse<Article[]>> => {
   let urlQuery = articleUrl.index;

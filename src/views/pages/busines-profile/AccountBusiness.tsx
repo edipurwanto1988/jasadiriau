@@ -25,6 +25,11 @@ import RoleComponent from "@/views/components/base/Role/RoleComponent";
 import { useAuth } from "@/views/contexts/AuthContext";
 import { useProgress } from "react-transition-progress";
 import { Link } from "react-transition-progress/next";
+import LoadComponent from "@/views/components/base/LoadComponent/LoadComponent";
+
+const QueryStatsOutlinedIcon = LoadComponent(
+  () => import("@mui/icons-material/QueryStatsOutlined")
+);
 
 const AccountBusiness = () => {
   const auth = useAuth();
@@ -43,10 +48,11 @@ const AccountBusiness = () => {
     service: getBusinessProfile,
     selector: (resp) => resp.data,
     total: (resp) => resp.total ?? 0,
+    replaceUrl: true,
+    debounceTime: 1000,
     pagination: {
       startPage: 0,
     },
-    replaceUrl: true,
   });
 
   const onClickDelete = React.useCallback(
@@ -117,7 +123,28 @@ const AccountBusiness = () => {
               py={0.5}
               px={2}
               sx={{ borderBottom: 1, borderColor: "divider" }}
+              spacing={2}
             >
+              <div>
+                <Button
+                  size="small"
+                  color="success"
+                  variant="outlined"
+                  sx={{ borderRadius: 0 }}
+                  startIcon={<QueryStatsOutlinedIcon />}
+                  onClick={() => {
+                    React.startTransition(() => {
+                      startProgress();
+                      router.push(`/admin/business-profile/interactive`, {
+                        scroll: false,
+                      });
+                    });
+                  }}
+                >
+                  Lihat Pengunjung Bisnis
+                </Button>
+              </div>
+
               <div>
                 <Button
                   variant={
@@ -148,7 +175,6 @@ const AccountBusiness = () => {
           loading={table.loading}
           tableProps={{ size: "small" }}
           column={[
-
             {
               label: "Foto",
               value: (value) => (

@@ -4,34 +4,39 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import { useProgress } from "react-transition-progress";
-import { serviceUrl } from "@/views/services/service.service";
 
 import useSWR from "swr";
 import Skeleton from "@mui/material/Skeleton";
-import { rupiah } from "@/utils/format";
 import React from "react";
+import { articleUrl } from "@/views/services/article.service";
 
-const ExcellentServiceSection = () => {
+type Props = {
+  slug: string;
+};
+
+const ArticleRelated = ({ slug }: Props) => {
   const router = useRouter();
   const startProgress = useProgress();
 
-  const { data, isLoading } = useSWR(serviceUrl.populer, (url) =>
-    fetch(url)
-      .then((resp) => resp.json())
-      .then((resp) => resp.data)
+  const { data, isLoading } = useSWR(
+    `${articleUrl.related}?slug=${slug}`,
+    (url) =>
+      fetch(url)
+        .then((resp) => resp.json())
+        .then((resp) => resp.data)
   );
   return (
     <Stack
       sx={{
-        p: 2,
         width: "100%",
         overflow: "hidden",
       }}
-      spacing={2}
+      mt={4}
+      spacing={3}
     >
       <Box>
         <Typography fontWeight={500} fontSize={22} lineHeight={"28px"}>
-          Jasa Unggulan
+          Artikel Lainya
         </Typography>
       </Box>
 
@@ -67,12 +72,12 @@ const ExcellentServiceSection = () => {
           : (data ?? []).map((value, i) => (
               <Stack
                 key={i}
-                width={223}
+                width={250}
                 spacing={1}
                 onClick={() => {
                   React.startTransition(() => {
                     startProgress();
-                    router.push(`/jasa/${value.slug}`);
+                    router.push(`/article/${value.slug}`);
                   });
                 }}
                 sx={{ cursor: "pointer" }}
@@ -82,9 +87,9 @@ const ExcellentServiceSection = () => {
                     overflow: "hidden",
                     borderRadius: "var(--mui-shape-borderRadius)",
                     position: "relative",
-                    width: 223,
-                    height: 223,
-                    backgroundImage: `url(${value.imageUrl})`,
+                    width: 250,
+                    height: 160,
+                    backgroundImage: `url(${value.thumbnail})`,
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center",
                     backgroundSize: "cover",
@@ -92,7 +97,9 @@ const ExcellentServiceSection = () => {
                   }}
                 ></Box>
                 <Box>
-                  <Typography variant="subtitle2">{value.categoryName}</Typography>
+                  <Typography variant="subtitle2">
+                    {value.category_name}
+                  </Typography>
                 </Box>
                 <Box>
                   <Typography
@@ -102,16 +109,7 @@ const ExcellentServiceSection = () => {
                     color="#4A739C"
                     alignSelf={"stretch"}
                   >
-                    {value.name}
-                  </Typography>
-                </Box>
-
-                <Box>
-                  <Typography
-                    fontWeight={500}
-                    variant="subtitle2"
-                  >
-                    {rupiah(value.price)}
+                    {value.title}
                   </Typography>
                 </Box>
               </Stack>
@@ -121,4 +119,4 @@ const ExcellentServiceSection = () => {
   );
 };
 
-export default ExcellentServiceSection;
+export default ArticleRelated;
