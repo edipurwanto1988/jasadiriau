@@ -59,7 +59,7 @@ export const createPage = async ({
     data: {
       ...payload,
       metaTitle: payload.title,
-      slug: slugify(`${padStart} ${payload.title}`),
+      slug: slugify(payload.title),
       status: status as StatusType,
       content
     },
