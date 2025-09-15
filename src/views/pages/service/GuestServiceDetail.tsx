@@ -192,9 +192,9 @@ const GuestServiceDetail = ({ data, siteName }: Props) => {
                           phoneNumber: v.whatsappNumber,
                           contactId: v.id,
                         });
-                        // router.push(
-                        //   `${process.env.NEXT_PUBLIC_WA_LINK}?phone=${phone}&text=${text}`
-                        // );
+                        router.push(
+                          `${process.env.NEXT_PUBLIC_WA_LINK}?phone=${phone}&text=${text}`
+                        );
                       }}
                     >
                       Chat Via Whatsapp
@@ -340,7 +340,7 @@ const GuestServiceDetail = ({ data, siteName }: Props) => {
             </Fade>
           </Box>
 
-          <ServiceRelated slug={data.slug ?? ""} />
+          <ServiceRelated slug={data?.slug ?? ""} />
           <Toolbar />
           <Toolbar />
         </Stack>
