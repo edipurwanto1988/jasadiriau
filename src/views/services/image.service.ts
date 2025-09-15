@@ -2,7 +2,7 @@ import { EventSend } from "ezhooks";
 import * as utils from "ezhooks/lib/utils";
 
 export const imageUrl = {
-  image: `${process.env.NEXT_PUBLIC_BASE_URL}/api/image`,
+  image: `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload`,
   gallery: `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/gallery`,
 };
 
