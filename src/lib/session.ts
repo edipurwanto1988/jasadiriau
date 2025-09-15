@@ -1,7 +1,7 @@
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { cache, use } from "react";
+import { cache } from "react";
 import { User } from "@/generated/prisma";
 import { v4 as uuid } from "uuid";
 

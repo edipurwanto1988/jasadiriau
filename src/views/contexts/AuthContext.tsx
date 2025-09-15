@@ -23,7 +23,7 @@ const AuthProvider = (props: Props) => {
         isAuth: false,
         userId: 0,
         role: "user" as RoleType,
-        ...props.initialState,
+        ...(props.initialState ?? {}),
       }}
     >
       {props.children}

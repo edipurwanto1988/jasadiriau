@@ -9,6 +9,7 @@ const HomeMenu = () => {
   if (!auth.isAuth) {
     return null;
   }
+  
   return (
     <Box>
       <Link

@@ -1,23 +1,11 @@
 "use client";
 import React from "react";
 import DataTablePage from "@/views/components/base/DataTable/DataTablePage";
-import Dropdown, {
-  DropdownProps,
-} from "@/views/components/base/Dropdown/Dropdown";
-import PageTemplate from "@/views/components/templates/PageTemplate";
-import Link from "@mui/material/Link";
-import StatusChip from "@/views/components/base/Chip/StatusChip";
-import { getPagination } from "@/utils/table";
-import { useSnackbar } from "@/views/contexts/SnackbarContext";
-import { useAlert } from "@/views/contexts/AlertContext";
-import { deleteService, getService } from "@/views/services/service.service";
-import { categoryUrl } from "@/views/services/category.service";
-import { useAuth } from "@/views/contexts/AuthContext";
-import useTable from "ezhooks/lib/useTable";
-import useMultiDialog from "@/views/hooks/useMultiDialog";
-import useSWRImmutable from "swr/immutable";
-import { getUser } from "@/views/services/user.service";
+import Dropdown from "@/views/components/base/Dropdown/Dropdown";
 import Avatar from "@mui/material/Avatar";
+import { getPagination } from "@/utils/table";
+import { getUser } from "@/views/services/user.service"
+import useTable from "ezhooks/lib/useTable";;
 import useDialog from "@/views/hooks/useDialog";
 import UserRoleForm from "./UserRoleForm";
 
