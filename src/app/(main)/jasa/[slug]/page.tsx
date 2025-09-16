@@ -78,7 +78,7 @@ export default async function Page({ params }: Props) {
           }}
           spacing={4}
         >
-          <Stack spacing={2}>
+          <Stack spacing={1}>
             <BackButton />
             <Breadcrumbs
               text={data.name ?? ""}
