@@ -256,7 +256,12 @@ const ServiceDetail = ({ id }: { id: number }) => {
               />
             </Tabs>
 
-            <Fade key={"description"} in={tab === "description"} unmountOnExit>
+            <Fade
+              key={"description"}
+              in={tab === "description"}
+              unmountOnExit
+              timeout={{ enter: 1000, exit: 0 }}
+            >
               <Stack
                 direction={"column"}
                 justifyContent={"center"}
@@ -351,14 +356,24 @@ const ServiceDetail = ({ id }: { id: number }) => {
               </Stack>
             </Fade>
 
-            <Fade key={"gallery"} in={tab === "gallery"} unmountOnExit>
+            <Fade
+              key={"gallery"}
+              in={tab === "gallery"}
+              unmountOnExit
+              timeout={{ enter: 1000, exit: 0 }}
+            >
               <Stack direction={"column"} spacing={1}>
                 <ServiceGalleryForm id={id} />
                 <ServiceGallery loading={isLoading} url={data?.images ?? []} />
               </Stack>
             </Fade>
 
-            <Fade key={"validation"} in={tab === "validation"} unmountOnExit>
+            <Fade
+              key={"validation"}
+              in={tab === "validation"}
+              unmountOnExit
+              timeout={{ enter: 1000, exit: 0 }}
+            >
               <div>
                 <ValidationItem
                   data={data?.validations ?? []}

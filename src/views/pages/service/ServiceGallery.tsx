@@ -127,7 +127,7 @@ const ServiceGallery = ({ url, loading }: Props) => {
           ))}
         </ImageList>
       ) : (
-        <Typography>Gambar Belum Tersedia.</Typography>
+        <Typography align="center" py={2}>Gambar Belum Tersedia.</Typography>
       )}
 
       <ImageView open={dialog.open} url={image} onClose={dialog.closeDialog} />

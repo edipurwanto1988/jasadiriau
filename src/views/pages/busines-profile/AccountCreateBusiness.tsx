@@ -184,7 +184,7 @@ const AccountCreateBusiness = ({
 
               <TextField
                 label="Deskripsi"
-                rows={6}
+                rows={10}
                 multiline
                 placeholder="Masukkan deskripsi"
                 name="description"

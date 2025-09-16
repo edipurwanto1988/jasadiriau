@@ -21,6 +21,6 @@ export const authRegister = async (credential: string) => {
   });
 
   await createSession({ ...user, picture: data.picture });
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return user;
 };

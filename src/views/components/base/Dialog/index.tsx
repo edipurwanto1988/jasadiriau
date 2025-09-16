@@ -135,7 +135,7 @@ const Dialog = ({
               lg: 0,
             }}
           >
-            <Typography variant="subtitle1">{title}</Typography>
+            <Typography variant="subtitle1" fontWeight={500} py={1.5}>{title}</Typography>
           </Box>
           {props.onClose ? (
             <Box>

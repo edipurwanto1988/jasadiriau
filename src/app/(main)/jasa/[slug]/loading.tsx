@@ -5,7 +5,7 @@ import MainTemplate from "@/views/components/templates/MainTemplate";
 export default async function Loading() {
   return (
     <MainTemplate>
-      <DetailPageLoading />;
+      <DetailPageLoading />
     </MainTemplate>
   );
 }

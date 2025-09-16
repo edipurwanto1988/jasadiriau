@@ -20,10 +20,12 @@ const ServiceRelated = ({ slug }: Props) => {
   const router = useRouter();
   const startProgress = useProgress();
 
-  const { data, isLoading } = useSWR(`${serviceUrl.related}?slug=${slug}`, (url) =>
-    fetch(url)
-      .then((resp) => resp.json())
-      .then((resp) => resp.data)
+  const { data, isLoading } = useSWR(
+    `${serviceUrl.related}?slug=${slug}`,
+    (url) =>
+      fetch(url)
+        .then((resp) => resp.json())
+        .then((resp) => resp.data)
   );
   return (
     <Stack
@@ -94,6 +96,8 @@ const ServiceRelated = ({ slug }: Props) => {
                     backgroundPosition: "center",
                     backgroundSize: "cover",
                     aspectRatio: "1/1",
+                    border: 1,
+                    borderColor: "divider",
                   }}
                 ></Box>
                 <Box>

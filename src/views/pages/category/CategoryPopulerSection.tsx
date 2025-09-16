@@ -73,7 +73,7 @@ const CategoryPopulerSection = () => {
                 onClick={() => {
                   React.startTransition(() => {
                     startProgress();
-                    router.push(`/catgory/${value.slug}`);
+                    router.push(`/category/${value.slug}`);
                   });
                 }}
                 sx={{ cursor: "pointer" }}

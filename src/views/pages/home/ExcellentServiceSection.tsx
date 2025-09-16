@@ -89,10 +89,14 @@ const ExcellentServiceSection = () => {
                     backgroundPosition: "center",
                     backgroundSize: "cover",
                     aspectRatio: "1/1",
+                    border: 1,
+                    borderColor: "divider",
                   }}
                 ></Box>
                 <Box>
-                  <Typography variant="subtitle2">{value.categoryName}</Typography>
+                  <Typography variant="subtitle2">
+                    {value.categoryName}
+                  </Typography>
                 </Box>
                 <Box>
                   <Typography
@@ -107,10 +111,7 @@ const ExcellentServiceSection = () => {
                 </Box>
 
                 <Box>
-                  <Typography
-                    fontWeight={500}
-                    variant="subtitle2"
-                  >
+                  <Typography fontWeight={500} variant="subtitle2">
                     {rupiah(value.price)}
                   </Typography>
                 </Box>
