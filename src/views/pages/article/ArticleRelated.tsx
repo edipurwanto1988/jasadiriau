@@ -1,7 +1,7 @@
 "use client";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
+import Typography from "@mui/material/Typography";
 
 import useSWR from "swr";
 import Skeleton from "@mui/material/Skeleton";
@@ -14,7 +14,6 @@ type Props = {
 };
 
 const ArticleRelated = ({ slug }: Props) => {
-
   const { data, isLoading } = useSWR(
     `${articleUrl.related}?slug=${slug}`,
     (url) =>
@@ -22,6 +21,11 @@ const ArticleRelated = ({ slug }: Props) => {
         .then((resp) => resp.json())
         .then((resp) => resp.data)
   );
+
+  if (!data?.length) {
+    return null;
+  }
+  
   return (
     <Stack
       sx={{
