@@ -48,7 +48,7 @@ const AllCategorySection = ({ data }: Props) => {
           <Box
             key={i}
             sx={{
-              p: 2,
+              p: 1,
               borderRadius: "var(--mui-shape-borderRadius)",
               border: 1,
               borderColor: "#cedbe8",
