@@ -20,6 +20,13 @@ const SearchSection = async () => {
           lg: 480,
           xl: 480,
         },
+        minHeight: {
+          xs: 216,
+          sm: 256,
+          md: 320,
+          lg: 480,
+          xl: 480,
+        },
         mx: {
           xs: 0,
           sm: 0,
@@ -27,7 +34,7 @@ const SearchSection = async () => {
           lg: 2,
           xl: 2,
         },
-        
+
         borderRadius: {
           xs: 0,
           sm: 0,

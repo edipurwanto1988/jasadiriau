@@ -11,7 +11,7 @@ import Divider from "@mui/material/Divider";
 const MainFooter = async () => {
   const [setting, menus] = await Promise.all([getSetting(), getFooter()]);
   return (
-    <footer>
+    <footer style={{ backgroundColor: "#f8fafc", opacity: 1 }}>
       <Box
         sx={{
           px: {

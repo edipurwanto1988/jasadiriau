@@ -45,7 +45,7 @@ const MainHeader = async () => {
             alignItems={"center"}
             spacing={2}
           >
-          <DrawerMenu setting={setting} menu={menus} />
+            <DrawerMenu setting={setting} menu={menus} />
 
             <Box>
               <Link
@@ -78,7 +78,9 @@ const MainHeader = async () => {
 
               {menus.map((v) => (
                 <Box key={v.id}>
-                  <Link href={v.url} prefetch={false} scroll={false}>{v.name}</Link>
+                  <Link href={v.url} prefetch={false} scroll={false}>
+                    {v.name}
+                  </Link>
                 </Box>
               ))}
             </Stack>

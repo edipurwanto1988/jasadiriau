@@ -4,18 +4,19 @@ import Toolbar from "@mui/material/Toolbar";
 
 type Props = {
   children?: React.ReactNode;
-  columnProps?: StackProps
+  columnProps?: StackProps;
 };
 
 const MainTemplate = (props: Props) => {
   return (
-    <main>
+    <main style={{ backgroundColor: "#f8fafc", opacity: 1, minHeight:"100vh" }}>
       <Stack
         flex={"1 1 0%"}
         direction={"row"}
         justifyContent={"center"}
         boxSizing={"border-box"}
         minHeight={"100%"}
+        height={"100%"}
         width={"100%"}
         sx={{
           px: {
