@@ -5,15 +5,11 @@ import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useRouter } from "next/navigation";
-import { useProgress } from "react-transition-progress";
 import { categoryUrl } from "@/views/services/category.service";
 import useSWR from "swr";
+import Link from "next/link";
 
 const CategoryPopulerSection = () => {
-  const router = useRouter();
-  const startProgress = useProgress();
-
   const { data, isLoading } = useSWR(categoryUrl.populer, (url) =>
     fetch(url)
       .then((resp) => resp.json())
@@ -41,12 +37,23 @@ const CategoryPopulerSection = () => {
       <Stack
         direction={"row"}
         alignItems={"stretch"}
-        gap={"12px"}
         sx={{
           display: "grid",
-          gridTemplateColumns: "repeat(5, 176px)",
+          gridTemplateColumns: {
+            xs: "repeat(2, 160px)",
+            sm: "repeat(2, 160px)",
+            md: "repeat(4, 160px)",
+            lg: "repeat(5, 176px)",
+            xl: "repeat(5, 176px)",
+          },
           width: "100%",
-          gap: "12px",
+          gap: {
+            xs: "18px",
+            sm: "18px",
+            md: "18px",
+            lg: "12px",
+            xl: "12px",
+          },
         }}
       >
         {isLoading
@@ -67,15 +74,11 @@ const CategoryPopulerSection = () => {
           : (data ?? []).map((value, i) => (
               <Stack
                 key={i}
+                component={Link}
+                href={`/category/${value.slug}`}
                 flexShrink={0}
                 width={160}
                 spacing={2}
-                onClick={() => {
-                  React.startTransition(() => {
-                    startProgress();
-                    router.push(`/category/${value.slug}`);
-                  });
-                }}
                 sx={{ cursor: "pointer" }}
               >
                 <Box
@@ -88,8 +91,20 @@ const CategoryPopulerSection = () => {
                     backgroundPosition: "center",
                     backgroundSize: "cover",
                     aspectRatio: "1/1",
-                    width: 176,
-                    height: 176,
+                    width: {
+                      xs: "160px",
+                      sm: "160px",
+                      md: "160px",
+                      lg: "176px",
+                      xl: "176px",
+                    },
+                    height: {
+                      xs: "160px",
+                      sm: "160px",
+                      md: "160px",
+                      lg: "176px",
+                      xl: "176px",
+                    },
                   }}
                 ></Box>
                 <Box>
