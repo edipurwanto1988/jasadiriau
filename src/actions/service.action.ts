@@ -15,7 +15,13 @@ export const getServiceBySlug = cache(async (slug: string) => {
           businessName: true,
           websiteUrl: true,
           BusinessContact: true,
-          BusinessLocation: true,
+          BusinessLocation: {
+            include: {
+              province: true,
+              regency: true,
+              district: true,
+            },
+          },
           BusinessSocial: true,
         },
       },
@@ -42,6 +48,19 @@ export const getServiceBySlug = cache(async (slug: string) => {
 
   return {
     ...model,
+    businessProfile: {
+      ...model.businessProfile,
+      BusinessLocation: model.businessProfile.BusinessLocation.map((loc) => ({
+        id: loc.id,
+        provinceId: loc.provinceId,
+        provinceName: loc.province.name,
+        regencyId: loc.regencyId,
+        regencyName: loc.regency.name,
+        districtId: loc.districtId,
+        districtName: loc.district.name,
+        address: loc.address,
+      })),
+    },
     price: +(model.price || 0),
     imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${
       image?.imageUrl ?? "/images/placeholder.webp"
@@ -102,4 +121,3 @@ export const getServiceByCategory = async (qs: Record<string, string>) => {
 export const getServiceAllSlug = cache(async () => {
   return prisma.service.findMany({ select: { slug: true } });
 });
-
