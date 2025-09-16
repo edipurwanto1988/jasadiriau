@@ -86,7 +86,7 @@ const ServiceListCard = ({ isGuest, loading, data }: Props) => {
                       }
                       prefetch={false}
                       scroll={false}
-                      style={{ color: "var(--blue-color)" }}
+                      style={{ color: "var(--blue-color)", fontSize: "16px" }}
                     >
                       {value.name}
                     </Link>

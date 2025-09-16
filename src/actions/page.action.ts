@@ -25,7 +25,7 @@ export const getPageBySlug = cache(async (slug: string) => {
 
 export const getPageAllSlug = cache(async () => {
   return prisma.page.findMany({
-    select: { slug: true },
+    select: { slug: true, updatedAt: true },
     where: { status: "active" },
   });
 });

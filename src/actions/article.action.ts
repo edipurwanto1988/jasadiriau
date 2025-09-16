@@ -35,7 +35,7 @@ export const getArticleBySlug = cache(async (slug: string) => {
 
 export const getArticleAllSlug = cache(async () => {
   return prisma.article.findMany({
-    select: { slug: true },
+    select: { slug: true, updatedAt: true },
     where: { status: "active" },
   });
 });

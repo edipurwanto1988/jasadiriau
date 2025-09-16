@@ -30,7 +30,7 @@ const CardSearch = ({ loading, data }: Props) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        gap:2
+        gap: 2,
       }}
     >
       <Stack flexGrow={1} direction={"column"} spacing={1}>
@@ -48,7 +48,7 @@ const CardSearch = ({ loading, data }: Props) => {
                   }
                   prefetch={false}
                   scroll={false}
-                  style={{ color: "var(--blue-color)" }}
+                  style={{ color: "var(--blue-color)", fontSize: "16px",textDecoration:"underline", textUnderlineOffset:"4px" }}
                 >
                   {data?.name ?? "-"}
                 </ILink>
@@ -80,7 +80,7 @@ const CardSearch = ({ loading, data }: Props) => {
         {loading ? (
           <Skeleton width={"100%"} />
         ) : (
-          <Typography component={"div"} variant="caption">
+          <Typography component={"div"} variant="caption" fontSize={13}>
             {`${data?.locations.at(0)?.provinceName ?? ""}, ${
               data?.locations.at(0)?.regencyName ?? ""
             }, ${data?.locations.at(0)?.districtName ?? ""}`}
@@ -105,6 +105,7 @@ const CardSearch = ({ loading, data }: Props) => {
                   component={"div"}
                   variant="caption"
                   fontWeight={500}
+                  fontSize={13}
                 >
                   {formatIndoPhone(contact.whatsapp)}
                 </Typography>

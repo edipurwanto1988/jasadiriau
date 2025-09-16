@@ -2,18 +2,14 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useRouter } from "next/navigation";
-import { useProgress } from "react-transition-progress";
 import { serviceUrl } from "@/views/services/service.service";
-
 import useSWR from "swr";
 import Skeleton from "@mui/material/Skeleton";
 import { rupiah } from "@/utils/format";
 import React from "react";
+import Link from "next/link";
 
 const ExcellentServiceSection = () => {
-  const router = useRouter();
-  const startProgress = useProgress();
 
   const { data, isLoading } = useSWR(serviceUrl.populer, (url) =>
     fetch(url)
@@ -66,16 +62,11 @@ const ExcellentServiceSection = () => {
             ))
           : (data ?? []).map((value, i) => (
               <Stack
+                component={Link}
+                href={`/jasa/${value.slug}`}
                 key={i}
                 width={223}
                 spacing={1}
-                onClick={() => {
-                  React.startTransition(() => {
-                    startProgress();
-                    router.push(`/jasa/${value.slug}`);
-                  });
-                }}
-                sx={{ cursor: "pointer" }}
               >
                 <Box
                   sx={{
@@ -101,8 +92,8 @@ const ExcellentServiceSection = () => {
                 <Box>
                   <Typography
                     lineHeight={"21px"}
-                    fontWeight={400}
-                    variant="subtitle2"
+                    fontWeight={500}
+                    variant="subtitle1"
                     color="#4A739C"
                     alignSelf={"stretch"}
                   >

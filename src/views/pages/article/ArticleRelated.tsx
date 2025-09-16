@@ -1,22 +1,19 @@
 "use client";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import { useRouter } from "next/navigation";
-import { useProgress } from "react-transition-progress";
+import Typography from "@mui/material/Typography"
 
 import useSWR from "swr";
 import Skeleton from "@mui/material/Skeleton";
 import React from "react";
 import { articleUrl } from "@/views/services/article.service";
+import Link from "next/link";
 
 type Props = {
   slug: string;
 };
 
 const ArticleRelated = ({ slug }: Props) => {
-  const router = useRouter();
-  const startProgress = useProgress();
 
   const { data, isLoading } = useSWR(
     `${articleUrl.related}?slug=${slug}`,
@@ -72,14 +69,10 @@ const ArticleRelated = ({ slug }: Props) => {
           : (data ?? []).map((value, i) => (
               <Stack
                 key={i}
+                component={Link}
+                href={`/article/${value.slug}`}
                 width={250}
                 spacing={1}
-                onClick={() => {
-                  React.startTransition(() => {
-                    startProgress();
-                    router.push(`/article/${value.slug}`);
-                  });
-                }}
                 sx={{ cursor: "pointer" }}
               >
                 <Box

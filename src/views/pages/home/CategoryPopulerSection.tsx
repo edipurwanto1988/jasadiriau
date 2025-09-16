@@ -4,14 +4,11 @@ import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useRouter } from "next/navigation";
-import { useProgress } from "react-transition-progress";
 import { categoryUrl } from "@/views/services/category.service";
 import useSWR from "swr";
+import Link from "next/link";
 
 const CategoryPopulerSection = () => {
-  const router = useRouter();
-  const startProgress = useProgress();
 
   const { data, isLoading } = useSWR(categoryUrl.populer, (url) =>
     fetch(url)
@@ -68,16 +65,11 @@ const CategoryPopulerSection = () => {
           : (data ?? []).map((value, i) => (
               <Stack
                 key={i}
+                href={`/category/${value.slug}`}
+                component={Link}
                 flexShrink={0}
                 width={160}
                 spacing={2}
-                onClick={() => {
-                  React.startTransition(() => {
-                    startProgress();
-                    router.push(`/category/${value.slug}`);
-                  });
-                }}
-                sx={{ cursor: "pointer" }}
               >
                 <Box
                   sx={{

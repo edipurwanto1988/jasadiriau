@@ -3,23 +3,19 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useRouter } from "next/navigation";
-import { useProgress } from "react-transition-progress";
 import { serviceUrl } from "@/views/services/service.service";
 
 import useSWR from "swr";
 import Skeleton from "@mui/material/Skeleton";
 import { rupiah } from "@/utils/format";
 import React from "react";
+import Link from "next/link";
 
 type Props = {
   slug: string;
 };
 
 const ServiceRelated = ({ slug }: Props) => {
-  const router = useRouter();
-  const startProgress = useProgress();
-
   const { data, isLoading } = useSWR(
     `${serviceUrl.related}?slug=${slug}`,
     (url) =>
@@ -27,6 +23,11 @@ const ServiceRelated = ({ slug }: Props) => {
         .then((resp) => resp.json())
         .then((resp) => resp.data)
   );
+
+  if (!data?.length) {
+    return null;
+  }
+
   return (
     <Stack
       sx={{
@@ -73,15 +74,11 @@ const ServiceRelated = ({ slug }: Props) => {
             ))
           : (data ?? []).map((value, i) => (
               <Stack
+                component={Link}
+                href={`/jasa/${value.slug}`}
                 key={i}
                 width={160}
                 spacing={1}
-                onClick={() => {
-                  React.startTransition(() => {
-                    startProgress();
-                    router.push(`/jasa/${value.slug}`);
-                  });
-                }}
                 sx={{ cursor: "pointer" }}
               >
                 <Box
@@ -111,6 +108,7 @@ const ServiceRelated = ({ slug }: Props) => {
                     fontWeight={400}
                     variant="subtitle2"
                     color="#4A739C"
+                    fontSize={16}
                     alignSelf={"stretch"}
                   >
                     {value.name}

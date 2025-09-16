@@ -6,7 +6,13 @@ import { cache } from "react";
 export const getCategories = unstable_cache(
   async () =>
     prisma.category.findMany({
-      select: { id: true, name: true, slug: true, imageUrl: true },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        imageUrl: true,
+        updatedAt: true,
+      },
       orderBy: {
         name: "asc",
       },

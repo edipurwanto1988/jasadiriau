@@ -53,7 +53,7 @@ export const getBusinessBySlug = cache(async (slug: string) => {
 
 export const getBusinessAllSlug = cache(async () => {
   return prisma.businessProfile.findMany({
-    select: { slug: true },
+    select: { slug: true, updatedAt: true },
     where: {
       slug: {
         not: null,

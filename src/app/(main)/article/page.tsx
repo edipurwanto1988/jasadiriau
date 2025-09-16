@@ -93,7 +93,6 @@ export default async function Page({ searchParams }: Props) {
         <Stack direction={"column"} spacing={1}>
           {data.map((value, i) => (
             <Paper
-            //   variant="outlined"
             elevation={0}
               key={i}
               sx={{
