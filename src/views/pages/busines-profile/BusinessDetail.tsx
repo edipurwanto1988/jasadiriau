@@ -142,6 +142,8 @@ const BusinessDetail = ({ id, role }: { id: number; role?: RoleType }) => {
                   height: 128,
                   borderRadius: "8px",
                   backgroundColor: "var(--input-bg-color)",
+                  border: 1,
+                  borderColor: "divider",
                 }}
               >
                 <Image

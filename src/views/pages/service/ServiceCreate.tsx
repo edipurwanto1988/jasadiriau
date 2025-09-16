@@ -13,6 +13,7 @@ import useSWR from "swr/immutable";
 import useZod from "@/views/hooks/useZod";
 import ServiceForm from "./ServiceForm";
 import { UseDialog } from "@/views/hooks/useDialog";
+import { useSWRConfig } from "swr";
 
 type Props = {
   dialog: UseDialog;
@@ -23,12 +24,16 @@ const ServiceCreate = ({ dialog, callback }: Props) => {
   const ref = React.useRef<HTMLFormElement | null>(null);
   const openSnackbar = useSnackbar();
 
+  const { mutate } = useSWRConfig();
   const { data: dataCategory } = useSWR<Category[]>(
     dialog.open ? categoryUrl.all : null,
     (url) =>
       fetch(url)
         .then((resp) => resp.json())
-        .then((resp) => resp.data)
+        .then((resp) => resp.data),
+    {
+      dedupingInterval: 0,
+    }
   );
 
   const { data: dataBusiness } = useSWR<BusinessProfile[]>(
@@ -36,7 +41,10 @@ const ServiceCreate = ({ dialog, callback }: Props) => {
     (url) =>
       fetch(url)
         .then((resp) => resp.json())
-        .then((resp) => resp.data)
+        .then((resp) => resp.data),
+    {
+      dedupingInterval: 0,
+    }
   );
 
   const mutation = useMutation({
@@ -95,14 +103,19 @@ const ServiceCreate = ({ dialog, callback }: Props) => {
       primary: val.name,
       value: val.id,
     }));
-  }, [dataCategory]);
+  }, [dataCategory, dialog.open]);
 
   const businessMemo = React.useMemo(() => {
     return (dataBusiness ?? []).map((val) => ({
       primary: val.businessName,
       value: val.id,
     }));
-  }, [dataBusiness]);
+  }, [dataBusiness, dialog.open]);
+
+  React.useEffect(() => {
+    mutate(categoryUrl.all)
+    mutate(`${businessUrl.business}?status=active`)
+  }, [dialog.open]);
 
   return (
     <Dialog

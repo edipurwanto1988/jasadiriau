@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
@@ -26,7 +27,11 @@ import {
   postContact,
   postServiceView,
 } from "@/views/services/interactive.service";
-import ServiceRelated from "./ServiceRelated";
+import dynamic from "next/dynamic";
+
+const ServiceRelated = dynamic(() => import("./ServiceRelated"), {
+  ssr: false,
+});
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
@@ -102,6 +107,8 @@ const GuestServiceDetail = ({ data, siteName }: Props) => {
                     height: 128,
                     borderRadius: "8px",
                     backgroundColor: "var(--input-bg-color)",
+                    border:1,
+                    borderColor: "divider"
                   }}
                 >
                   <Image

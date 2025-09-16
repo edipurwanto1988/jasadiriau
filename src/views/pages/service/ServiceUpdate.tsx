@@ -14,6 +14,7 @@ import useZod from "@/views/hooks/useZod";
 import ServiceForm from "./ServiceForm";
 import omit from "lodash/omit";
 import { UseDialog } from "@/views/hooks/useDialog";
+import { useSWRConfig } from "swr";
 
 type Props = {
   dialog: UseDialog;
@@ -26,6 +27,7 @@ const ServiceUpdate = ({ id, dialog, callback }: Props) => {
   const openSnackbar = useSnackbar();
   const [time, setTime] = React.useState(0);
 
+  const { mutate } = useSWRConfig();
   const { data } = useSWR<Service>(
     dialog.open ? `${serviceUrl.serviceAccount}/${id}` : null,
     (url) =>
@@ -127,6 +129,11 @@ const ServiceUpdate = ({ id, dialog, callback }: Props) => {
     if (!data) return;
     setTime(new Date().getTime());
   }, [data, dataBusiness, dataCategory, mutation.data(), dialog.open]);
+
+  React.useEffect(() => {
+      mutate(categoryUrl.all)
+      mutate(`${businessUrl.business}?status=active`)
+    }, [dialog.open]);
 
   return (
     <Dialog

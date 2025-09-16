@@ -32,6 +32,7 @@ const Register = () => {
               startProgress();
               const timer = setTimeout(() => {
                 router.push("/", { scroll: false });
+                router.prefetch('/');
                 clearTimeout(timer);
               }, 500);
             });

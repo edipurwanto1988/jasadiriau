@@ -28,6 +28,7 @@ import {
 } from "@/views/services/validation.service";
 import ServiceGalleryForm from "./ServiceGalleryForm";
 import ServiceGallery from "./ServiceGallery";
+import { rupiah } from "@/utils/format";
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
@@ -134,6 +135,8 @@ const ServiceDetail = ({ id }: { id: number }) => {
                   height: 128,
                   borderRadius: "8px",
                   backgroundColor: "var(--input-bg-color)",
+                  border: 1,
+                  borderColor: "divider",
                 }}
               >
                 <Image
@@ -181,7 +184,7 @@ const ServiceDetail = ({ id }: { id: number }) => {
                     sx={{
                       color: "var(--blue-color)",
                       fontWeight: 400,
-                      textDecoration:"none"
+                      textDecoration: "none",
                     }}
                   >
                     {data?.bussinessName}
@@ -260,6 +263,34 @@ const ServiceDetail = ({ id }: { id: number }) => {
                 py={2}
                 spacing={2}
               >
+                <Stack direction={"column"} spacing={2}>
+                  <Box>
+                    <Typography
+                      sx={{
+                        fontSize: 18,
+                        fontWeight: 700,
+                        letterSpacing: "-0.015em",
+                        lineHeight: 1.25,
+                      }}
+                    >
+                      Biaya
+                    </Typography>
+                  </Box>
+
+                  <Fade in={isLoading} unmountOnExit>
+                    <Skeleton width={"80%"} />
+                  </Fade>
+
+                  <Box>
+                    <Typography
+                      variant="subtitle1"
+                      sx={{ whiteSpace: "pre-line", wordBreak: "break-word" }}
+                    >
+                      {rupiah(data?.price)}
+                    </Typography>
+                  </Box>
+                </Stack>
+
                 <Stack direction={"column"} spacing={2}>
                   <Box>
                     <Typography
