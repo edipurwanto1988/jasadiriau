@@ -43,6 +43,7 @@ const ServiceTable = () => {
     onClose: {
       update: () => {
         setID(0);
+        
       },
     },
   });

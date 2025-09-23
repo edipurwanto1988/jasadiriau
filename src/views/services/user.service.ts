@@ -4,6 +4,7 @@ export const userUrl = {
   index: `${process.env.NEXT_PUBLIC_BASE_URL}/api/user`,
   role: `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/role`,
   current: `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/current`,
+  check: `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/check`,
 };
 
 export const getUser = async (
@@ -28,6 +29,27 @@ export const getCurrent = async (
   event?: EventSend
 ): Promise<HttpResponse<User>> => {
   const res = await fetch(userUrl.current, {
+    signal: event?.ctr?.signal,
+    next: { revalidate: 0 },
+  });
+
+  if (!res.ok) {
+    throw res;
+  }
+
+  return res.json();
+};
+
+export const getCheck = async (
+  event?: EventSend
+): Promise<
+  HttpResponse<{
+    dontHaveBusiness: boolean;
+    dontHaveService: boolean;
+    login: boolean;
+  }>
+> => {
+  const res = await fetch(userUrl.check, {
     signal: event?.ctr?.signal,
     next: { revalidate: 0 },
   });

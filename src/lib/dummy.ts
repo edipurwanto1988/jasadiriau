@@ -190,7 +190,7 @@ export const inputValidasi: UpdateValidationSchema = {
 
 export const inputService: CreateServiceSchema = {
   name: "",
-  price: null,
+  price: 0,
   categoryId: 0,
   profileId: 0,
 };

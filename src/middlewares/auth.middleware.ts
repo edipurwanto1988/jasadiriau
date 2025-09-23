@@ -20,7 +20,7 @@ export default async function authMiddleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/login", req.nextUrl));
     }
 
-    if (admin && session.role !== Role.admin) {
+    if (admin && session.role !== Role.admin || admin && session.role !== Role.operator) {
       return NextResponse.redirect(new URL("/404", req.nextUrl));
     }
   }

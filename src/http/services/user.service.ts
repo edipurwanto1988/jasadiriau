@@ -52,3 +52,19 @@ export const updateRole = (payload: Prisma.UserUncheckedUpdateInput) => {
     data: { role: payload.role },
   });
 };
+
+export const checkService = async (userId?: number) => {
+  if (!userId) {
+    return { login: false, dontHaveBusiness: true, dontHaveService: true };
+  }
+  const business = await prisma.businessProfile.count({ where: { userId } });
+  const service = await prisma.service.count({
+    where: { businessProfile: { userId } },
+  });
+
+  return {
+    login: true,
+    dontHaveBusiness: business === 0,
+    dontHaveService: service === 0,
+  };
+};

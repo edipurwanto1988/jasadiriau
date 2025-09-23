@@ -93,9 +93,9 @@ const ServiceCreate = ({ dialog, callback }: Props) => {
   };
 
   const close = () => {
-    dialog.closeDialog();
     mutation.reset();
     validation.clear();
+    dialog.closeDialog();
   };
 
   const categoryMemo = React.useMemo(() => {

@@ -71,6 +71,7 @@ const AuthMenuHeader = () => {
                   React.startTransition(() => {
                     startProgress();
                     signout();
+                    router.refresh()
                   });
                 },
               },
