@@ -12,6 +12,7 @@ import { getHeader } from "@/actions/menu.action";
 import { getSetting } from "@/actions/setting.action";
 import { Link } from "react-transition-progress/next";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 
 const DrawerMenu = dynamic(() => import("../Menu/DrawerMenu"));
 const SearchIcon = LoadComponent(() => import("@mui/icons-material/Search"));
@@ -47,6 +48,15 @@ const MainHeader = async () => {
           >
             <DrawerMenu setting={setting} menu={menus} />
 
+            <Box sx={{ position: "relative", width: 40, height: 40 }}>
+              <Image
+                src={"/images/logo.png"}
+                alt="logo"
+                fill
+                loading="lazy"
+                sizes="100%"
+              />
+            </Box>
             <Box>
               <Link
                 href="/"

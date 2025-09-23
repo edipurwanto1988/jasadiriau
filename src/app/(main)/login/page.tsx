@@ -6,14 +6,21 @@ import Toolbar from "@mui/material/Toolbar";
 import Register from "@/views/pages/auth/Register";
 import Box from "@mui/material/Box";
 import { getSetting } from "@/actions/setting.action";
+import Image from "next/image";
 
 export default async function Page() {
-  const setting = await getSetting()
+  const setting = await getSetting();
   return (
     <MainTemplate>
-      <Toolbar/>
+      <Toolbar />
       <Stack alignItems={"center"} spacing={3}>
-        <Avatar sx={{ width: 64, height: 64 }} />
+        <Image
+          src={"/images/logo.png"}
+          alt="logo"
+          width={128}
+          height={128}
+          loading="lazy"
+        />
 
         <Stack spacing={1} px={2}>
           <Typography
@@ -22,7 +29,7 @@ export default async function Page() {
             lineHeight={1.5}
             fontSize={20}
           >
-            Selamat datang di {setting?.siteName ?? 'JasaDiRiau'}
+            Selamat datang di {setting?.siteName ?? "JasaDiRiau"}
           </Typography>
           <Typography align="center" fontSize={16} fontWeight={400}>
             Login untuk mulai terhubung dengan penyedia jasa terpercaya di Riau.
@@ -30,8 +37,8 @@ export default async function Page() {
         </Stack>
 
         <Register />
-        
-        <Box sx={{px:2}}>
+
+        <Box sx={{ px: 2 }}>
           <Typography variant="caption" align="center">
             Dengan melanjutkan, Anda menyetujui Syarat & Kebijakan Privasi kami.
           </Typography>
