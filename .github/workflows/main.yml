@@ -12,7 +12,7 @@ jobs:
       uses: appleboy/ssh-action@v0.1.6
       with:
         host: 103.172.205.144
-        username: jasadiriau
+        username: root
         key: |
           -----BEGIN RSA PRIVATE KEY-----
           MIIJKAIBAAKCAgEA0QkIgS792fJBmpmN4zKeds7JxuXnss59nV6pr8yefrg90EcZ
