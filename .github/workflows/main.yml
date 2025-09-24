@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Deploy Next.js to VPS
 
 on:
   push:
@@ -6,46 +6,75 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
+    env:
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_SCHEMA: public
+      DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASS }}@localhost:5433/${{ secrets.DB_NAME }}?schema=public
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repo
+      uses: actions/checkout@v3
 
-      # Setup SSH key biar bisa tunnel ke server
-      - name: Setup SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+    - name: Setup SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
 
-      # Bikin SSH tunnel (forward localhost:5432 -> server:5432)
-      - name: Create SSH tunnel
-        run: |
-          ssh -f -N \
-            -L 5432:127.0.0.1:5432 \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+    - name: Setup SSH tunnel to Postgres
+      run: |
+        ssh -o StrictHostKeyChecking=no -f -N \
+          -i ~/.ssh/id_rsa \
+          -L 5433:localhost:5432 \
+          ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
 
-      # Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-      # Install deps
-      - name: Install dependencies
-        run: npm ci
+    - name: Build Docker image
+      run: |
+        echo "👉 Using DATABASE_URL=$DATABASE_URL"
+        docker build \
+          --build-arg DATABASE_URL=$DATABASE_URL \
+          -t image-jasadiriau:latest .
 
-      # Build Next.js pakai real DB connection
-      - name: Build project
-        env:
-          DATABASE_URL: "postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASS }}@localhost:5432/${{ secrets.DB_NAME }}?schema=public"
-          BASE_URL: "https://jasadiriau.com"
-          NEXT_PUBLIC_BASE_URL: "https://jasadiriau.com"
-          NEXT_PUBLIC_IMAGE_PATH: "uploads/images"
-          NEXT_PUBLIC_WA_LINK: "https://api.whatsapp.com/send"
-          NEXT_PUBLIC_GOOGLE_CLIENT_ID: "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com"
-          SESSION_SECRET: "mgxiOqv3UA5nlZ1w+jbBh9jN1VyzkIfDiEeRrrYWV4I="
-        run: npm run build
+    - name: Save Docker image as tar
+      run: docker save image-jasadiriau:latest -o image-jasadiriau.tar
+
+    - name: Copy Docker image to VPS
+      uses: appleboy/scp-action@v0.1.5
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        source: "image-jasadiriau.tar"
+        target: "/home/jasadiriau/deploy/"
+
+    - name: SSH to VPS and run container
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script: |
+          cd /home/jasadiriau/deploy
+          docker load -i image-jasadiriau.tar
+          docker stop app_jasadiriau || true
+          docker rm app_jasadiriau || true
+          docker run -d \
+            --name app_jasadiriau \
+            -p 4000:4000 \
+            -e DATABASE_URL=postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASS }}@localhost:5432/${{ secrets.DB_NAME }}?schema=public \
+            -e BASE_URL=https://jasadiriau.com \
+            -e NEXT_PUBLIC_BASE_URL=https://jasadiriau.com \
+            -e NEXT_PUBLIC_IMAGE_PATH=uploads/images \
+            -e NEXT_PUBLIC_WA_LINK=https://api.whatsapp.com/send \
+            -e NEXT_PUBLIC_GOOGLE_CLIENT_ID="92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com" \
+            -e SESSION_SECRET="mgxiOqv3UA5nlZ1w+jbBh9jN1VyzkIfDiEeRrrYWV4I=" \
+            image-jasadiriau:latest
+          rm -f image-jasadiriau.tar
