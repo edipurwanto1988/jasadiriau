@@ -56,13 +56,13 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Jalankan prisma generate sebelum build Next.js
-# RUN npx prisma generate
+RUN npx prisma generate
 
-RUN if [ "$SKIP_DB" = "true" ]; then \
-        echo "Skipping prisma generate"; \
-    else \
-        npx prisma generate; \
-    fi
+# RUN if [ "$SKIP_DB" = "true" ]; then \
+#         echo "Skipping prisma generate"; \
+#     else \
+#         npx prisma generate; \
+#     fi
 
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
