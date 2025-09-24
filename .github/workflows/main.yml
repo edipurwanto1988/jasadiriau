@@ -40,10 +40,10 @@ jobs:
     - name: Save Docker image as tar
       run: docker save image-jasadiriau:latest -o $GITHUB_WORKSPACE/image-jasadiriau.tar
       
-    - name: Tar workspace
-      run: |
-        cd $GITHUB_WORKSPACE
-        tar --exclude='image-jasadiriau.tar' -czvf $GITHUB_WORKSPACE/archive.tar.gz .
+    # - name: Tar workspace
+    #   run: |
+    #     cd $GITHUB_WORKSPACE
+    #     tar --exclude='image-jasadiriau.tar' -czvf $GITHUB_WORKSPACE/archive.tar.gz .
 
     - name: List workspace
       run: ls -l $GITHUB_WORKSPACE
