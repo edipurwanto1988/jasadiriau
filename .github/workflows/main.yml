@@ -54,7 +54,8 @@ jobs:
         key: ${{ secrets.VPS_SSH_KEY }}
         script: |
           echo "SSH connection successful!"
-          hostname
+          echo "Logged in user: $(whoami)"
+          echo "Hostname: $(hostname)"
           uname -a
 
     - name: Copy Docker image to VPS
