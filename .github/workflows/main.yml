@@ -18,36 +18,23 @@ jobs:
       with:
         node-version: 18
 
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Setup SSH tunnel to DB
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh -o StrictHostKeyChecking=no \
-          -i ~/.ssh/id_rsa \
-          -L 5433:127.0.0.1:5432 \
-          ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} -N &
-        sleep 10
-
-    - name: Build Next.js with real DB
-      run: npm run build
-      env:
-        DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASS }}@localhost:5433/${{ secrets.DB_NAME }}?schema=public
-        BASE_URL: https://jasadiriau.com
-        NEXT_PUBLIC_BASE_URL: https://jasadiriau.com
-        NEXT_PUBLIC_IMAGE_PATH: uploads/images
-        NEXT_PUBLIC_WA_LINK: https://api.whatsapp.com/send
-        NEXT_PUBLIC_GOOGLE_CLIENT_ID: "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com"
-        SESSION_SECRET: "mgxiOqv3UA5nlZ1w+jbBh9jN1VyzkIfDiEeRrrYWV4I="
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - name: Build Docker image
-      run: docker build -t image-jasadiriau:latest .
+    - name: Build Docker image (skip DB)
+      run: docker build \
+            --build-arg SKIP_DB=true \
+            --build-arg DB_USER=${{ secrets.DB_USER }} \
+            --build-arg DB_PASS=${{ secrets.DB_PASS }} \
+            --build-arg DB_NAME=${{ secrets.DB_NAME }} \
+            --build-arg DB_HOST=172.17.0.1 \
+            --build-arg DB_PORT=5432 \
+            --build-arg DB_SCHEMA=public \
+            --build-arg DATABASE_URL="postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASS }}@172.17.0.1:5432/${{ secrets.DB_NAME }}?schema=public" \
+            --build-arg BASE_URL=https://jasadiriau.com \
+            --build-arg NEXT_PUBLIC_BASE_URL=https://jasadiriau.com \
+            --build-arg NEXT_PUBLIC_IMAGE_PATH=uploads/images \
+            --build-arg NEXT_PUBLIC_WA_LINK=https://api.whatsapp.com/send \
+            --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID="92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com" \
+            --build-arg SESSION_SECRET="mgxiOqv3UA5nlZ1w+jbBh9jN1VyzkIfDiEeRrrYWV4I=" \
+            -t image-jasadiriau:latest .
 
     - name: Save Docker image as tar
       run: docker save image-jasadiriau:latest -o image-jasadiriau.tar
@@ -61,19 +48,15 @@ jobs:
         source: "image-jasadiriau.tar"
         target: "/home/jasadiriau/deploy/"
 
-    # - name: SSH to VPS and deploy
-    #   uses: appleboy/ssh-action@v0.1.6
-    #   with:
-    #     host: ${{ secrets.VPS_HOST }}
-    #     username: ${{ secrets.VPS_USER }}
-    #     key: ${{ secrets.VPS_SSH_KEY }}
-    #     script: |
-    #       cd /home/jasadiriau/deploy
-    #       docker load -i image-jasadiriau.tar
-    #       docker stop app-jasadiriau || true
-    #       docker rm app-jasadiriau || true
-    #       docker run -d --name app-jasadiriau \
-    #         -p 3000:3000 \
-    #         -e DATABASE_URL="postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}?schema=public" \
-    #         image-jasadiriau:latest
-    #       rm -f image-jasadiriau.tar
+    - name: SSH to VPS and deploy with docker-compose
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script: |
+          cd /home/jasadiriau/deploy
+          docker load -i image-jasadiriau.tar
+          docker-compose down
+          docker-compose up -d
+          rm -f image-jasadiriau.tar
