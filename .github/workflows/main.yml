@@ -9,36 +9,33 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        ports:
-          - 5433:5432
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: db_dummy
-        options: >-
-          --health-cmd="pg_isready -U postgres -d db_dummy"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
-    env:
-      # Pakai dummy DB supaya prisma/next build nggak error
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5433/db_dummy
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
+      # Buat SSH tunnel ke VPS supaya bisa akses Postgres dari runner
+      - name: Setup SSH tunnel to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no -f -N \
+            -L 5433:localhost:5432 ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
 
       - name: Install dependencies
         run: npm ci
 
       - name: Generate Prisma Client
+        env:
+          DATABASE_URL: postgresql://${{ secrets.DB_USER }}:db%@localhost:5433/${{ secrets.DB_NAME }}?schema=public
         run: npx prisma generate
 
       - name: Build Next.js
+        env:
+          DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASS }}@localhost:5433/${{ secrets.DB_NAME }}?schema=public
+          BASE_URL: https://jasadiriau.com
+          NEXT_PUBLIC_BASE_URL: https://jasadiriau.com
+          NEXT_PUBLIC_IMAGE_PATH: uploads/images
+          NEXT_PUBLIC_WA_LINK: https://api.whatsapp.com/send
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: "92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com"
+          SESSION_SECRET: "mgxiOqv3UA5nlZ1w+jbBh9jN1VyzkIfDiEeRrrYWV4I="
         run: npm run build
 
       - name: Set up Docker Buildx
