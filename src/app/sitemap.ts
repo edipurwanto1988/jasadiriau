@@ -7,6 +7,17 @@ import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "";
+  
+  if (process.env.SKIP_DB === "true") {
+    return [
+      {
+        url: baseUrl,
+        lastModified: new Date(),
+        changeFrequency: "daily",
+        priority: 1,
+      },
+    ];
+  }
 
   const category = (await getCategories()).map((item) => ({
     url: `${baseUrl}/category/${item.slug}`,
@@ -42,7 +53,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "weekly" as MetadataRoute.Sitemap[0]["changeFrequency"],
     priority: 0.8,
   }));
-
 
   return [
     {
