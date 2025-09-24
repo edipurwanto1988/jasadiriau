@@ -20,7 +20,7 @@ type Props = {
 export const revalidate = 60;
 
 export async function generateStaticParams() {
-  if (process.env.SKIP) {
+  if (process.env.SKIP === "true") {
     return [];
   }
   const categories = await getCategories();
