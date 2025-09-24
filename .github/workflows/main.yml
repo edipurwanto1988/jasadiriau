@@ -42,6 +42,9 @@ jobs:
 
     - name: List workspace
       run: ls -l $GITHUB_WORKSPACE
+      
+    - name: Fix permissions for Docker image
+      run: chmod 644 $GITHUB_WORKSPACE/image-jasadiriau.tar
 
     - name: Test SSH connection
       uses: appleboy/ssh-action@v0.1.6
