@@ -11,7 +11,7 @@ jobs:
     - name: Test SSH connection
       uses: appleboy/ssh-action@v0.1.6
       with:
-        host: 123.45.67.89
+        host: 103.172.205.144
         username: jasadiriau
         password: Jasadiriau123
         script: |
