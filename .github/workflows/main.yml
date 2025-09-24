@@ -43,8 +43,8 @@ jobs:
     - name: List workspace
       run: ls -l $GITHUB_WORKSPACE
       
-    - name: Fix permissions for Docker image
-      run: chmod 644 $GITHUB_WORKSPACE/image-jasadiriau.tar
+    # - name: Fix permissions for Docker image
+    #   run: chmod 644 $GITHUB_WORKSPACE/image-jasadiriau.tar
 
     - name: Test SSH connection
       uses: appleboy/ssh-action@v0.1.6
@@ -54,6 +54,7 @@ jobs:
         key: ${{ secrets.VPS_SSH_KEY }}
         script: |
           echo "SSH connection successful!"
+          hostname
           uname -a
 
     - name: Copy Docker image to VPS
