@@ -30,6 +30,9 @@ type Props = {
 export const revalidate = 60;
 
 export async function generateStaticParams() {
+  if (process.env.SKIP) {
+    return [];
+  }
   const data = await getServiceAllSlug();
   return data.map((val) => ({
     slug: val.slug,

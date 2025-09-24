@@ -13,7 +13,7 @@ import "@/views/components/tiptap-templates/simple/simple-editor.scss";
 import MainTemplate from "@/views/components/templates/MainTemplate";
 import Stack from "@mui/material/Stack";
 import Breadcrumbs from "@/views/components/base/Breadcrumbs";
-import '../style.scss';
+import "../style.scss";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -22,6 +22,9 @@ type Props = {
 export const revalidate = 60;
 
 export async function generateStaticParams() {
+  if (process.env.SKIP) {
+    return [];
+  }
   const data = await getPageAllSlug();
   return data.map((val) => ({
     slug: val.slug as string,
