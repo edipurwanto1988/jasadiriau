@@ -12,24 +12,21 @@ jobs:
     services:
       postgres:
         image: postgres:15
+        ports:
+          - 5433:5432
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: db_dummy
-        ports:
-          - 5433:5432
         options: >-
-          --health-cmd="pg_isready -U ${{ secrets.DB_USER }}"
+          --health-cmd="pg_isready -U postgres"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
 
     env:
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASS: ${{ secrets.DB_PASS }}
-      DB_NAME: ${{ secrets.DB_NAME }}
-      DB_SCHEMA: public
-      DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASS }}@localhost:5433/${{ secrets.DB_NAME }}?schema=public
+      # Dummy DB URL buat Prisma/Next.js saat build
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5433/db_dummy
 
     steps:
     - name: Checkout repo
@@ -39,11 +36,7 @@ jobs:
       uses: docker/setup-buildx-action@v3
 
     - name: Build Docker image
-      run: |
-        echo "👉 DATABASE_URL=$DATABASE_URL"
-        docker build \
-          --build-arg DATABASE_URL=$DATABASE_URL \
-          -t image-jasadiriau:latest .
+      run: docker build -t image-jasadiriau:latest .
 
     - name: Save Docker image as tar
       run: docker save image-jasadiriau:latest -o image-jasadiriau.tar
@@ -62,7 +55,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
-        key: ${{ secrets.VPS_SSH_KEY }}
+        key: ${{ secrets.VPS_SSH_KEY_LITERAL }}
         script: |
           cd /home/jasadiriau/deploy
           docker load -i image-jasadiriau.tar
