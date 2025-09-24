@@ -11,8 +11,8 @@ jobs:
     - name: Test SSH connection
       uses: appleboy/ssh-action@v0.1.6
       with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
+        host: 103.172.205.144
+        username: jasadiriau
         key: |
           -----BEGIN RSA PRIVATE KEY-----
           MIIJKAIBAAKCAgEA0QkIgS792fJBmpmN4zKeds7JxuXnss59nV6pr8yefrg90EcZ
