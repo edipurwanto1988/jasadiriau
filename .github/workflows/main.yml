@@ -19,22 +19,23 @@ jobs:
         node-version: 18
 
     - name: Build Docker image (skip DB)
-      run: docker build \
-            --build-arg SKIP_DB=true \
-            --build-arg DB_USER=${{ secrets.DB_USER }} \
-            --build-arg DB_PASS=${{ secrets.DB_PASS }} \
-            --build-arg DB_NAME=${{ secrets.DB_NAME }} \
-            --build-arg DB_HOST=172.17.0.1 \
-            --build-arg DB_PORT=5432 \
-            --build-arg DB_SCHEMA=public \
-            --build-arg DATABASE_URL="postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASS }}@172.17.0.1:5432/${{ secrets.DB_NAME }}?schema=public" \
-            --build-arg BASE_URL=https://jasadiriau.com \
-            --build-arg NEXT_PUBLIC_BASE_URL=https://jasadiriau.com \
-            --build-arg NEXT_PUBLIC_IMAGE_PATH=uploads/images \
-            --build-arg NEXT_PUBLIC_WA_LINK=https://api.whatsapp.com/send \
-            --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID="92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com" \
-            --build-arg SESSION_SECRET="mgxiOqv3UA5nlZ1w+jbBh9jN1VyzkIfDiEeRrrYWV4I=" \
-            -t image-jasadiriau:latest .
+      run: |
+        docker build \
+          --build-arg SKIP_DB=true \
+          --build-arg DB_USER=${{ secrets.DB_USER }} \
+          --build-arg DB_PASS=${{ secrets.DB_PASS }} \
+          --build-arg DB_NAME=${{ secrets.DB_NAME }} \
+          --build-arg DB_HOST=172.17.0.1 \
+          --build-arg DB_PORT=5432 \
+          --build-arg DB_SCHEMA=public \
+          --build-arg DATABASE_URL="postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASS }}@172.17.0.1:5432/${{ secrets.DB_NAME }}?schema=public" \
+          --build-arg BASE_URL=https://jasadiriau.com \
+          --build-arg NEXT_PUBLIC_BASE_URL=https://jasadiriau.com \
+          --build-arg NEXT_PUBLIC_IMAGE_PATH=uploads/images \
+          --build-arg NEXT_PUBLIC_WA_LINK=https://api.whatsapp.com/send \
+          --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID="92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com" \
+          --build-arg SESSION_SECRET="mgxiOqv3UA5nlZ1w+jbBh9jN1VyzkIfDiEeRrrYWV4I=" \
+          -t image-jasadiriau:latest .
 
     - name: Save Docker image as tar
       run: docker save image-jasadiriau:latest -o image-jasadiriau.tar
