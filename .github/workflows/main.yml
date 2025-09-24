@@ -19,7 +19,14 @@ jobs:
         node-version: 18
 
     - name: Build Docker image (skip DB)
-      run: docker build --build-arg SKIP_DB=true -t image-jasadiriau:latest .
+      run: |
+        docker build \
+          --build-arg SKIP_DB=true \
+          --build-arg NEXT_PUBLIC_BASE_URL=https://jasadiriau.com \
+          --build-arg NEXT_PUBLIC_IMAGE_PATH=uploads/images \
+          --build-arg NEXT_PUBLIC_WA_LINK=https://api.whatsapp.com/send \
+          --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID="92261591557-raee5naceogcbfb1mhbddcu6nggt0685.apps.googleusercontent.com" \
+          -t image-jasadiriau:latest .
 
     - name: Save Docker image as tar
       run: docker save image-jasadiriau:latest -o image-jasadiriau.tar
@@ -66,5 +73,5 @@ jobs:
           cd /home/jasadiriau/deploy
           sudo docker load -i image-jasadiriau.tar
           sudo docker compose down
-          sudo docker compose up -d --force-create
+          sudo docker compose up -d --force-recreate
           rm -f image-jasadiriau.tar
