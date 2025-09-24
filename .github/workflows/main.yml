@@ -13,7 +13,58 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
-        key: ${{ secrets.VPS_SSH_KEY }}
+        key: |
+          -----BEGIN RSA PRIVATE KEY-----
+          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
+          -----END RSA PRIVATE KEY-----
         script: |
           echo "SSH connection successful!"
           uname -a
