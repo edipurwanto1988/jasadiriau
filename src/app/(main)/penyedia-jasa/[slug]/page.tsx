@@ -29,7 +29,7 @@ type Props = {
 export const revalidate = 60;
 
 export async function generateStaticParams() {
-  if (process.env.SKIP === "true") {
+  if (process.env.SKIP_DB === "true") {
     return [];
   }
   const data = await getBusinessAllSlug();
