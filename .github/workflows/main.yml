@@ -38,7 +38,7 @@ jobs:
           -t image-jasadiriau:latest .
 
     - name: Save Docker image as tar
-      run: sudo docker save image-jasadiriau:latest -o $GITHUB_WORKSPACE/image-jasadiriau.tar
+      run: docker save image-jasadiriau:latest -o $GITHUB_WORKSPACE/image-jasadiriau.tar
 
     - name: List workspace
       run: ls -l $GITHUB_WORKSPACE
