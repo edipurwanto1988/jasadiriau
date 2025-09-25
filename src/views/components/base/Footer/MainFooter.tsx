@@ -11,10 +11,10 @@ import Divider from "@mui/material/Divider";
 const MainFooter = async () => {
   const [setting, menus] = await Promise.all([getSetting(), getFooter()]);
   return (
-    <footer style={{ backgroundColor: "#f8fafc", opacity: 1 }}>
+    <footer style={{ backgroundColor: "var(--blue-color)", opacity: 1 }}>
       <Box
         sx={{
-          px: {
+          mt: {
             xs: 0,
             sm: 0,
             md: 10,
@@ -24,7 +24,6 @@ const MainFooter = async () => {
           pb: 1,
         }}
       >
-        <Toolbar />
         <Divider />
         <Stack spacing={4} py={2}>
           <Stack
@@ -51,14 +50,20 @@ const MainFooter = async () => {
                 key={v.id}
                 href={v.url ?? ""}
                 style={{ textAlign: "center" }}
-                color="#4A739C"
+                color="#FFF"
               >
                 {v.name}
               </Link>
             ))}
           </Stack>
 
-          <Stack direction={"row"} justifyContent={"center"} spacing={2}>
+          <Stack direction={"row"} justifyContent={"center"} spacing={2} sx={{'& a': {
+            borderRadius: 1,
+            p:1,
+            backgroundColor:"#fff",
+            display:"flex",
+            alignItems:"center"
+          }}}>
             {setting?.facebookUrl ? (
               <Link target="_blank" prefetch={false} href={setting.facebookUrl}>
                 <Image
@@ -138,7 +143,7 @@ const MainFooter = async () => {
           <Box>
             <Typography
               fontWeight={400}
-              color="#4A739C"
+              color="#FFF"
               lineHeight="24px"
               align="center"
             >

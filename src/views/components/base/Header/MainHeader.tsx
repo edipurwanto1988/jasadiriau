@@ -48,7 +48,20 @@ const MainHeader = async () => {
           >
             <DrawerMenu setting={setting} menu={menus} />
 
-            <Box sx={{ position: "relative", width: 40, height: 40 }}>
+            <Box
+              sx={{
+                position: "relative",
+                width: 40,
+                height: 40,
+                display: {
+                  xs: "none",
+                  sm: "none",
+                  md: "block",
+                  lg: "block",
+                  xl: "block",
+                },
+              }}
+            >
               <Image
                 src={"/images/logo.png"}
                 alt="logo"
@@ -122,7 +135,7 @@ const MainHeader = async () => {
                 slotProps={{
                   input: {
                     startAdornment: (
-                      <SearchIcon htmlColor="#4A739C" sx={{ mr: 1 }} />
+                      <SearchIcon color="primary" sx={{ mr: 1 }} />
                     ),
                   },
                 }}

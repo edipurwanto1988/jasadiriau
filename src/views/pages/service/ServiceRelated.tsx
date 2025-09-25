@@ -107,7 +107,6 @@ const ServiceRelated = ({ slug }: Props) => {
                     lineHeight={"21px"}
                     fontWeight={400}
                     variant="subtitle2"
-                    color="#4A739C"
                     fontSize={16}
                     alignSelf={"stretch"}
                   >

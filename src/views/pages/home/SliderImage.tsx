@@ -41,7 +41,7 @@ const SliderImage = ({ images }: Props) => {
           sx={{
             width: "100%",
             position: "relative",
-            aspectRatio: { xs: "4/3", sm: "16/9" }, // responsive ratio
+            aspectRatio: { xs: "16/9", sm: "16/9" }, // responsive ratio
           }}
         >
           <Image

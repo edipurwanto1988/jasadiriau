@@ -10,7 +10,6 @@ import React from "react";
 import Link from "next/link";
 
 const ExcellentServiceSection = () => {
-
   const { data, isLoading } = useSWR(serviceUrl.populer, (url) =>
     fetch(url)
       .then((resp) => resp.json())
@@ -26,7 +25,7 @@ const ExcellentServiceSection = () => {
       spacing={2}
     >
       <Box>
-        <Typography fontWeight={500} fontSize={22} lineHeight={"28px"}>
+        <Typography fontWeight={600} fontSize={18} lineHeight={"28px"}>
           Jasa Unggulan
         </Typography>
       </Box>
@@ -65,7 +64,7 @@ const ExcellentServiceSection = () => {
                 component={Link}
                 href={`/jasa/${value.slug}`}
                 key={i}
-                width={223}
+                width={{ xs: 170, sm: 170, md: 223, lg: 223, xl: 223 }}
                 spacing={1}
               >
                 <Box
@@ -73,8 +72,8 @@ const ExcellentServiceSection = () => {
                     overflow: "hidden",
                     borderRadius: "var(--mui-shape-borderRadius)",
                     position: "relative",
-                    width: 223,
-                    height: 223,
+                    width: { xs: 170, sm: 170, md: 223, lg: 223, xl: 223 },
+                    height: { xs: 170, sm: 170, md: 223, lg: 223, xl: 223 },
                     backgroundImage: `url(${value.imageUrl})`,
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center",
@@ -93,8 +92,8 @@ const ExcellentServiceSection = () => {
                   <Typography
                     lineHeight={"21px"}
                     fontWeight={500}
+                    color="primary"
                     variant="subtitle1"
-                    color="#4A739C"
                     alignSelf={"stretch"}
                   >
                     {value.name}

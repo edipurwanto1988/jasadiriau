@@ -14,7 +14,7 @@ const AdvantageSection = async () => {
         width: "100%",
         overflow: "hidden",
       }}
-      spacing={5}
+      spacing={4}
     >
       <Box>
         <Typography fontWeight={500} fontSize={22} lineHeight={"28px"}>
@@ -27,10 +27,11 @@ const AdvantageSection = async () => {
         secondary="Kami berkomitmen untuk memberikan pengalaman terbaik bagi pengguna dalam mencari dan menggunakan jasa."
         slotProps={{
           primary: {
-            fontSize: 36,
+            fontSize: 28,
             fontWeight: 800,
             letterSpacing: "-1px",
             lineHeight: "48px",
+            color:"textPrimary"
           },
           secondary: {
             color: "textPrimary",
@@ -96,7 +97,6 @@ const AdvantageSection = async () => {
                 lineHeight={1.5}
                 fontWeight={400}
                 variant="subtitle2"
-                color="#4A739C"
                 alignSelf={"stretch"}
               >
                 {value.description}

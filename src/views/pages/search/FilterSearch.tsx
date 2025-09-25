@@ -122,7 +122,7 @@ const FilterSearch = ({ url, setUrl, onSearch }: Props) => {
             input: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon htmlColor="#4A739C" />
+                  <SearchIcon color="primary" />
                 </InputAdornment>
               ),
             },

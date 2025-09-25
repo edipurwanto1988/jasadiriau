@@ -103,7 +103,6 @@ const ArticleRelated = ({ slug }: Props) => {
                     lineHeight={"21px"}
                     fontWeight={400}
                     variant="subtitle2"
-                    color="#4A739C"
                     alignSelf={"stretch"}
                   >
                     {value.title}

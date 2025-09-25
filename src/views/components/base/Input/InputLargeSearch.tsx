@@ -21,7 +21,7 @@ const InputLargeSearch = (props?: TextFieldProps) => {
             },
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon htmlColor="#4A739C" />
+                <SearchIcon color="primary" />
               </InputAdornment>
             ),
           },

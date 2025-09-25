@@ -8,11 +8,14 @@ let theme = createTheme({
     fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
   },
   palette: {
+    info:{
+      main:"#c14144",
+    },
     primary: {
-      main: "#0D80F2",
+      main: "#c14144",
     },
     text: {
-      primary: "#0D141C",
+      primary: "#333333",
     },
   },
   shape: {
@@ -25,6 +28,11 @@ let theme = createTheme({
           textTransform: "unset",
         },
       },
+    },
+    MuiTypography: {
+      defaultProps: {
+        color: "textPrimary"
+      }
     },
     MuiTextField: {
       defaultProps: {

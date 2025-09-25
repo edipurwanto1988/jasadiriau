@@ -67,7 +67,7 @@ const HeaderNotification = ({ data }: Props) => {
             badgeContent={data?.length}
             invisible={!data?.length}
           >
-            <NotificationsOutlinedIcon />
+            <NotificationsOutlinedIcon color="primary" />
           </Badge>
         </IconButton>
 
