@@ -30,17 +30,17 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export const revalidate = 60;
+// export const revalidate = 60;
 
-export async function generateStaticParams() {
-  if (process.env.SKIP_DB === "true") {
-    return [];
-  }
-  const data = await getArticleAllSlug();
-  return data.map((val) => ({
-    slug: val.slug as string,
-  }));
-}
+// export async function generateStaticParams() {
+//   if (process.env.SKIP_DB === "true") {
+//     return [];
+//   }
+//   const data = await getArticleAllSlug();
+//   return data.map((val) => ({
+//     slug: val.slug as string,
+//   }));
+// }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

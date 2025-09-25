@@ -5,19 +5,21 @@ import { getPageAllSlug } from "@/actions/page.action";
 import { getServiceAllSlug } from "@/actions/service.action";
 import { MetadataRoute } from "next";
 
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "";
-  
-  if (process.env.SKIP_DB === "true") {
-    return [
-      {
-        url: baseUrl,
-        lastModified: new Date(),
-        changeFrequency: "daily",
-        priority: 1,
-      },
-    ];
-  }
+
+  // if (process.env.SKIP_DB === "true") {
+  //   return [
+  //     {
+  //       url: baseUrl,
+  //       lastModified: new Date(),
+  //       changeFrequency: "daily",
+  //       priority: 1,
+  //     },
+  //   ];
+  // }
 
   const category = (await getCategories()).map((item) => ({
     url: `${baseUrl}/category/${item.slug}`,

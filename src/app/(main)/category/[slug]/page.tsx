@@ -17,17 +17,17 @@ type Props = {
   searchParams: Promise<Partial<Record<string, string>>>;
 };
 
-export const revalidate = 60;
+// export const revalidate = 60;
 
-export async function generateStaticParams() {
-  if (process.env.SKIP_DB === "true") {
-    return [];
-  }
-  const categories = await getCategories();
-  return categories.map((val: { slug: string }) => ({
-    slug: val.slug,
-  }));
-}
+// export async function generateStaticParams() {
+//   if (process.env.SKIP_DB === "true") {
+//     return [];
+//   }
+//   const categories = await getCategories();
+//   return categories.map((val: { slug: string }) => ({
+//     slug: val.slug,
+//   }));
+// }
 
 export async function generateMetadata({
   params,

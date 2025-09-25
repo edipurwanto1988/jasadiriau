@@ -27,17 +27,17 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export const revalidate = 60;
+// export const revalidate = 60;
 
-export async function generateStaticParams() {
-  if (process.env.SKIP_DB === "true") {
-    return [];
-  }
-  const data = await getServiceAllSlug();
-  return data.map((val) => ({
-    slug: val.slug,
-  }));
-}
+// export async function generateStaticParams() {
+//   if (process.env.SKIP_DB === "true") {
+//     return [];
+//   }
+//   const data = await getServiceAllSlug();
+//   return data.map((val) => ({
+//     slug: val.slug,
+//   }));
+// }
 
 const profile = `${process.env.NEXT_PUBLIC_BASE_URL}/images/placeholder.webp`;
 
