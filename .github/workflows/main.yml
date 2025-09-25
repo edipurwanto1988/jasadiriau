@@ -43,7 +43,7 @@ jobs:
       run: chmod 644 image-jasadiriau.tar
 
     - name: Test SSH connection
-      uses: appleboy/ssh-action@v0.1.6
+      uses: appleboy/ssh-action@v0.1.9
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
@@ -55,7 +55,7 @@ jobs:
           uname -a
 
     - name: Copy Docker image to VPS
-      uses: appleboy/scp-action@v0.1.5
+      uses: appleboy/scp-action@v0.1.9
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
@@ -64,7 +64,7 @@ jobs:
         target: "/home/jasadiriau/deploy/"
 
     - name: SSH to VPS and deploy with docker-compose
-      uses: appleboy/ssh-action@v0.1.6
+      uses: appleboy/ssh-action@v0.1.9
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
