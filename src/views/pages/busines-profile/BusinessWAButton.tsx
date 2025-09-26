@@ -2,7 +2,7 @@
 import React from "react";
 import ButtonWithIcon from "@/views/components/base/Button/ButtonWithIcon";
 import Box from "@mui/material/Box";
-import { useRouter } from "next/navigation";
+import { postContact } from "@/views/services/interactive.service";
 
 const BusinessWAButton = ({
   data,
@@ -11,8 +11,6 @@ const BusinessWAButton = ({
   data: BusinessProfile;
   siteName: string | null;
 }) => {
-  const router = useRouter();
-
   return (
     <Box>
       {(data.businessContact ?? [])
@@ -34,11 +32,17 @@ const BusinessWAButton = ({
             onClick={() => {
               const phone = v.whatsappNumber;
               const text = encodeURIComponent(
-                `Halo, saya menemukan profil layanan Anda di ${siteName}.\nSaya ingin menanyakan lebih lanjut mengenai layanan yang tersedia.\nApakah bisa dibantu?`
+                `Halo, saya menemukan layanan *${data.businessName}* di ${siteName}.\n` +
+                  `Saya ingin menanyakan lebih lanjut mengenai detail layanan tersebut.\n` +
+                  `Apakah bisa dibantu?`
               );
-              router.push(
-                `${process.env.NEXT_PUBLIC_WA_LINK}?phone=${phone}&text=${text}`
-              );
+              postContact({
+                source: "detail",
+                phoneNumber: v.whatsappNumber,
+                contactId: v.id,
+              });
+              const url = `${process.env.NEXT_PUBLIC_WA_LINK}?phone=${phone}&text=${text}`;
+              window.open(url, "_blank", "noopener,noreferrer");
             }}
           >
             Chat Via Whatsapp

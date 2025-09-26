@@ -7,7 +7,7 @@ import useSWR from "swr";
 import Skeleton from "@mui/material/Skeleton";
 import { rupiah } from "@/utils/format";
 import React from "react";
-import Link from "next/link";
+import { Link } from "react-transition-progress/next";
 
 const ExcellentServiceSection = () => {
   const { data, isLoading } = useSWR(serviceUrl.populer, (url) =>
@@ -95,6 +95,9 @@ const ExcellentServiceSection = () => {
                     color="primary"
                     variant="subtitle1"
                     alignSelf={"stretch"}
+                    sx={{
+                      textDecoration: "underline"
+                    }}
                   >
                     {value.name}
                   </Typography>

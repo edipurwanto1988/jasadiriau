@@ -101,9 +101,7 @@ const MainSidebarMenu = (props: Props) => {
                     router.push(
                       auth.role === "user"
                         ? "/account/business-profile"
-                        : "/admin",
-                      { scroll: false }
-                    );
+                        : "/admin"                    );
                     props.onOpen();
                   });
                 }}
@@ -133,7 +131,7 @@ const MainSidebarMenu = (props: Props) => {
                       onClick={() => {
                         React.startTransition(() => {
                           startProgress();
-                          router.push("/account/service", { scroll: false });
+                          router.push("/account/service");
                           props.onOpen();
                         });
                       }}
@@ -154,7 +152,7 @@ const MainSidebarMenu = (props: Props) => {
               onClick={() => {
                 React.startTransition(() => {
                   startProgress();
-                  router.push(val.url, { scroll: false });
+                  router.push(val.url);
                   props.onOpen();
                 });
               }}

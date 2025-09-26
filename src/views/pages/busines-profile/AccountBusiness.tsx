@@ -93,7 +93,7 @@ const AccountBusiness = () => {
     (id: number) => () => {
       React.startTransition(() => {
         startProgress();
-        router.push(`business-profile/${id}/update`, { scroll: false });
+        router.push(`business-profile/${id}/update`);
       });
     },
     [table.data]
@@ -107,7 +107,7 @@ const AccountBusiness = () => {
           ? () => {
               React.startTransition(() => {
                 startProgress();
-                router.push("business-profile/create", { scroll: false });
+                router.push("business-profile/create");
               });
             }
           : undefined

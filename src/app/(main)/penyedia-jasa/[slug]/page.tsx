@@ -131,7 +131,7 @@ export default async function Page({ params }: Props) {
                 <Box>
                   <ListItemText
                     primary={data?.businessName}
-                    secondary={"Kategori"}
+                    secondary={"Penyedia Jasa"}
                     slotProps={{
                       primary: {
                         component: "h1",
@@ -143,7 +143,7 @@ export default async function Page({ params }: Props) {
                       secondary: {
                         variant: "subtitle1",
                         color: "var(--blue-color)",
-                        fontWeight: 400,
+                        fontWeight: 500,
                       },
                     }}
                   />

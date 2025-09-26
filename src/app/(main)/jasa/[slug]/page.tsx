@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "react-transition-progress/next";
 
 const BackButton = dynamic(
   () => import("@/views/components/base/Button/BackButton")
@@ -133,7 +133,7 @@ export default async function Page({ params }: Props) {
               <Stack
                 direction={"column"}
                 justifyContent={"flex-start"}
-                spacing={0.5}
+                spacing={1}
               >
                 <Box>
                   <Typography
@@ -158,7 +158,7 @@ export default async function Page({ params }: Props) {
                     variant="subtitle2"
                     sx={{
                       fontSize: "16px !important",
-                      color: "var(--blue-color)",
+                      color: "var(--blue-color) !important",
                       fontWeight: 500,
                     }}
                   >

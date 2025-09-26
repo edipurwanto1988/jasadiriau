@@ -56,7 +56,7 @@ const AdminHeader = () => {
   const handlLogout = () => {
     React.startTransition(() => {
       startProgress();
-      router.push("/login", { scroll: false });
+      router.push("/login");
     });
   };
 

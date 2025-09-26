@@ -49,8 +49,7 @@ const MainFooter = async () => {
               <Link
                 key={v.id}
                 href={v.url ?? ""}
-                style={{ textAlign: "center" }}
-                color="#FFF"
+                style={{ textAlign: "center", color: '#FFF' }}
               >
                 {v.name}
               </Link>

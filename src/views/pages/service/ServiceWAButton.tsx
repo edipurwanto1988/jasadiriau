@@ -45,9 +45,8 @@ const ServiceWAButton = ({ data, siteName }: Props) => {
                 phoneNumber: v.whatsappNumber,
                 contactId: v.id,
               });
-              router.push(
-                `${process.env.NEXT_PUBLIC_WA_LINK}?phone=${phone}&text=${text}`
-              );
+              const url = `${process.env.NEXT_PUBLIC_WA_LINK}?phone=${phone}&text=${text}`;
+              window.open(url, "_blank", "noopener,noreferrer");
             }}
           >
             Chat Via Whatsapp

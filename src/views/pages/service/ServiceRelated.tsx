@@ -9,7 +9,7 @@ import useSWR from "swr";
 import Skeleton from "@mui/material/Skeleton";
 import { rupiah } from "@/utils/format";
 import React from "react";
-import Link from "next/link";
+import { Link } from "react-transition-progress/next";
 
 type Props = {
   slug: string;
@@ -79,7 +79,6 @@ const ServiceRelated = ({ slug }: Props) => {
                 key={i}
                 width={160}
                 spacing={1}
-                sx={{ cursor: "pointer" }}
               >
                 <Box
                   sx={{
@@ -109,6 +108,8 @@ const ServiceRelated = ({ slug }: Props) => {
                     variant="subtitle2"
                     fontSize={16}
                     alignSelf={"stretch"}
+                    color="primary"
+                    sx={{textDecoration: "underline"}}
                   >
                     {value.name}
                   </Typography>

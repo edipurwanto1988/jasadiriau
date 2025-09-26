@@ -64,7 +64,7 @@ const TooltipAccountSidebarMenu = (props: Props) => {
               startProgress();
               if (props.path) {
                 clearKey();
-                router.push(props.path, { scroll: false });
+                router.push(props.path);
               } else {
                 addKey(props.pathKey);
                 if (!open) {

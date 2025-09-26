@@ -49,7 +49,7 @@ const ListSearch = () => {
   }, [params.toString()]);
 
   const onSearch = () => {
-    router.replace(urlWithParam.search, { scroll: false });
+    router.replace(urlWithParam.search);
   };
 
   return (

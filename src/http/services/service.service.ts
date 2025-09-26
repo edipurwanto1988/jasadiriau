@@ -353,12 +353,10 @@ export const getServiceRelated = async (qs: URLSearchParams) => {
 
   const newResult = relateds.map((val) => {
     const image = images.find((f) => f.entityId === val.id);
-    if (image) {
-      Object.assign(val, {
-        image_url: image.imageUrl ?? "/images/placeholder.webp",
-      });
-    }
-    return val;
+    return {
+      ...val,
+        image_url: image?.imageUrl ?? "/images/placeholder.webp",
+    };
   });
 
   return newResult;

@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { categoryUrl } from "@/views/services/category.service";
 import useSWR from "swr";
-import Link from "next/link";
+import { Link } from "react-transition-progress/next";
 
 const CategoryPopulerSection = () => {
   const { data, isLoading } = useSWR(categoryUrl.populer, (url) =>
@@ -79,7 +79,6 @@ const CategoryPopulerSection = () => {
                 flexShrink={0}
                 width={160}
                 spacing={2}
-                sx={{ cursor: "pointer" }}
               >
                 <Box
                   sx={{

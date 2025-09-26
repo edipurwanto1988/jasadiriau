@@ -58,7 +58,7 @@ const TooltipSidebarMenu = (props: Props) => {
             e.preventDefault();
             React.startTransition(() => {
               startProgress();
-              router.push(props.path ?? "/", { scroll: false });
+              router.push(props.path ?? "/");
             });
           }}
           sx={{

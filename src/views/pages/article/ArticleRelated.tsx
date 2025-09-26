@@ -7,7 +7,7 @@ import useSWR from "swr";
 import Skeleton from "@mui/material/Skeleton";
 import React from "react";
 import { articleUrl } from "@/views/services/article.service";
-import Link from "next/link";
+import { Link } from "react-transition-progress/next";
 
 type Props = {
   slug: string;
@@ -103,7 +103,9 @@ const ArticleRelated = ({ slug }: Props) => {
                     lineHeight={"21px"}
                     fontWeight={400}
                     variant="subtitle2"
+                    color="primary"
                     alignSelf={"stretch"}
+                    style={{textDecoration: "underlineF"}}
                   >
                     {value.title}
                   </Typography>
