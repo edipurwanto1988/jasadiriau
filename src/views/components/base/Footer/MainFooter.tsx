@@ -22,47 +22,76 @@ const MainFooter = async () => {
             xl: 20,
           },
           pb: 1,
+          overflow: "hidden",
         }}
       >
         <Divider />
         <Stack spacing={4} py={2}>
           <Stack
-            pt={2}
-            direction={{
-              xs: "column",
-              sm: "column",
-              md: "row",
-              lg: "row",
-              xl: "row",
-            }}
-            justifyContent={"space-around"}
-            alignItems={"center"}
-            spacing={{
+            direction={{ xs: "column", sm: "column", md: "row", lg: "row", xl: "row" }}
+            alignItems={"flex-start"}
+            px={{
               xs: 2,
               sm: 2,
-              md: 0,
-              lg: 0,
-              xl: 0,
+              md: 20,
+              lg: 20,
+              xl: 20,
             }}
+            spacing={3}
           >
-            {menus.map((v) => (
-              <Link
-                key={v.id}
-                href={v.url ?? ""}
-                style={{ textAlign: "center", color: '#FFF' }}
-              >
-                {v.name}
-              </Link>
-            ))}
+            <Box sx={{ width: "350px" }}>
+              <Typography color="#FFF" variant="subtitle2">
+                <span style={{ fontWeight: 600, fontSize: 18, color: "#000" }}>
+                  Tentang Aplikasi:
+                </span>
+                <br />
+                {setting?.siteName || "JasaDiRiau.com"} memudahkan Anda
+                menemukan berbagai penyedia jasa di Riau. Informasi data
+                pengguna digunakan hanya untuk proses login dan keamanan.
+              </Typography>
+            </Box>
+
+            <Box
+              pt={2}
+              sx={{
+                display: "grid",
+                gridAutoFlow: "column", 
+                gridTemplateRows: {
+                  xs: "repeat(6, auto)",
+                  sm: "repeat(6, auto)",
+                  md: "repeat(3, auto)",
+                  lg: "repeat(3, auto)",
+                  xl: "repeat(3, auto)",
+                },
+                gap: 1.5,
+              }}
+            >
+              {[...menus, ...menus, ...menus, ...menus, ...menus].map((v) => (
+                <Link
+                  // key={v.id}
+                  href={v.url ?? ""}
+                  style={{ color: "#FFF", textDecoration: "underline" }}
+                >
+                  {v.name}
+                </Link>
+              ))}
+            </Box>
           </Stack>
 
-          <Stack direction={"row"} justifyContent={"center"} spacing={2} sx={{'& a': {
-            borderRadius: 1,
-            p:1,
-            backgroundColor:"#fff",
-            display:"flex",
-            alignItems:"center"
-          }}}>
+          <Stack
+            direction={"row"}
+            justifyContent={"center"}
+            spacing={2}
+            sx={{
+              "& a": {
+                borderRadius: 1,
+                p: 1,
+                backgroundColor: "#fff",
+                display: "flex",
+                alignItems: "center",
+              },
+            }}
+          >
             {setting?.facebookUrl ? (
               <Link target="_blank" prefetch={false} href={setting.facebookUrl}>
                 <Image
@@ -139,6 +168,7 @@ const MainFooter = async () => {
               </Link>
             ) : null}
           </Stack>
+          
           <Box>
             <Typography
               fontWeight={400}
