@@ -66,9 +66,9 @@ const MainFooter = async () => {
                 gap: 1.5,
               }}
             >
-              {[...menus, ...menus, ...menus, ...menus, ...menus].map((v) => (
+              {menus.map((v) => (
                 <Link
-                  // key={v.id}
+                  key={v.id}
                   href={v.url ?? ""}
                   style={{ color: "#FFF", textDecoration: "underline" }}
                 >
