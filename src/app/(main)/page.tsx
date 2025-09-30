@@ -6,6 +6,7 @@ import MainTemplate from "@/views/components/templates/MainTemplate";
 import { getSetting } from "@/actions/setting.action";
 import { Metadata } from "next";
 import RegisterSection from "@/views/pages/home/RegisterSection";
+import DetailSection from "@/views/pages/home/DetailSection";
 
 export async function generateMetadata(): Promise<Metadata> {
   const setting = await getSetting();
@@ -22,6 +23,7 @@ export default async function Page() {
       <SearchSection />
       <RegisterSection/>
       <CategoryPopulerSection />
+      <DetailSection/>
       <AdvantageSection />
       <ExcellentServiceSection />
     </MainTemplate>

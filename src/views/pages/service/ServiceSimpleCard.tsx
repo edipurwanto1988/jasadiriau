@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import Stack from "@mui/material/Stack";
 import Skeleton from "@mui/material/Skeleton";
@@ -42,9 +42,13 @@ const ServiceSimpleCard = ({ loading, data }: Props) => {
               ) : (
                 <ILink
                   href={`/jasa/${data.slug}`}
-                  prefetch={false}
                   scroll={false}
-                  style={{ color: "var(--blue-color)" }}
+                  style={{
+                    color: "var(--blue-color)",
+                    fontSize: "16px",
+                    textDecoration: "underline",
+                    textUnderlineOffset: "4px",
+                  }}
                 >
                   {data?.name ?? "-"}
                 </ILink>
